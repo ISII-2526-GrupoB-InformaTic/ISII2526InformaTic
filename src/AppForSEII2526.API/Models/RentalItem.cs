@@ -1,4 +1,5 @@
 ﻿
+
 namespace AppForSEII2526.API.Models
 {
     public class RentalItem
@@ -11,23 +12,24 @@ namespace AppForSEII2526.API.Models
             Quantity = quantity;
             RentalId = rentalId;
         }
-        [Key]
+
         public int CarId { get; set; }
         public int Quantity { get; set; }
-        [Key]
         public int RentalId { get; set; }
         public Rental Rental { get; set; }
+        public Car Car { get; set; }
         public override bool Equals(object? obj)
         {
             return obj is RentalItem item &&
                    CarId == item.CarId &&
                    Quantity == item.Quantity &&
-                   RentalId == item.RentalId;
+                   RentalId == item.RentalId &&
+                   EqualityComparer<Rental>.Default.Equals(Rental, item.Rental);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(CarId, Quantity, RentalId);
+            return HashCode.Combine(CarId, Quantity, RentalId, Rental);
         }
     }
 }
