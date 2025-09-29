@@ -14,7 +14,31 @@ namespace AppForSEII2526.API.Models
 
         public Car(){ 
         
+        }
 
+        public Car(string carClass, string color, string description, string manufacturer, string rentalItems, string reviewItems, int id, int quantityForPurchasing, int quantityForRenting, float purchasingPrice, float rentingPrice)
+        {
+            this.carClass = carClass;
+            
+            Color = color;
+            
+            Description = description;
+            
+            Manufacturer = manufacturer;
+            
+            RentalItems = rentalItems;
+            
+            ReviewItems = reviewItems;
+            
+            Id = id;
+            
+            QuantityForPurchasing = quantityForPurchasing;
+            
+            QuantityForRenting = quantityForRenting;
+            
+            PurchasingPrice = purchasingPrice;
+            
+            RentingPrice = rentingPrice;
         
         }
 

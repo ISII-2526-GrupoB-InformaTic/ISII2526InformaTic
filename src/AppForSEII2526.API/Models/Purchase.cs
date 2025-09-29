@@ -12,7 +12,25 @@
 
         public Purchase(){
 
+        }
 
+
+        public Purchase(string deliveryCarDealer, string name, string paymentMethod, string surname, DateTime purchasingDate, float purchasingPrice, int id)
+        {
+            DeliveryCarDealer = deliveryCarDealer;
+            
+            Name = name;
+            
+            PaymentMethod = paymentMethod;
+            
+            Surname = surname;
+            
+            PurchasingDate = purchasingDate;
+            
+            PurchasingPrice = purchasingPrice;
+            
+            Id = id;
+        
         }
 
         public override bool Equals(object? obj){

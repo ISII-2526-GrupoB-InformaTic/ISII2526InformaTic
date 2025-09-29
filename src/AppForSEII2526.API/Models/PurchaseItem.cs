@@ -6,9 +6,17 @@ namespace AppForSEII2526.API.Models
         int CarId, PurchaseId, Quantity;
 
         public PurchaseItem(){
+
+        }
+
+        public PurchaseItem(int carId, int purchaseId, int quantity){
+            
+            CarId = carId;
+            
+            PurchaseId = purchaseId;
         
-
-
+            Quantity = quantity;
+        
         }
 
         public override bool Equals(object? obj){
