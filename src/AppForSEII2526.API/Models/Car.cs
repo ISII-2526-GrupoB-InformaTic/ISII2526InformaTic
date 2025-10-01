@@ -6,11 +6,13 @@ namespace AppForSEII2526.API.Models
 {
     public class Car {
 
-        String carClass, Color, Description, Manufacturer, RentalItems, ReviewItems;
+        public String carClass, Color, Description, Manufacturer, RentalItems, ReviewItems;
 
-        int Id, QuantityForPurchasing, QuantityForRenting;
+        public int Id, QuantityForPurchasing, QuantityForRenting;
 
-        float PurchasingPrice, RentingPrice;
+        public float PurchasingPrice, RentingPrice;
+
+        public IList<PurchaseItem> purchaseItems;   //Es una lista de PurchaseItems, Lo hemos hecho de tipo Ilist porque para relacionarlo con la clase Purchase necesitas la clase intermedia que es PurchaseItem
 
         public Car(){ 
         

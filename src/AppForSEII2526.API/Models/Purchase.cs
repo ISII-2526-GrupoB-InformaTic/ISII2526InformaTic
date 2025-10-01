@@ -2,13 +2,15 @@
 {
     public class Purchase{
 
-        String DeliveryCarDealer, Name, PaymentMethod, Surname;
+        public String DeliveryCarDealer, Name, PaymentMethod, Surname;
 
-        DateTime PurchasingDate;
+        public DateTime PurchasingDate;
 
-        float PurchasingPrice;
+        public float PurchasingPrice;
 
-        int Id;
+        public int Id;
+
+        public IList<PurchaseItem> purchaseItems;   //Es una lista de PurchaseItems, Lo hemos hecho de tipo Ilist porque para relacionarlo con la clase Car necesitas la clase intermedia que es PurchaseItem
 
         public Purchase(){
 

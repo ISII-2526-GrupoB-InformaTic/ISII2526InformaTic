@@ -3,7 +3,11 @@ namespace AppForSEII2526.API.Models
 {
     public class PurchaseItem{
 
-        int CarId, PurchaseId, Quantity;
+        public int CarId, PurchaseId, Quantity;
+
+        public Purchase purchase;
+
+        public Car car;
 
         public PurchaseItem(){
 
