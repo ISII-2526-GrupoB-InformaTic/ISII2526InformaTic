@@ -6,9 +6,6 @@
       <HashCode>CAgiCAAAAAAgAAABwAACAACAAAAAAIAAAAAAgBAAAAA=</HashCode>
       <FileName>Models\Car.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Field Name="purchaseItems" />
-    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.Purchase">
     <Position X="10" Y="1.25" Width="1.5" />
@@ -16,9 +13,6 @@
       <HashCode>AAAjAAAAAAAAAAAAwAAAgAQABAAAAIAAAAAABAAAAAA=</HashCode>
       <FileName>Models\Purchase.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Field Name="purchaseItems" />
-    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.PurchaseItem">
     <Position X="7" Y="1.25" Width="1.5" />
@@ -27,9 +21,16 @@
       <FileName>Models\PurchaseItem.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="car" />
       <Field Name="purchase" />
+      <Field Name="car" />
     </ShowAsAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.Model">
+    <Position X="1.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAgAAAAAQAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Model.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

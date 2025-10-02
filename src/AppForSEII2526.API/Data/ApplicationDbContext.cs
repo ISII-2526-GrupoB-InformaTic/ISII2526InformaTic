@@ -16,6 +16,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<Purchase>().HasKey(pi => new { pi.Id });
     
         builder.Entity<Car>().HasKey(pi => new { pi.Id });
+
+        builder.Entity<Model>().HasKey(pi => new { pi.Id });
    
     }
 
@@ -24,5 +26,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<PurchaseItem> PurchaseItems { get; set; }
 
     public DbSet<Car> Cars { get; set; }
+
+    public DbSet<Model> Models { get; set; }
 
 }
