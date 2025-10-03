@@ -6,6 +6,8 @@
 
         public String Name;
 
+        public IList<Car> car;
+
         public Model(){ 
         
         }

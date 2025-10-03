@@ -14,11 +14,13 @@ namespace AppForSEII2526.API.Models
 
         public IList<PurchaseItem> purchaseItems;   //Es una lista de PurchaseItems, Lo hemos hecho de tipo Ilist porque para relacionarlo con la clase Purchase necesitas la clase intermedia que es PurchaseItem
 
+        public Model model;
+
         public Car(){ 
         
         }
 
-        public Car(string carClass, string color, string description, string manufacturer, string rentalItems, string reviewItems, int id, int quantityForPurchasing, int quantityForRenting, float purchasingPrice, float rentingPrice)
+        public Car(string carClass, string color, string description, string manufacturer, string rentalItems, string reviewItems, int id, int quantityForPurchasing, int quantityForRenting, float purchasingPrice, float rentingPrice, Model model)
         {
             this.carClass = carClass;
             
@@ -41,6 +43,8 @@ namespace AppForSEII2526.API.Models
             PurchasingPrice = purchasingPrice;
             
             RentingPrice = rentingPrice;
+
+            this.model = model;
         
         }
 
