@@ -7,34 +7,18 @@
 
         public String Name;
 
-        //public IList<Car> car;
+        public IList<Car> Cars;
 
         public Model()
         {
 
         }
 
-
-        public Model(int id)
-        {
-
-            Id = id;
-
-        }
-
-        public Model(String name)
-        {
-
-            Name = name;
-
-        }
-
-
-        public Model(int id, String name)
+        public Model(int id, string name, IList<Car> car)
         {
             Id = id;
             Name = name;
-
+            this.Cars = car;
         }
 
         public override bool Equals(object? obj)
@@ -42,14 +26,15 @@
 
             return obj is Model model &&
                    Id == model.Id &&
-                   Name == model.Name;
+                   Name == model.Name &&
+                   Cars == model.Cars;
 
         }
 
         public override int GetHashCode()
         {
 
-            return HashCode.Combine(Id, Name);
+            return HashCode.Combine(Id, Name,Cars);
 
         }
 
