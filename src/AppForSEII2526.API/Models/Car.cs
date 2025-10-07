@@ -13,13 +13,14 @@ namespace AppForSEII2526.API.Models
 
         public float PurchasingPrice, RentingPrice;
 
+        public Model Model { get; set; }
         public Car()
         {
 
         }
 
         public Car(string carClass, string color, string description, string manufacturer, string reviewItems, int id,
-            int quantityForPurchasing, int quantityForRenting, float purchasingPrice, float rentingPrice)
+            int quantityForPurchasing, int quantityForRenting, float purchasingPrice, float rentingPrice, Model model)
         {
             this.carClass = carClass;
             Color = color;
@@ -31,6 +32,7 @@ namespace AppForSEII2526.API.Models
             QuantityForRenting = quantityForRenting;
             PurchasingPrice = purchasingPrice;
             RentingPrice = rentingPrice;
+            Model = model;
         }
 
         public override bool Equals(object? obj)
@@ -45,7 +47,8 @@ namespace AppForSEII2526.API.Models
                    QuantityForPurchasing == car.QuantityForPurchasing &&
                    QuantityForRenting == car.QuantityForRenting &&
                    PurchasingPrice == car.PurchasingPrice &&
-                   RentingPrice == car.RentingPrice;
+                   RentingPrice == car.RentingPrice &&
+                   Model == car.Model;
         }
 
         public override int GetHashCode()
@@ -61,6 +64,7 @@ namespace AppForSEII2526.API.Models
             hash.Add(QuantityForRenting);
             hash.Add(PurchasingPrice);
             hash.Add(RentingPrice);
+            hash.Add(Model);
             return hash.ToHashCode();
         }
     }
