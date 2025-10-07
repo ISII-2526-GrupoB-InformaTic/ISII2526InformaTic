@@ -8,7 +8,7 @@ namespace AppForSEII2526.API.Models
         {
 
         }
-        public Booking(string clientAddress, string clientName, int clientPhoneNumber, string clientSurname, string Date, int Id, string PaymentMethod) : base()
+        public Booking(string clientAddress, string clientName, int clientPhoneNumber, string clientSurname, string Date, int Id, string PaymentMethod, IList<BookingItem> BookingItems) : base()
         {
             this.clientAdress = clientAddress;
             this.clientName = clientName;
@@ -17,6 +17,7 @@ namespace AppForSEII2526.API.Models
             this.Date = Date;
             this.Id = Id;
             this.PaymentMethod = PaymentMethod;
+            this.BookingItems = BookingItems;
         }
 
         [Key]
@@ -27,6 +28,7 @@ namespace AppForSEII2526.API.Models
         public string clientSurname { get; set; }
         public string Date { get; set; }
         public string PaymentMethod { get; set; }
+        public List<BookingItem> BookingItems { get; set; }
 
 
         public override bool Equals(object? obj)
