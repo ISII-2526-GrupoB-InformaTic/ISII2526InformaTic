@@ -6,7 +6,7 @@ namespace AppForSEII2526.API.Models
 
         public int CarId, PurchaseId, Quantity;
 
-        //public Purchase purchase;
+        public Purchase purchase;
 
         public Car car;
 
@@ -15,7 +15,7 @@ namespace AppForSEII2526.API.Models
 
         }
 
-        public PurchaseItem(int carId, int purchaseId, int quantity)
+        public PurchaseItem(int carId, int purchaseId, int quantity, Car car, Purchase purchase)
         {
 
             CarId = carId;
@@ -23,6 +23,10 @@ namespace AppForSEII2526.API.Models
             PurchaseId = purchaseId;
 
             Quantity = quantity;
+
+            this.car = car;
+
+            this.purchase = purchase;
 
         }
 
@@ -35,14 +39,18 @@ namespace AppForSEII2526.API.Models
 
                 PurchaseId == item.PurchaseId &&
 
-                Quantity == item.Quantity;
+                Quantity == item.Quantity &&
+
+                car == item.car && 
+                
+                purchase == item.purchase;
 
         }
 
         public override int GetHashCode()
         {
 
-            return HashCode.Combine(CarId, PurchaseId, Quantity);
+            return HashCode.Combine(CarId, PurchaseId, Quantity, car, purchase);
 
         }
 

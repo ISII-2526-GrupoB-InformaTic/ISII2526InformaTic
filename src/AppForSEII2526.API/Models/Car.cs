@@ -15,13 +15,15 @@ namespace AppForSEII2526.API.Models
 
         public Model Model { get; set; }
         public IList<RentalItem> RentalItems { get; set; }
+
+        public IList<PurchaseItem> PurchaseItems { get; set; }
         public Car()
         {
 
         }
 
         public Car(string carClass, string color, string description, string manufacturer, string reviewItems, int id,
-            int quantityForPurchasing, int quantityForRenting, float purchasingPrice, float rentingPrice, Model model, IList<RentalItem> rentalItems)
+            int quantityForPurchasing, int quantityForRenting, float purchasingPrice, float rentingPrice, Model model, IList<RentalItem> rentalItems, IList<PurchaseItem> purchaseItems)
         {
             this.carClass = carClass;
             Color = color;
@@ -35,6 +37,7 @@ namespace AppForSEII2526.API.Models
             RentingPrice = rentingPrice;
             Model = model;
             RentalItems = rentalItems;
+            PurchaseItems = purchaseItems;
         }
 
         public override bool Equals(object? obj)
@@ -51,7 +54,9 @@ namespace AppForSEII2526.API.Models
                    PurchasingPrice == car.PurchasingPrice &&
                    RentingPrice == car.RentingPrice &&
                    Model == car.Model &&
-                   RentalItems == car.RentalItems;
+                   RentalItems == car.RentalItems &&
+                   PurchaseItems == car.PurchaseItems;        
+
         }
 
         public override int GetHashCode()
@@ -69,6 +74,7 @@ namespace AppForSEII2526.API.Models
             hash.Add(RentingPrice);
             hash.Add(Model);
             hash.Add(RentalItems);
+            hash.Add(PurchaseItems);
             return hash.ToHashCode();
         }
     }
