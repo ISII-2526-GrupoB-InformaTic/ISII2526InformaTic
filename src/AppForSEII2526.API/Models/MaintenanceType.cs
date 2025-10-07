@@ -8,27 +8,29 @@ namespace AppForSEII2526.API.Models
         {
 
         }
-        public MaintenanceType(int Id, string Type) : base()
+        public MaintenanceType(int Id, string Type, Maintenance Maintenance) : base()
         {
             this.Id = Id;
             this.Type = Type;
-
+            this.Maintenance = Maintenance;
         }
 
         [Key]
         public int Id { get; set; }
         public string Type { get; set; }
-
+        public Maintenance Maintenance { get; set; }
 
         public override bool Equals(object? obj)
         {
-            return obj is MaintenanceType maintenancetype &&
-                this.Id == maintenancetype.Id;
+            return obj is MaintenanceType type &&
+                   Id == type.Id &&
+                   Type == type.Type &&
+                   EqualityComparer<Maintenance>.Default.Equals(Maintenance, type.Maintenance);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Type);
+            return HashCode.Combine(Id, Type, Maintenance);
         }
     }
 }

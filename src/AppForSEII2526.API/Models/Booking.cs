@@ -28,18 +28,24 @@ namespace AppForSEII2526.API.Models
         public string clientSurname { get; set; }
         public string Date { get; set; }
         public string PaymentMethod { get; set; }
-        public List<BookingItem> BookingItems { get; set; }
-
+        public IList<BookingItem> BookingItems { get; set; }
 
         public override bool Equals(object? obj)
         {
             return obj is Booking booking &&
-                this.Id == booking.Id;
+                   Id == booking.Id &&
+                   clientAdress == booking.clientAdress &&
+                   clientName == booking.clientName &&
+                   clientPhoneNumber == booking.clientPhoneNumber &&
+                   clientSurname == booking.clientSurname &&
+                   Date == booking.Date &&
+                   PaymentMethod == booking.PaymentMethod &&
+                   EqualityComparer<IList<BookingItem>>.Default.Equals(BookingItems, booking.BookingItems);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, clientName);
+            return HashCode.Combine(Id, clientAdress, clientName, clientPhoneNumber, clientSurname, Date, PaymentMethod, BookingItems);
         }
     }
 }

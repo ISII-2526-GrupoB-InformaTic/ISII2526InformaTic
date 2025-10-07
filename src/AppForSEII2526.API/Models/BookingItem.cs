@@ -8,28 +8,35 @@ namespace AppForSEII2526.API.Models
         {
 
         }
-        public BookingItem(int BookingId, string Comment, int MantID) : base()
+        public BookingItem(int BookingId, string Comment, int MantID, Booking Booking, Maintenance Maintenance) : base()
         {
             this.BookingId = BookingId;
             this.Comment = Comment;
             this.MantID = MantID;
+            this.Booking = Booking;
+            this.Maintenance = Maintenance;
         }
 
         [Key]
         public int BookingId { get; set; }
         public string Comment { get; set; }
         public int MantID { get; set; }
-
+        public Booking Booking { get; set; }
+        public Maintenance Maintenance { get; set; }
 
         public override bool Equals(object? obj)
         {
-            return obj is BookingItem bookingItem &&
-                this.BookingId == bookingItem.BookingId && this.MantID == bookingItem.MantID;
+            return obj is BookingItem item &&
+                   BookingId == item.BookingId &&
+                   Comment == item.Comment &&
+                   MantID == item.MantID &&
+                   EqualityComparer<Booking>.Default.Equals(Booking, item.Booking) &&
+                   EqualityComparer<Maintenance>.Default.Equals(Maintenance, item.Maintenance);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, BookingId);
+            return HashCode.Combine(BookingId, Comment, MantID, Booking, Maintenance);
         }
     }
 }

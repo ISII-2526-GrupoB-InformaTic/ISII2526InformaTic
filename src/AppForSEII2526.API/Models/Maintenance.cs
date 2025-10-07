@@ -8,12 +8,14 @@ namespace AppForSEII2526.API.Models
         {
 
         }
-        public Maintenance(int Id, string Name, int NumberOfDays, float Price) : base()
+        public Maintenance(int Id, string Name, int NumberOfDays, float Price, IList<BookingItem> BookingItems, IList<MaintenanceType> MaintenanceTypes) : base()
         {
             this.Id = Id;
             this.Name = Name;
             this.NumberOfDays = NumberOfDays;
             this.Price = Price;
+            this.BookingItems = BookingItems;
+            this.MaintenanceTypes = MaintenanceTypes;
         }
 
         [Key]
@@ -21,17 +23,23 @@ namespace AppForSEII2526.API.Models
         public string Name { get; set; }
         public int NumberOfDays { get; set; }
         public float Price { get; set; }
-
+        public IList<BookingItem> BookingItems { get; set; }
+        public IList<MaintenanceType> MaintenanceTypes { get; set; }
 
         public override bool Equals(object? obj)
         {
             return obj is Maintenance maintenance &&
-                this.Id == maintenance.Id;
+                   Id == maintenance.Id &&
+                   Name == maintenance.Name &&
+                   NumberOfDays == maintenance.NumberOfDays &&
+                   Price == maintenance.Price &&
+                   EqualityComparer<IList<BookingItem>>.Default.Equals(BookingItems, maintenance.BookingItems) &&
+                   EqualityComparer<IList<MaintenanceType>>.Default.Equals(MaintenanceTypes, maintenance.MaintenanceTypes);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Name);
+            return HashCode.Combine(Id, Name, NumberOfDays, Price, BookingItems, MaintenanceTypes);
         }
     }
 }
