@@ -17,7 +17,6 @@ namespace AppForSEII2526.API.Models
             this.Maintenance = Maintenance;
         }
 
-        [Key]
         public int BookingId { get; set; }
         public string Comment { get; set; }
         public int MantID { get; set; }
