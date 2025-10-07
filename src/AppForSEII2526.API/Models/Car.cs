@@ -6,10 +6,12 @@ namespace AppForSEII2526.API.Models
 {
     public class Car
     {
+        [Key]
+        public int Id { get; set; }
 
         public String carClass, Color, Description, Manufacturer, ReviewItems;
 
-        public int Id, QuantityForPurchasing, QuantityForRenting;
+        public int QuantityForPurchasing, QuantityForRenting;
 
         public float PurchasingPrice, RentingPrice;
 

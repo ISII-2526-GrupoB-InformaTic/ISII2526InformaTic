@@ -2,7 +2,7 @@
 {
     public class Model
     {
-
+        [Key]
         public int Id;
 
         public String Name;
