@@ -3,7 +3,7 @@
     public class Purchase
     {
 
-        public String DeliveryCarDealer, Name, PaymentMethod, Surname;
+        public String DeliveryCarDealer, PaymentMethod;
 
         public DateTime PurchasingDate;
 
@@ -12,29 +12,20 @@
         public int Id;
 
         public IList<PurchaseItem> purchaseItems;   //Es una lista de PurchaseItems, Lo hemos hecho de tipo Ilist porque para relacionarlo con la clase Car necesitas la clase intermedia que es PurchaseItem
-
+        public ApplicationUser User { get; set; }
         public Purchase()
         {
 
         }
 
 
-        public Purchase(string deliveryCarDealer, string name, string paymentMethod, string surname, DateTime purchasingDate, float purchasingPrice, int id, IList<PurchaseItem> purchaseItem)
+        public Purchase(string deliveryCarDealer, string paymentMethod, DateTime purchasingDate, float purchasingPrice, int id, IList<PurchaseItem> purchaseItem)
         {
             DeliveryCarDealer = deliveryCarDealer;
-
-            Name = name;
-
             PaymentMethod = paymentMethod;
-
-            Surname = surname;
-
             PurchasingDate = purchasingDate;
-
             PurchasingPrice = purchasingPrice;
-
             Id = id;
-
             purchaseItems = purchaseItem;
 
         }
@@ -46,11 +37,7 @@
 
                 DeliveryCarDealer == purchase.DeliveryCarDealer &&
 
-                Name == purchase.Name &&
-
                 PaymentMethod == purchase.PaymentMethod &&
-
-                Surname == purchase.Surname &&
 
                 PurchasingDate == purchase.PurchasingDate &&
 
@@ -65,7 +52,7 @@
         public override int GetHashCode()
         {
 
-            return HashCode.Combine(DeliveryCarDealer, Name, PaymentMethod, Surname, PurchasingDate, PurchasingPrice, Id, purchaseItems);
+            return HashCode.Combine(DeliveryCarDealer, PaymentMethod, PurchasingDate, PurchasingPrice, Id, purchaseItems);
 
         }
 
