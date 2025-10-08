@@ -14,6 +14,8 @@ namespace AppForSEII2526.API.Models
         }
 
         public int CarId { get; set; }
+        [Required]
+        [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
         public int Quantity { get; set; }
         public int RentalId { get; set; }
         public Rental Rental { get; set; }
