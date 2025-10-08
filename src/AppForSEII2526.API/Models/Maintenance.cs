@@ -20,7 +20,9 @@ namespace AppForSEII2526.API.Models
 
         [Key]
         public int Id { get; set; }
+        [StringLength(10, ErrorMessage = "El nombre debe tener menos de 10 caracteres y mas de 3.", MinimumLength = 3)]
         public string Name { get; set; }
+        [Range(1, 10, ErrorMessage = "Minimo 1, Maximo 10")]
         public int NumberOfDays { get; set; }
         public float Price { get; set; }
         public IList<BookingItem> BookingItems { get; set; }
