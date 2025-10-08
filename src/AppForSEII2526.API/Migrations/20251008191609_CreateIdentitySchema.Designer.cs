@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppForSEII2526.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251007112755_CreateIdentitySchema")]
+    [Migration("20251008191609_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         /// <inheritdoc />
@@ -106,22 +106,32 @@ namespace AppForSEII2526.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("clientAdress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("clientName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
-                    b.Property<int>("clientPhoneNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("clientPhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<string>("clientSurname")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Bookings");
                 });
@@ -136,7 +146,8 @@ namespace AppForSEII2526.API.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("MaintenanceId")
                         .HasColumnType("int");
@@ -176,7 +187,8 @@ namespace AppForSEII2526.API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<int>("NumberOfDays")
                         .HasColumnType("int");
@@ -202,7 +214,8 @@ namespace AppForSEII2526.API.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
 
@@ -232,7 +245,12 @@ namespace AppForSEII2526.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Purchases");
                 });
@@ -262,14 +280,11 @@ namespace AppForSEII2526.API.Migrations
 
                     b.Property<string>("DeliveryCarDealer")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RentingDate")
                         .HasColumnType("datetime2");
@@ -277,14 +292,16 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("TotalPrice")
+                        .HasPrecision(5, 2)
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Rentals");
                 });
@@ -440,6 +457,15 @@ namespace AppForSEII2526.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AppForSEII2526.API.Models.Booking", b =>
+                {
+                    b.HasOne("AppForSEII2526.API.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("AppForSEII2526.API.Models.BookingItem", b =>
                 {
                     b.HasOne("AppForSEII2526.API.Models.Booking", "Booking")
@@ -481,6 +507,15 @@ namespace AppForSEII2526.API.Migrations
                     b.Navigation("Maintenance");
                 });
 
+            modelBuilder.Entity("AppForSEII2526.API.Models.Purchase", b =>
+                {
+                    b.HasOne("AppForSEII2526.API.Models.ApplicationUser", "User")
+                        .WithMany("Purchases")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("AppForSEII2526.API.Models.PurchaseItem", b =>
                 {
                     b.HasOne("AppForSEII2526.API.Models.Car", null)
@@ -488,6 +523,15 @@ namespace AppForSEII2526.API.Migrations
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AppForSEII2526.API.Models.Rental", b =>
+                {
+                    b.HasOne("AppForSEII2526.API.Models.ApplicationUser", "User")
+                        .WithMany("Rentals")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.RentalItem", b =>
@@ -558,6 +602,13 @@ namespace AppForSEII2526.API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AppForSEII2526.API.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Purchases");
+
+                    b.Navigation("Rentals");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Booking", b =>
