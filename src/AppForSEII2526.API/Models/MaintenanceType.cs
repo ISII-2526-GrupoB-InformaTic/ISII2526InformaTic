@@ -17,6 +17,7 @@ namespace AppForSEII2526.API.Models
 
         [Key]
         public int Id { get; set; }
+        [StringLength(10, ErrorMessage = "El nombre debe tener menos de 10 caracteres y mas de 3.", MinimumLength = 3)]
         public string Type { get; set; }
         public Maintenance Maintenance { get; set; }
 

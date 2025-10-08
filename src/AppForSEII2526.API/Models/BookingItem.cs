@@ -18,6 +18,7 @@ namespace AppForSEII2526.API.Models
         }
 
         public int BookingId { get; set; }
+        [StringLength(200, ErrorMessage = "El comentario debe tener menos de 200 caracteres y mas de 20.", MinimumLength = 20)]
         public string Comment { get; set; }
         public int MantID { get; set; }
         public Booking Booking { get; set; }
