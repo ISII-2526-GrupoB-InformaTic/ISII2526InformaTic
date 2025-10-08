@@ -1,13 +1,29 @@
-﻿namespace AppForSEII2526.API.Models
+﻿using Microsoft.Data.SqlClient;
+
+namespace AppForSEII2526.API.Models
 {
     public class Purchase
     {
 
-        public String DeliveryCarDealer, PaymentMethod;
+        [Required]
+        [StringLength(10, ErrorMessage = "Nombre no valido")]
+        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
+        public String DeliveryCarDealer;
 
+        [Required]
+        public String PaymentMethod;
+
+
+        [Required]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date), Display(Name ="Purchase Date")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime PurchasingDate;
 
+        [Required]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
+        [Display(Name = "Price for Car")]
         public float PurchasingPrice;
+        
         [Key]
         public int Id;
 
@@ -19,7 +35,7 @@
         }
 
 
-        public Purchase(string deliveryCarDealer, string paymentMethod, DateTime purchasingDate, float purchasingPrice, int id, IList<PurchaseItem> purchaseItem)
+        public Purchase(string deliveryCarDealer, string paymentMethod, DateTime purchasingDate, float purchasingPrice, int id, IList<PurchaseItem> purchaseItem, ApplicationUser User)
         {
             DeliveryCarDealer = deliveryCarDealer;
             PaymentMethod = paymentMethod;
@@ -27,6 +43,7 @@
             PurchasingPrice = purchasingPrice;
             Id = id;
             purchaseItems = purchaseItem;
+            this.User = User;
 
         }
 
@@ -45,14 +62,16 @@
 
                 Id == purchase.Id &&
 
-                purchaseItems == purchase.purchaseItems;
+                purchaseItems == purchase.purchaseItems &&
+                
+                this.User == purchase.User;
 
         }
 
         public override int GetHashCode()
         {
 
-            return HashCode.Combine(DeliveryCarDealer, PaymentMethod, PurchasingDate, PurchasingPrice, Id, purchaseItems);
+            return HashCode.Combine(DeliveryCarDealer, PaymentMethod, PurchasingDate, PurchasingPrice, Id, purchaseItems, User);
 
         }
 
