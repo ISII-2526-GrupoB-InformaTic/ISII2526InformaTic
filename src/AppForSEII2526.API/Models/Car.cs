@@ -8,12 +8,41 @@ namespace AppForSEII2526.API.Models
     {
         [Key]
         public int Id { get; set; }
+        [Required]
+        [StringLength(100, ErrorMessage = "Name can't be longer than 100 characters.")]
+        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
+        public String carClass;
+        [Required]
+        [StringLength(50, ErrorMessage = "Color can't be longer than 50 characters.")]
+        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
+        public String Color;
+        [Required]
+        [StringLength(1000, ErrorMessage = "Description can't be longer than 1000 characters.")]
+        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
+        public String Description;
+        [Required]
+        [StringLength(100, ErrorMessage = "Manufacturer name can't be longer than 100 characters.")]
+        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
+        public String Manufacturer;
+        [Required]
+        public String ReviewItems;
+        [Required]
+        [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
+        public int QuantityForPurchasing;
+        [Required]
+        [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
+        public int QuantityForRenting;
 
-        public String carClass, Color, Description, Manufacturer, ReviewItems;
-
-        public int QuantityForPurchasing, QuantityForRenting;
-
-        public float PurchasingPrice, RentingPrice;
+        [Required]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
+        [Range(1, 1000000, ErrorMessage = "Minimum 1, Maximum 1000000")]
+        [Precision(5, 2)]
+        public float PurchasingPrice;
+        [Required]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
+        [Range(1, 1000000, ErrorMessage = "Minimum 1, Maximum 1000000")]
+        [Precision(5, 2)]
+        public float RentingPrice;
 
         public Model Model { get; set; }
         public IList<RentalItem> RentalItems { get; set; }

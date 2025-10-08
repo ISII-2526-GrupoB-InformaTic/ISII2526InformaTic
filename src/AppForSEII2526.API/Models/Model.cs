@@ -4,7 +4,9 @@
     {
         [Key]
         public int Id;
-
+        [Required]
+        [StringLength(100, ErrorMessage = "Name can't be longer than 100 characters.")]
+        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
         public String Name;
 
         public IList<Car> Cars;
