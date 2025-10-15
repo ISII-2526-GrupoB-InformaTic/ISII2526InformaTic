@@ -34,7 +34,7 @@ namespace AppForSEII2526.API.Models
         public string clientSurname { get; set; }
         [DataType(DataType.Date)]
         public string Date { get; set; }
-        public string PaymentMethod { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
         public IList<BookingItem> BookingItems { get; set; }
         public ApplicationUser User { get; set; }
 
