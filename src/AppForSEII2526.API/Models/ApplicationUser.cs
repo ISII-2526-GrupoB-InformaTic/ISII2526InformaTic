@@ -8,5 +8,6 @@ public class ApplicationUser : IdentityUser {
 
     public IList<Purchase> Purchases { get; set; }
     public IList<Rental> Rentals { get; set; }
+    public IList<Booking> Bookings { get; set; }
 
 }
