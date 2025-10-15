@@ -3,13 +3,13 @@
     public class Model
     {
         [Key]
-        public int Id;
+        public int Id { get; set; }
         [Required]
         [StringLength(100, ErrorMessage = "Name can't be longer than 100 characters.")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
-        public String Name;
+        public String Name {  get; set; }
 
-        public IList<Car> Cars;
+        public IList<Car> Cars { get; set; }
 
         public Model()
         {
