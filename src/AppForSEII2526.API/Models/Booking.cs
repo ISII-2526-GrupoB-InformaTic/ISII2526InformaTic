@@ -9,7 +9,7 @@ namespace AppForSEII2526.API.Models
         {
 
         }
-        public Booking(string clientAddress,string clientSurname, string Date, int Id, string PaymentMethod, IList<BookingItem> BookingItems, ApplicationUser usuario ) : base()
+        public Booking(string clientAddress,string clientSurname, string Date, int Id, PaymentMethod PaymentMethod, IList<BookingItem> BookingItems, ApplicationUser usuario ) : base()
         {
             this.clientAdress = clientAddress;
             this.Date = Date;
@@ -29,12 +29,12 @@ namespace AppForSEII2526.API.Models
         [StringLength(10, ErrorMessage = "El nombre debe tener menos de 10 caracteres y mas de 3.", MinimumLength = 3)]
         public string clientName { get; set; }
         [StringLength(12, ErrorMessage = "El telefono movil debe tener entre 9 y 12 digitos", MinimumLength = 9)]
-        public string clientPhoneNumber { get; set; }
+        public string? clientPhoneNumber { get; set; }
         [StringLength(10, ErrorMessage = "El apellido debe tener menos de 10 caracteres y mas de 3.", MinimumLength = 3)]
         public string clientSurname { get; set; }
         [DataType(DataType.Date)]
         public string Date { get; set; }
-        public string PaymentMethod { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
         public IList<BookingItem> BookingItems { get; set; }
         public ApplicationUser User { get; set; }
 
