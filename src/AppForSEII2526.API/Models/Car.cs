@@ -8,41 +8,49 @@ namespace AppForSEII2526.API.Models
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
         [StringLength(100, ErrorMessage = "Name can't be longer than 100 characters.")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
-        public String carClass;
+        public String carClass { get; set; }
+
         [Required]
         [StringLength(50, ErrorMessage = "Color can't be longer than 50 characters.")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
-        public String Color;
+        public String Color { get; set; }
+
         [Required]
         [StringLength(1000, ErrorMessage = "Description can't be longer than 1000 characters.")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
-        public String Description;
+        public String Description {  get; set; }
+
         [Required]
         [StringLength(100, ErrorMessage = "Manufacturer name can't be longer than 100 characters.")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
-        public String Manufacturer;
+        public String Manufacturer {  get; set; }
+
         [Required]
-        public String ReviewItems;
+        public String ReviewItems {  get; set; }
+
         [Required]
         [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
-        public int QuantityForPurchasing;
+        public int QuantityForPurchasing {  get; set; }
+
         [Required]
         [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
-        public int QuantityForRenting;
+        public int QuantityForRenting {  get; set; }
 
         [Required]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
         [Range(1, 1000000, ErrorMessage = "Minimum 1, Maximum 1000000")]
         [Precision(5, 2)]
-        public float PurchasingPrice;
+
+        public float PurchasingPrice {  get; set; }
         [Required]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
         [Range(1, 1000000, ErrorMessage = "Minimum 1, Maximum 1000000")]
         [Precision(5, 2)]
-        public float RentingPrice;
+        public float RentingPrice { get; set; }
 
         public Model Model { get; set; }
         public IList<RentalItem> RentalItems { get; set; }
