@@ -16,11 +16,14 @@
   <Class Name="AppForSEII2526.API.Models.Purchase">
     <Position X="12.25" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAjAAAAAAAAAAAAwAAAgAQABAAAAIAAAAAABAAAAAA=</HashCode>
+      <HashCode>AAAjAAAAAAAAAAAAwAAAgAAAAAAAAIAAAAAABAAAAAA=</HashCode>
       <FileName>Models\Purchase.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Field Name="purchaseItems" />
+      <Property Name="purchaseItems" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.Model">
@@ -30,7 +33,7 @@
       <FileName>Models\Model.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Field Name="Cars" />
+      <Property Name="Cars" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.PurchaseItem">
@@ -40,9 +43,19 @@
       <FileName>Models\PurchaseItem.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="car" />
-      <Field Name="purchase" />
+      <Property Name="purchase" />
+      <Property Name="car" />
     </ShowAsAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.ApplicationUser">
+    <Position X="16" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ApplicationUser.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Purchases" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

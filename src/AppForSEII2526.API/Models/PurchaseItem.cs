@@ -4,15 +4,18 @@ namespace AppForSEII2526.API.Models
     public class PurchaseItem
     {
 
-        public int CarId, PurchaseId;
+        public int CarId { get; set; }      //Ponemos el get y set para poder modificar luego los valores en la base de datos
+            
+        public int PurchaseId { get; set; }
+
 
         [Required]
         [Display(Name = "Quantity")]
-        public int Quantity;
+        public int Quantity { get; set; }
 
-        public Purchase purchase;
+        public Purchase purchase { get; set; }
 
-        public Car car;
+        public Car car { get; set; }
 
         public PurchaseItem()
         {
