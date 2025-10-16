@@ -39,7 +39,7 @@ namespace AppForSEII2526.API.Models
         }
 
 
-        public Purchase(string deliveryCarDealer, string paymentMethod, DateTime purchasingDate, float purchasingPrice, int id, IList<PurchaseItem> purchaseItem, ApplicationUser User)
+        public Purchase(string deliveryCarDealer, PaymentMethod paymentMethod, DateTime purchasingDate, int purchasingPrice, int id, IList<PurchaseItem> purchaseItem, ApplicationUser User)
         {
             DeliveryCarDealer = deliveryCarDealer;
             PaymentMethod = paymentMethod;
