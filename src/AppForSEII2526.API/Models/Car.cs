@@ -45,12 +45,12 @@ namespace AppForSEII2526.API.Models
         [Range(1, 1000000, ErrorMessage = "Minimum 1, Maximum 1000000")]
         [Precision(5, 2)]
 
-        public float PurchasingPrice {  get; set; }
+        public int PurchasingPrice {  get; set; }
         [Required]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
         [Range(1, 1000000, ErrorMessage = "Minimum 1, Maximum 1000000")]
         [Precision(5, 2)]
-        public float RentingPrice { get; set; }
+        public int RentingPrice { get; set; }
 
         public Model Model { get; set; }
         public IList<RentalItem> RentalItems { get; set; }
@@ -62,7 +62,7 @@ namespace AppForSEII2526.API.Models
         }
 
         public Car(string carClass, string color, string description, string manufacturer, string reviewItems, int id,
-            int quantityForPurchasing, int quantityForRenting, float purchasingPrice, float rentingPrice, Model model, IList<RentalItem> rentalItems, IList<PurchaseItem> purchaseItems)
+            int quantityForPurchasing, int quantityForRenting, int purchasingPrice, int rentingPrice, Model model, IList<RentalItem> rentalItems, IList<PurchaseItem> purchaseItems)
         {
             this.carClass = carClass;
             Color = color;
