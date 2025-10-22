@@ -56,6 +56,18 @@ namespace AppForSEII2526.API.Models
         public IList<RentalItem> RentalItems { get; set; }
 
         public IList<PurchaseItem> PurchaseItems { get; set; }
+
+        [Required]
+        public string FuelType { get; set; }
+
+        [Required]
+        public string EngDisplacement {  get; set; }
+
+        [Required]
+        public string RimSize { get; set; }
+
+        public IList<MaintenanceType> MaintenanceTypes { get; set; }
+
         public Car()
         {
 
