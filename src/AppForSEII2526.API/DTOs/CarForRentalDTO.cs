@@ -1,11 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using RabbitMQ.Client;
-
-namespace AppForSEII2526.API.Models
-
+﻿namespace AppForSEII2526.API.DTOs
 {
-    public class Car
+    public class CarForRentalDTO
     {
+
         [Key]
         public int Id { get; set; }
 
@@ -22,30 +19,20 @@ namespace AppForSEII2526.API.Models
         [Required]
         [StringLength(1000, ErrorMessage = "Description can't be longer than 1000 characters.")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
-        public String Description {  get; set; }
+        public String Description { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "Manufacturer name can't be longer than 100 characters.")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
-        public String Manufacturer {  get; set; }
+        public String Manufacturer { get; set; }
 
         [Required]
-        public String ReviewItems {  get; set; }
-
-        [Required]
-        [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
-        public int QuantityForPurchasing {  get; set; }
+        public String ReviewItems { get; set; }
 
         [Required]
         [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
-        public int QuantityForRenting {  get; set; }
+        public int QuantityForRenting { get; set; }
 
-        [Required]
-        [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
-        [Range(1, 1000000, ErrorMessage = "Minimum 1, Maximum 1000000")]
-        [Precision(5, 2)]
-
-        public int PurchasingPrice {  get; set; }
         [Required]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
         [Range(1, 1000000, ErrorMessage = "Minimum 1, Maximum 1000000")]
@@ -53,28 +40,25 @@ namespace AppForSEII2526.API.Models
         public int RentingPrice { get; set; }
 
         public Model Model { get; set; }
-        public IList<RentalItem> RentalItems { get; set; }
-
-        public IList<PurchaseItem> PurchaseItems { get; set; }
+        public IList<RentalItemDTO> RentalItems { get; set; }
 
         [Required]
         public string FuelType { get; set; }
 
         [Required]
-        public string EngDisplacement {  get; set; }
+        public string EngDisplacement { get; set; }
 
         [Required]
         public string RimSize { get; set; }
 
         public IList<MaintenanceType> MaintenanceTypes { get; set; }
-
-        public Car()
+        public CarForRentalDTO()
         {
 
         }
 
-        public Car(string carClass, string color, string description, string manufacturer, string reviewItems, int id,
-            int quantityForPurchasing, int quantityForRenting, int purchasingPrice, int rentingPrice, Model model, IList<RentalItem> rentalItems, IList<PurchaseItem> purchaseItems)
+        public CarForRentalDTO(int id, string carClass, string color, string description, string manufacturer, string reviewItems, 
+            int quantityForRenting, int rentingPrice, Model model, IList<RentalItemDTO> rentalItems)
         {
             this.carClass = carClass;
             Color = color;
@@ -82,13 +66,20 @@ namespace AppForSEII2526.API.Models
             Manufacturer = manufacturer;
             ReviewItems = reviewItems;
             Id = id;
-            QuantityForPurchasing = quantityForPurchasing;
             QuantityForRenting = quantityForRenting;
-            PurchasingPrice = purchasingPrice;
             RentingPrice = rentingPrice;
             Model = model;
             RentalItems = rentalItems;
-            PurchaseItems = purchaseItems;
+        }
+
+        public CarForRentalDTO(int id, string color, string manufacturer, int rentingPrice, string fuelType, Model model)
+        {
+            Id = id;
+            Color = color;
+            Manufacturer = manufacturer;
+            RentingPrice = rentingPrice;
+            FuelType = fuelType;
+            Model = model;
         }
 
         public override bool Equals(object? obj)
@@ -100,13 +91,10 @@ namespace AppForSEII2526.API.Models
                    Manufacturer == car.Manufacturer &&
                    ReviewItems == car.ReviewItems &&
                    Id == car.Id &&
-                   QuantityForPurchasing == car.QuantityForPurchasing &&
                    QuantityForRenting == car.QuantityForRenting &&
-                   PurchasingPrice == car.PurchasingPrice &&
                    RentingPrice == car.RentingPrice &&
                    Model == car.Model &&
-                   RentalItems == car.RentalItems &&
-                   PurchaseItems == car.PurchaseItems;        
+                   RentalItems == car.RentalItems;
 
         }
 
@@ -119,15 +107,11 @@ namespace AppForSEII2526.API.Models
             hash.Add(Manufacturer);
             hash.Add(ReviewItems);
             hash.Add(Id);
-            hash.Add(QuantityForPurchasing);
             hash.Add(QuantityForRenting);
-            hash.Add(PurchasingPrice);
             hash.Add(RentingPrice);
             hash.Add(Model);
             hash.Add(RentalItems);
-            hash.Add(PurchaseItems);
             return hash.ToHashCode();
         }
     }
-
 }
