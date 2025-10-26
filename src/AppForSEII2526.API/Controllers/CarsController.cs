@@ -68,5 +68,26 @@ namespace AppForSEII2526.API.Controllers
             return Ok(cars);
 
         }
+
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(IList<MaintenanceDTO>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetMaintenance(string? type, string? name)
+        {
+            IList<MaintenanceDTO> maintenance = await _context.Maintenances
+                .Include(m => m.MaintenanceTypes)
+                .Where(m => (type == null || m.MaintenanceTypes.Any(mt => mt.Type != null && mt.Type.Contains(type))) &&
+                            (name == null || m.Name.Contains(name)))
+                .Select(m => new MaintenanceDTO(
+                    m.Id,
+                    m.Name,
+                    m.NumberOfDays,
+                    m.Price,
+                    m.MaintenanceTypes.Select(mt => new MaintenanceTypeDTO(mt.Id, mt.Type, m)).ToList()
+                ))
+                .ToListAsync();
+
+            return Ok(maintenance);
+        }
     }
 }
