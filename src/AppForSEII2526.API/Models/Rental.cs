@@ -8,10 +8,9 @@ namespace AppForSEII2526.API.Models
 
         }
 
-        public Rental(int id, DateTime endDate, DateTime startDate, DateTime rentingDate,
+        public Rental(DateTime endDate, DateTime startDate, DateTime rentingDate,
             int totalPrice, string deliveryCarDealer, IList<RentalItem> rentalItems, PaymentMethod paymentMethod)
         {
-            Id = id;
             EndDate = endDate;
             StartDate = startDate;
             RentingDate = rentingDate;
@@ -67,7 +66,8 @@ namespace AppForSEII2526.API.Models
                    TotalPrice == rental.TotalPrice &&
                    DeliveryCarDealer == rental.DeliveryCarDealer &&
                    RentalItems == rental.RentalItems &&
-                   PaymentMethod == rental.PaymentMethod;
+                   PaymentMethod == rental.PaymentMethod &&
+                   User == rental.User;
 
         }
 
@@ -82,6 +82,7 @@ namespace AppForSEII2526.API.Models
             hash.Add(DeliveryCarDealer);
             hash.Add(RentalItems);
             hash.Add(PaymentMethod);
+            hash.Add(User);
             return hash.ToHashCode();
         }
     }

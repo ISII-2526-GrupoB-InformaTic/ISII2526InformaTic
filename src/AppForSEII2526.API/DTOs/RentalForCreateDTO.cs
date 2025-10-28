@@ -23,20 +23,54 @@ namespace AppForSEII2526.API.DTOs
         [Required]
         public int Quantity { get; set; }
 
-        public IList<RentalItemDTO> rentalItems { get; set; }
+        public IList<RentalItemDTO> RentalItems { get; set; }
 
+        [Required]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime RentingDate { get; set; }
+
+        public int Price { get; set; }
+        private int NumberOfDays
+        {
+            get
+            {
+                return (EndDate - StartDate).Days;
+            }
+        }
+
+        [Display(Name = "Total Price")]
+        [JsonPropertyName("TotalPrice")]
+        public int TotalPrice
+        {
+            get
+            {
+                return (Price * NumberOfDays) / 2;
+            }
+        }
         public RentalForCreateDTO(string name, string surname, string deliveryAddress,
-            PaymentMethod paymentMethod, int quantity)
+            PaymentMethod paymentMethod, IList<RentalItemDTO> rentalItem)
         {
             Name = name;
             Surname = surname;
             DeliveryAddress = deliveryAddress;
             PaymentMethod = paymentMethod;
-            Quantity = quantity;
+            RentalItems = rentalItem;
+
         }
         public RentalForCreateDTO()
         {
-            rentalItems = new List<RentalItemDTO>();
+            RentalItems = new List<RentalItemDTO>();
         }
 
         public override bool Equals(object? obj)
@@ -47,12 +81,31 @@ namespace AppForSEII2526.API.DTOs
                    DeliveryAddress == dTO.DeliveryAddress &&
                    PaymentMethod == dTO.PaymentMethod &&
                    Quantity == dTO.Quantity &&
-                   EqualityComparer<IList<RentalItemDTO>>.Default.Equals(rentalItems, dTO.rentalItems);
+                   EqualityComparer<IList<RentalItemDTO>>.Default.Equals(RentalItems, dTO.RentalItems) &&
+                   EndDate == dTO.EndDate &&
+                   StartDate == dTO.StartDate &&
+                   RentingDate == dTO.RentingDate &&
+                   Price == dTO.Price &&
+                   NumberOfDays == dTO.NumberOfDays &&
+                   TotalPrice == dTO.TotalPrice;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Surname, DeliveryAddress, PaymentMethod, Quantity, rentalItems);
+            HashCode hash = new HashCode();
+            hash.Add(Name);
+            hash.Add(Surname);
+            hash.Add(DeliveryAddress);
+            hash.Add(PaymentMethod);
+            hash.Add(Quantity);
+            hash.Add(RentalItems);
+            hash.Add(EndDate);
+            hash.Add(StartDate);
+            hash.Add(RentingDate);
+            hash.Add(Price);
+            hash.Add(NumberOfDays);
+            hash.Add(TotalPrice);
+            return hash.ToHashCode();
         }
     }
 }
