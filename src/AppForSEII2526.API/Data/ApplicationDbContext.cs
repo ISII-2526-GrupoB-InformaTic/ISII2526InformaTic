@@ -22,6 +22,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<BookingItem>().HasKey(pi => new { pi.BookingId, pi.MantID });
         builder.Entity<Maintenance>().HasKey(pi => new { pi.Id });
         builder.Entity<MaintenanceType>().HasKey(pi => new { pi.Id });
+        builder.Entity<ApplicationUser>().HasKey(pi => new { pi.Id });
     }
 
     public DbSet<Rental> Rentals { get; set; }
@@ -34,4 +35,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Maintenance> Maintenances { get; set; }
     public DbSet<MaintenanceType> MaintenanceTypes { get; set; }
     public DbSet<BookingItem> BookingItems { get; set; }
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 }
