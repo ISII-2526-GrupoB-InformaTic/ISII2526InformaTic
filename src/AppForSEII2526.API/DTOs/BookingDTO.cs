@@ -9,7 +9,7 @@ namespace AppForSEII2526.API.DTOs
         {
 
         }
-        public BookingDTO(string clientAddress,string clientSurname, string Date, int Id, PaymentMethod PaymentMethod, IList<BookingItemDTO> BookingItems, ApplicationUser usuario ) : base()
+        public BookingDTO(string clientAddress,string clientSurname, DateTime Date, int Id, PaymentMethod PaymentMethod, IList<BookingItemDTO> BookingItems, ApplicationUser usuario ) : base()
         {
             this.clientAdress = clientAddress;
             this.Date = Date;
@@ -33,7 +33,7 @@ namespace AppForSEII2526.API.DTOs
         [StringLength(10, ErrorMessage = "El apellido debe tener menos de 10 caracteres y mas de 3.", MinimumLength = 3)]
         public string clientSurname { get; set; }
         [DataType(DataType.Date)]
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public IList<BookingItemDTO> BookingItems { get; set; }
         public ApplicationUser User { get; set; }

@@ -9,7 +9,7 @@ namespace AppForSEII2526.API.Models
         {
 
         }
-        public Booking(string clientAddress,string clientSurname, string Date, int Id, PaymentMethod PaymentMethod, IList<BookingItem> BookingItems, ApplicationUser usuario ) : base()
+        public Booking(string clientAddress,string clientSurname, DateTime Date, int Id, PaymentMethod PaymentMethod, IList<BookingItem> BookingItems, ApplicationUser usuario ) : base()
         {
             this.clientAdress = clientAddress;
             this.Date = Date;
@@ -33,7 +33,7 @@ namespace AppForSEII2526.API.Models
         [StringLength(10, ErrorMessage = "El apellido debe tener menos de 10 caracteres y mas de 3.", MinimumLength = 3)]
         public string clientSurname { get; set; }
         [DataType(DataType.Date)]
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public IList<BookingItem> BookingItems { get; set; }
         public ApplicationUser User { get; set; }
