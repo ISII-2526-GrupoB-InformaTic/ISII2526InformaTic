@@ -64,6 +64,42 @@ namespace AppForSEII2526.API.Controllers
 
             return CreatedAtAction("GetBooking", new { id = booking.Id }, bookingDetail);
         }
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(BookingDetailDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult> GetBookings(int id)
+        {
+            if (_context.Bookings == null)
+            {
+                _logger.LogError("Error: Booking table does not exist");
+                return NotFound();
+            }
+
+            var booking = await _context.Bookings
+                .Where(r => r.Id == id)
+                .Include(r => r.BookingItems)
+                    .ThenInclude(ri => ri.Maintenance)
+                        .ThenInclude(ris => ris.MaintenanceTypes)
+                .Select(r => new BookingDetailDTO(r.clientName, r.clientSurname,
+                    r.clientAdress, r.PaymentMethod,
+                    r.Date,
+                    r.BookingItems
+                        .Select(ri => new BookingItemDTO(ri.BookingId,
+                                ri.Comment, ri.MantID,
+                                new BookingDTO(r.clientName, r.clientSurname, r.Date, r.Id, r.PaymentMethod, r.BookingItems.Select(bi => new BookingItemDTO(bi.BookingId, bi.Comment, bi.MantID, null, null)).ToList(), r.User),
+                                new MaintenanceDTO(ri.Maintenance.Id, ri.Maintenance.Name, ri.Maintenance.NumberOfDays, ri.Maintenance.Price, null)))
+                        .ToList()))
+                .FirstOrDefaultAsync();
+
+            if (booking == null)
+            {
+                _logger.LogError($"Error: Booking with id {id} does not exist");
+                return NotFound();
+            }
+
+            return Ok(booking);
+        }
 
     }
 }
