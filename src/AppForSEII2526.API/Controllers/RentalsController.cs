@@ -55,6 +55,7 @@ namespace AppForSEII2526.API.Controllers
                 .Select(m => new {
                     m.Id,
                     m.Model.Name,
+                    m.Manufacturer,
                     m.QuantityForRenting,
                     m.RentingPrice,
                     //we count the number of rentalItems that are within the rental period
@@ -84,7 +85,7 @@ namespace AppForSEII2526.API.Controllers
                 else
                 {
                     // rental does not exist in the database yet and does not have a valid Id, so we must relate rentalitem to the object rental
-                    rental.RentalItems.Add(new RentalItem(car.Id,car.QuantityForRenting,rental.Id));
+                    rental.RentalItems.Add(new RentalItem(car.Id, car.QuantityForRenting, rental.Id));
                     item.Car.RentingPrice = car.RentingPrice;
                 }
             }
@@ -113,13 +114,49 @@ namespace AppForSEII2526.API.Controllers
             }
 
             //it returns rentalDetail
-            var rentalDetail = new RentalDetailDTO( rentalForCreate.Name, rentalForCreate.Surname,
+            var rentalDetail = new RentalDetailDTO(rentalForCreate.Name, rentalForCreate.Surname,
                 rentalForCreate.DeliveryAddress, rentalForCreate.PaymentMethod,
-                rental.StartDate, rental.EndDate,DateTime.Now,
+                rental.StartDate, rental.EndDate, DateTime.Now,
                 rentalForCreate.RentalItems);
 
             return CreatedAtAction("GetRental", new { id = rental.Id }, rentalDetail);
         }
-    }
-}
 
+
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(RentalDetailDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult> GetRental(int id)
+        {
+            if (_context.Rentals == null)
+            {
+                _logger.LogError("Error: Rentals table does not exist");
+                return NotFound();
+            }
+
+            var rental = await _context.Rentals
+             .Where(r => r.Id == id)
+                 .Include(r => r.RentalItems) //join table RentalItems
+                    .ThenInclude(ri => ri.Car) //then join table Movies
+                        .ThenInclude(car => car.Model) //then join table Genre
+             .Select(r => new RentalDetailDTO(r.Name, r.Surname,
+                    r.DeliveryAddress, r.PaymentMethod,
+                    r.StartDate, r.EndDate,r.RentingDate,
+                    r.RentalItems
+                        .Select(ri => new RentalItemDTO(ri.Car.Id,ri.Quantity,ri.RentalId)).ToList<RentalItemDTO>()))
+             .FirstOrDefaultAsync();
+
+
+            if (rental == null)
+            {
+                _logger.LogError($"Error: Rental with id {id} does not exist");
+                return NotFound();
+            }
+
+
+            return Ok(rental);
+        }
+    }
+
+}
