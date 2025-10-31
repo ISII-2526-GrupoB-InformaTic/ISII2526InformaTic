@@ -1,15 +1,15 @@
-using AppForSEII2526.API.Models;
+using AppForSEII2526.API.DTOs;
 using DataType = System.ComponentModel.DataAnnotations.DataType;
 
-namespace AppForSEII2526.API.Models
+namespace AppForSEII2526.API.DTOs
 {
-    public class Booking
+    public class BookingDTO
     {
-        public Booking()
+        public BookingDTO()
         {
 
         }
-        public Booking(string clientAddress,string clientSurname, DateTime Date, int Id, PaymentMethod PaymentMethod, IList<BookingItem> BookingItems, ApplicationUser usuario ) : base()
+        public BookingDTO(string clientAddress,string clientSurname, DateTime Date, int Id, PaymentMethod PaymentMethod, IList<BookingItemDTO> BookingItems, ApplicationUser usuario ) : base()
         {
             this.clientAdress = clientAddress;
             this.Date = Date;
@@ -35,23 +35,8 @@ namespace AppForSEII2526.API.Models
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
-        public IList<BookingItem> BookingItems { get; set; }
+        public IList<BookingItemDTO> BookingItems { get; set; }
         public ApplicationUser User { get; set; }
 
-        public override bool Equals(object? obj)
-        {
-            return obj is Booking booking &&
-                   Id == booking.Id &&
-                   clientAdress == booking.clientAdress &&
-                   clientPhoneNumber == booking.clientPhoneNumber &&
-                   Date == booking.Date &&
-                   PaymentMethod == booking.PaymentMethod &&
-                   EqualityComparer<IList<BookingItem>>.Default.Equals(BookingItems, booking.BookingItems);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, clientAdress, clientName, clientPhoneNumber, clientSurname, Date, PaymentMethod, BookingItems);
-        }
     }
 }
