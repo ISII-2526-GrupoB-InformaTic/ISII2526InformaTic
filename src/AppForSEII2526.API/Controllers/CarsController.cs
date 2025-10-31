@@ -6,7 +6,7 @@ namespace AppForSEII2526.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CarsController : ControllerBase
+    public class CarsController : ControllerBase        //HEMOS CREADO ESTE DTO PORQUE NO QUEREMOS EXPONER TODA LA INFORMACION DE LA ENTIDAD CAR, SOLO LO QUE TE PIDEN
     {
         //used to enable your controller to access to the database
         private readonly ApplicationDbContext _context;
@@ -37,7 +37,7 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<CarForRentalDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetCarsForRenting(string? modelFilter, int? priceMin, int? priceMax)
+        public async Task<ActionResult> GetCarsForRenting(string? modelFilter, int? priceMin, int? priceMax)    //AÑADIMOS LOS FILTROS DE MODELO Y PRECIO MINIMO Y MAXIMO
         {
             IList<CarForRentalDTO> cars = await _context.Cars
                 .Include(c => c.Model)
@@ -55,7 +55,7 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<CarForPurchasingDTO>), (int)HttpStatusCode.OK)]
 
-        public async Task<ActionResult> GetCarForPurchase(string? name, string? color)
+        public async Task<ActionResult> GetCarForPurchase(string? name, string? color)      //AÑADIMOS LOS FILTROS DE NOMBRE Y COLOR
         {
 
             IList<CarForPurchasingDTO> cars = await _context.Cars
@@ -68,5 +68,9 @@ namespace AppForSEII2526.API.Controllers
             return Ok(cars);
 
         }
+
+
+
+
     }
 }
