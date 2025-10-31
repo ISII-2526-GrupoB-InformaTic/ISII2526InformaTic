@@ -1,18 +1,17 @@
 ﻿
 
+
 namespace AppForSEII2526.API.Models
 {
     public class RentalItem
     {
         public RentalItem() { }
 
-        public RentalItem(int carId, int quantity, int rentalId,Car car,Rental rental)
+        public RentalItem(int carId, int quantity, int rentalId)
         {
             CarId = carId;
             Quantity = quantity;
             RentalId = rentalId;
-            Car = car;
-            Rental = rental;
         }
 
         public int CarId { get; set; }
