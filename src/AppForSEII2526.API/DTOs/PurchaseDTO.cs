@@ -1,24 +1,21 @@
-﻿using Microsoft.Data.SqlClient;
-
-namespace AppForSEII2526.API.Models
+﻿namespace AppForSEII2526.API.DTOs
 {
-    public class Purchase
+    public class PurchaseDTO
     {
-        internal int purchasing;
 
         [Required]
         [StringLength(10, ErrorMessage = "Nombre no valido")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
-        public String DeliveryCarDealer {get; set;}
+        public String DeliveryCarDealer { get; set; }
 
         [Required]
         public PaymentMethod PaymentMethod { get; set; }
 
 
         [Required]
-        [DataType(System.ComponentModel.DataAnnotations.DataType.Date), Display(Name ="Purchase Date")]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date), Display(Name = "Purchase Date")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime PurchasingDate {get; set;}
+        public DateTime PurchasingDate { get; set; }
 
 
         [Required]
@@ -29,25 +26,20 @@ namespace AppForSEII2526.API.Models
         [Required]
         public int TotalPrice { get; set; }
 
-
         [Key]
-        public int Id {get; set; }
+        public int Id { get; set; }
 
-        public IList<PurchaseItem> purchaseItems { get; set; }   //Es una lista de PurchaseItems, Lo hemos hecho de tipo Ilist porque para relacionarlo con la clase Car necesitas la clase intermedia que es PurchaseItem
+        public IList<PurchaseItemDTO> purchaseItems { get; set; }   //Es una lista de PurchaseItems, Lo hemos hecho de tipo Ilist porque para relacionarlo con la clase Car necesitas la clase intermedia que es PurchaseItem
         public ApplicationUser User { get; set; }
-        public IEnumerable<object> PurchaseItems { get; set; }
-        public DateTime DateTime { get; set; }
-        public string Direccion { get; set; }
-        public string Apellidos { get; set; }
-        public string Name { get; set; }
 
-        public Purchase()
+
+        public PurchaseDTO()
         {
 
         }
 
 
-        public Purchase(string deliveryCarDealer, PaymentMethod paymentMethod, DateTime purchasingDate, int purchasingPrice, int id, IList<PurchaseItem> purchaseItem, ApplicationUser User)
+        public PurchaseDTO(string deliveryCarDealer, PaymentMethod paymentMethod, DateTime purchasingDate, int purchasingPrice, int id, IList<PurchaseItemDTO> purchaseItem, ApplicationUser User)
         {
             DeliveryCarDealer = deliveryCarDealer;
             PaymentMethod = paymentMethod;
@@ -75,7 +67,7 @@ namespace AppForSEII2526.API.Models
                 Id == purchase.Id &&
 
                 purchaseItems == purchase.purchaseItems &&
-                
+
                 this.User == purchase.User;
 
         }
@@ -88,6 +80,4 @@ namespace AppForSEII2526.API.Models
         }
 
     }
-
-
 }

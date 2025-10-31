@@ -1,0 +1,201 @@
+﻿using AppForSEII2526.API.DTOs;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol;
+
+namespace AppForSEII2526.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PurchasesController : ControllerBase   //ESTAMOS UTILIZANDO EL PURCHASE CONTROLLER PORQUE ESTAMOS OBTENIENDO LAS COMPRAS REALIZADAS
+    {
+
+        private readonly ApplicationDbContext _context;
+        private readonly ILogger<PurchasesController> _logger;
+
+
+        public PurchasesController(ApplicationDbContext context, ILogger<PurchasesController> logger)
+        {
+            _context = context;
+            _logger = logger;
+        }
+
+
+
+        [HttpPost]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(PurchaseForDetailsDTO), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
+        public async Task<ActionResult> CreatePurchase(PurchaseForCreateDTO purchaseForCreate)   //ESTAMOS CREANDO UNA NUEVA COMPRA A TRAVES DE ESTE METODO
+        {
+
+            if (purchaseForCreate.nombre == null || purchaseForCreate.apellido == null || purchaseForCreate.direccion == null)
+            {
+                return BadRequest("Faltan datos obligatorios");
+            }
+            // Lógica para crear la compra utilizando los datos del DTO
+            // Aquí deberías agregar la lógica para guardar la compra en la base de datos
+            return CreatedAtAction(nameof(CreatePurchase), new { id = 1 }, purchaseForCreate); // Retorna un ejemplo de respuesta creada
+
+            if (purchaseForCreate.paymentMethod == null)
+            {
+                return BadRequest("Falta el metodo de pago");
+
+            }
+
+
+            var user = _context.ApplicationUsers.FirstOrDefault(u => u.UserName == User.Identity.Name);
+
+            if (user == null)
+            {
+
+                ModelState.AddModelError("User", "Usuario no encontrado");
+
+            }
+
+            if (ModelState.ErrorCount > 0)
+            {
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+
+            var carModels = purchaseForCreate.purchaseItems.Select(pi => pi.Car.model.Name).ToList<String>();
+
+            var cars = _context.Cars
+                .Include(c => c.PurchaseItems)
+                .ThenInclude(pi => pi.purchase)
+                .Where(c => carModels.Contains(c.Model.Name)).ToList()
+                .Select(m => new
+                {
+                    m.Id,
+                    m.Model.Name,
+                    m.Color,
+                    m.Description,
+                    m.PurchasingPrice,
+                    m.QuantityForPurchasing
+
+                })
+                .ToList();
+
+            Purchase purchase = new Purchase(
+                purchaseForCreate.nombre + " " + purchaseForCreate.apellido,
+                purchaseForCreate.paymentMethod,
+                DateTime.Now,
+                purchaseForCreate.precio,
+                0,
+                new List<PurchaseItem>(),
+                user
+            );
+
+            purchase.TotalPrice = 0;
+
+            foreach (var item in purchaseForCreate.purchaseItems)
+            {
+                var car = cars.FirstOrDefault(c => c.Name == item.Car.model.Name);
+                if (car == null)
+                {
+                    return BadRequest($"El coche {item.Car.model.Name} no existe");
+                }
+                if (car.QuantityForPurchasing < item.Quantity)
+                {
+                    return Conflict($"No hay suficiente cantidad del coche {item.Car.model.Name} para comprar");
+                }
+                PurchaseItem purchaseItem = new PurchaseItem(
+                    car.Id,
+                    purchase.Id,
+                    item.Quantity,
+                    null,
+                    purchase
+                );
+                purchase.purchaseItems.Add(purchaseItem);
+                purchase.TotalPrice += car.PurchasingPrice;
+
+            }
+
+            purchase.TotalPrice += purchase.purchaseItems.Sum(pi => pi.car.PurchasingPrice * pi.Quantity);
+
+            if (ModelState.ErrorCount > 0)
+            {
+
+                return BadRequest(new ValidationProblemDetails(ModelState));
+
+            }
+
+            _context.Add(purchase);
+
+            try
+            {
+
+                await _context.SaveChangesAsync();
+
+            }
+            catch (DbUpdateException ex)
+            {
+
+                _logger.LogError(ex.Message);
+                ModelState.AddModelError("Purchase", $"Error al crear la compra, por favor, intentalo de nuevo");
+                return Conflict("Error" + ex.Message);
+
+            }
+
+            var purchaseDetails = new PurchaseForDetailsDTO(purchaseForCreate.nombre, purchaseForCreate.apellido,
+                purchaseForCreate.direccion, purchase.PurchasingDate, purchase.PurchasingPrice, purchaseForCreate.purchaseItems);
+
+            return CreatedAtAction("GetPurchase", new { id = purchase.Id }, purchaseDetails);
+
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(PurchaseForDetailsDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult> GetPurchase(int id)   //ESTE METODO NOS PERMITE OBTENER LAS COMPRAS REALIZADAS
+        {
+
+            if (_context.Purchases == null)
+            {
+
+                _logger.LogError("Error: Purchases table does not exist");
+                return NotFound("No hay compras realizadas");
+
+            }
+
+            var purchases = await _context.Purchases
+                .Where(p => p.Id == id)
+                .Include(p => p.purchaseItems)
+                .ThenInclude(pi => pi.car)
+                .ThenInclude(c => c.Model)
+                .Select(p => new PurchaseForDetailsDTO(
+                    p.Name,
+                    p.Apellidos,
+                    p.Direccion,
+                    p.DateTime,
+                    p.purchasing,
+                    p.purchaseItems
+                        .Select(pi => new PurchaseItemDTO
+                        {
+                            CarId = pi.car.Id,
+                            PurchaseId = pi.PurchaseId,
+                            Quantity = pi.Quantity
+                        })
+                        .ToList<PurchaseItemDTO>()
+                ))
+                .FirstOrDefaultAsync();
+
+            if (purchases == null )
+            {
+
+                _logger.LogError($"Error: Purchase with id {id} does not exist");
+                return NotFound();
+
+            }
+
+            return Ok(purchases);
+
+        }
+
+
+    }
+
+}

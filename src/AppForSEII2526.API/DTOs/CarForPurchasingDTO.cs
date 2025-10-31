@@ -2,7 +2,7 @@
 
 namespace AppForSEII2526.API.DTOs
 {
-    public class CarForPurchasingDTO
+    public class CarForPurchasingDTO    //DTO para enseñar los datos de los coches disponibles para comprar (DTO del select)
     {
 
         public CarForPurchasingDTO(int id, Model Model,String Color, String FuelType, String Manufacture, int PurchasingPrice)
