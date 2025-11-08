@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AppForSEII2526.API.Controllers;
+using AppForSEII2526.API.DTOs;
+using AppForSEII2526.API.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppForSEII2526.API.Controllers;
-using AppForSEII2526.API.DTOs;
 namespace AppForSEII2526.UT.CarsController_test
 {
     public class GetCarsForRenting_test : AppForSEII25264SqliteUT
@@ -27,7 +28,7 @@ namespace AppForSEII2526.UT.CarsController_test
                     ReviewItems="???",QuantityForRenting= 1, RentingPrice=1500,Model= models[2] }
             };
 
-            ApplicationUser user = new ApplicationUser(1, "Pepe", "Viyuela", "pepeV@uclm.es");
+            ApplicationUser user = new ApplicationUser("1", "Pepe", "Viyuela", "pepeV@uclm.es");
 
             var startDate = DateTime.Today.AddDays(1);
             var endDate = DateTime.Today.AddDays(7);
@@ -39,6 +40,90 @@ namespace AppForSEII2526.UT.CarsController_test
 
             rental.RentalItems.Add(rentalItem);
 
+            _context.Add(user);
+            _context.AddRange(models);
+            _context.AddRange(cars);
+            _context.Add(rental);
+            _context.SaveChanges();
+        }
+        public static IEnumerable<object[]> TestCasesFor_GetCarsForRental_OK()
+        {
+            var models = new List<Model>()
+            {
+                new Model {Name="Toyota R"},
+                new Model {Name="Toyota A"},
+                new Model {Name = "Toyota V"}
+            };
+
+            var carDTOs = new List<CarForRentalDTO>() {
+                new CarForRentalDTO(1,"rojo","Toyota",2000,"Gasoline",models[0]),
+                new CarForRentalDTO(2,"amarillo","Toyota",3000,"Gasoline",models[1]),
+                new CarForRentalDTO(3,"verde","Toyota",1500,"Gasoline",models[2]),
+            };
+
+            var carDTOsTC1 = new List<CarForRentalDTO>() { carDTOs[0], carDTOs[1], carDTOs[2] }
+                    //the GetMoviesForPurchase method returns the movies ordered by title
+                    .OrderBy(c => c.Model.Name).ToList();
+
+
+            var carDTOsTC2 = new List<CarForRentalDTO>() { carDTOs[1] };
+            var carDTOsTC3 = new List<CarForRentalDTO>() { carDTOs[0],carDTOs[2] }
+                //the GetMoviesForPurchase method returns the movies ordered by title
+                .OrderBy(c => c.Model.Name).ToList();
+
+            var allTests = new List<object[]>
+            {             //filters to apply - expected movies
+                                          //by default datefrom=today +1, dateto=today+2, thus movieDTOs[0] cannot be returned
+                new object[] { null, null, null,  carDTOsTC1,  },
+                new object[] { "Toyota A", null, null,  carDTOsTC2, },
+                new object[] { null, 1000, 2000,  carDTOsTC3, },
+            };
+
+            return allTests;
+        }
+
+        [Theory]
+        [MemberData(nameof(TestCasesFor_GetCarsForRental_OK))]
+        [Trait("Database", "WithoutFixture")]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task GetCarsForRental_OK_test(string? modelFilter, int? priceMin, int? priceMax, IList<CarForRentalDTO> expectedCars)
+        {
+            // Arrange
+            var controller = new CarsController(_context, null);
+
+            // Act
+            var result = await controller.GetCarsForRenting(modelFilter,priceMin,priceMax);
+
+            //Assert
+            //we check that the response type is OK 
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            //and obtain the list of movies
+            var movieDTOsActual = Assert.IsType<List<CarForRentalDTO>>(okResult.Value);
+            Assert.Equal(expectedCars, movieDTOsActual);
+
+        }
+
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        [Trait("Database", "WithoutFixture")]
+        public async Task GetCarsForRental_badrequest_test()
+        {
+            // Arrange
+            var mock = new Mock<ILogger<CarsController>>();
+            ILogger<CarsController> logger = mock.Object;
+            var controller = new CarsController(_context, logger);
+
+            // Act
+            var result = await controller.GetCarsForRenting("Toyota A",null,null);
+
+            //Assert
+            //we check that the response type is OK and obtain the list of movies
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
+            var problem = problemDetails.Errors.First().Value[0];
+
+            Assert.Equal("fromDate must be earlier than toDate", problem);
         }
     }
 }

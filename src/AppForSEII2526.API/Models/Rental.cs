@@ -54,8 +54,6 @@ namespace AppForSEII2526.API.Models
 
         public IList<RentalItem> RentalItems { get; set; }
 
-        public ApplicationUser User { get; set; }
-
         public string Name { get; set; }
 
         public string Surname { get; set; }
@@ -72,8 +70,7 @@ namespace AppForSEII2526.API.Models
                    TotalPrice == rental.TotalPrice &&
                    DeliveryCarDealer == rental.DeliveryCarDealer &&
                    RentalItems == rental.RentalItems &&
-                   PaymentMethod == rental.PaymentMethod &&
-                   User == rental.User;
+                   PaymentMethod == rental.PaymentMethod;
 
         }
 
@@ -88,7 +85,6 @@ namespace AppForSEII2526.API.Models
             hash.Add(DeliveryCarDealer);
             hash.Add(RentalItems);
             hash.Add(PaymentMethod);
-            hash.Add(User);
             return hash.ToHashCode();
         }
     }

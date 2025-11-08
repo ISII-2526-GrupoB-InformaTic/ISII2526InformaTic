@@ -19,6 +19,8 @@ namespace AppForSEII2526.API.DTOs
             public int RentalId { get; set; }
             public RentalDTO Rental { get; set; }
             public CarForRentalDTO Car { get; set; }
+            
+            public ApplicationUser User {  get; set; }
 
         public override bool Equals(object? obj)
         {
