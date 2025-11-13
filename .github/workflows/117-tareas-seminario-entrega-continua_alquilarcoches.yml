@@ -6,7 +6,10 @@ name: Build and deploy ASP.Net Core app to Azure Web App - alquilarcoches
 on:
   push:
     branches:
-      - 117-tareas-seminario-entrega-continua
+#      - 117-tareas-seminario-entrega-continua
+       - development
+    paths:
+      - 'src/AppForMovies.API**'
   workflow_dispatch:
 
 jobs:

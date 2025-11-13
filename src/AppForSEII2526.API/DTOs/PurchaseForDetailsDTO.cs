@@ -1,7 +1,7 @@
 ﻿
 namespace AppForSEII2526.API.DTOs
 {
-    public class PurchaseForDetailsDTO : PurchaseForDetailsDTO
+    public class PurchaseForDetailsDTO : PurchaseForCreateDTO
     //DTO para enseñar los datos de las compras realizadas (DTO del details)
     {
 
