@@ -30,7 +30,7 @@ namespace AppForSEII2526.API.Models
         public String Manufacturer {  get; set; }
 
         [Required]
-        public String ReviewItems {  get; set; }
+        public String? ReviewItems {  get; set; }
 
         [Required]
         [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
@@ -57,14 +57,11 @@ namespace AppForSEII2526.API.Models
 
         public IList<PurchaseItem> PurchaseItems { get; set; }
 
-        [Required]
-        public string FuelType { get; set; }
+        public string? FuelType { get; set; }
 
-        [Required]
-        public string EngDisplacement {  get; set; }
+        public string? EngDisplacement {  get; set; }
 
-        [Required]
-        public string RimSize { get; set; }
+        public string? RimSize { get; set; }
 
         public IList<MaintenanceType> MaintenanceTypes { get; set; }
 

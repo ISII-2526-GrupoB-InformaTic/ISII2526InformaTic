@@ -14,21 +14,21 @@ namespace AppForSEII2526.UT.CarsController_test
             //Arrange
             var models = new List<Model>()
             {
-                new Model {Name="Toyota R"},
-                new Model {Name="Toyota A"},
-                new Model {Name = "Toyota V"}
+                new Model {Id=1,Name="Toyota R"},
+                new Model {Id=2,Name="Toyota A"},
+                new Model {Id=3,Name="Toyota V"}
             }; 
             var cars = new List<Car>()
             {
                 new Car {carClass = "coche",Color="rojo",Description="un coche rojo",Manufacturer="Toyota",
-                    ReviewItems="???",QuantityForRenting= 1, RentingPrice=2000,Model= models[0] },
+                    QuantityForRenting= 1, RentingPrice=2000,Model= models[0],FuelType="Gasoline",ReviewItems="?" },
                 new Car {carClass = "coche",Color="amarillo",Description="un coche amarillo",Manufacturer="Toyota",
-                    ReviewItems="???",QuantityForRenting= 1, RentingPrice=3000,Model= models[1] },
+                    QuantityForRenting= 1, RentingPrice=3000,Model= models[1],FuelType="Gasoline",ReviewItems="?" },
                 new Car {carClass = "coche",Color="verde",Description="un coche verde",Manufacturer="Toyota",
-                    ReviewItems="???",QuantityForRenting= 1, RentingPrice=1500,Model= models[2] }
+                    QuantityForRenting= 1, RentingPrice=1500,Model= models[2],FuelType="Gasoline",ReviewItems="?" }
             };
 
-            ApplicationUser user = new ApplicationUser("1", "Pepe", "Viyuela", "pepeV@uclm.es");
+            ApplicationUser user = new ApplicationUser("1", "Pepe", "Viyuela", "pepeV@uclm.es", "Calle MiCasa Nº7");
 
             var startDate = DateTime.Today.AddDays(1);
             var endDate = DateTime.Today.AddDays(7);
@@ -36,7 +36,7 @@ namespace AppForSEII2526.UT.CarsController_test
 
             var rental = new Rental(endDate,startDate, DateTime.Now, (cars[1].RentingPrice * numDays), "Tony", new List<RentalItem>(), PaymentMethod.TarjetaDeCredito);
 
-            var rentalItem = new RentalItem(1, 5, 1, cars[0], rental);
+            var rentalItem = new RentalItem(1, 5, 1, cars[0], rental,user);
 
             rental.RentalItems.Add(rentalItem);
 
@@ -50,15 +50,15 @@ namespace AppForSEII2526.UT.CarsController_test
         {
             var models = new List<Model>()
             {
-                new Model {Name="Toyota R"},
-                new Model {Name="Toyota A"},
-                new Model {Name = "Toyota V"}
+                new Model {Id=1,Name="Toyota R"},
+                new Model {Id=2,Name="Toyota A"},
+                new Model {Id=3,Name="Toyota V"}
             };
 
             var carDTOs = new List<CarForRentalDTO>() {
-                new CarForRentalDTO(1,"rojo","Toyota",2000,"Gasoline",models[0]),
-                new CarForRentalDTO(2,"amarillo","Toyota",3000,"Gasoline",models[1]),
-                new CarForRentalDTO(3,"verde","Toyota",1500,"Gasoline",models[2]),
+                new CarForRentalDTO(1,"un coche rojo","rojo","Toyota",2000,1,"Gasoline",models[0]),
+                new CarForRentalDTO(2,"un coche amarillo","amarillo","Toyota",3000,1,"Gasoline",models[1]),
+                new CarForRentalDTO(3,"un coche verde","verde","Toyota",1500,1,"Gasoline",models[2]),
             };
 
             var carDTOsTC1 = new List<CarForRentalDTO>() { carDTOs[0], carDTOs[1], carDTOs[2] }
@@ -74,9 +74,9 @@ namespace AppForSEII2526.UT.CarsController_test
             var allTests = new List<object[]>
             {             //filters to apply - expected movies
                                           //by default datefrom=today +1, dateto=today+2, thus movieDTOs[0] cannot be returned
-                new object[] { null, null, null,  carDTOsTC1,  },
-                new object[] { "Toyota A", null, null,  carDTOsTC2, },
-                new object[] { null, 1000, 2000,  carDTOsTC3, },
+                new object[] {null, null, null,  carDTOsTC1,  },
+                new object[] {"Toyota A", null, null,  carDTOsTC2, },
+                new object[] {null, 1000, 2000,  carDTOsTC3, },
             };
 
             return allTests;
@@ -98,8 +98,8 @@ namespace AppForSEII2526.UT.CarsController_test
             //we check that the response type is OK 
             var okResult = Assert.IsType<OkObjectResult>(result);
             //and obtain the list of movies
-            var movieDTOsActual = Assert.IsType<List<CarForRentalDTO>>(okResult.Value);
-            Assert.Equal(expectedCars, movieDTOsActual);
+            var carDTOsActual = Assert.IsType<List<CarForRentalDTO>>(okResult.Value);
+            Assert.Equal(expectedCars, carDTOsActual);
 
         }
 
@@ -115,7 +115,7 @@ namespace AppForSEII2526.UT.CarsController_test
             var controller = new CarsController(_context, logger);
 
             // Act
-            var result = await controller.GetCarsForRenting("Toyota A",null,null);
+            var result = await controller.GetCarsForRenting("BMW",null,null);
 
             //Assert
             //we check that the response type is OK and obtain the list of movies
@@ -123,7 +123,7 @@ namespace AppForSEII2526.UT.CarsController_test
             var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
             var problem = problemDetails.Errors.First().Value[0];
 
-            Assert.Equal("fromDate must be earlier than toDate", problem);
+            Assert.Equal("No cars could be found meeting that criteria", problem);
         }
     }
 }

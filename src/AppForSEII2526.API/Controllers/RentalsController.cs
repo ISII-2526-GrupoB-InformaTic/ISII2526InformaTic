@@ -85,7 +85,7 @@ namespace AppForSEII2526.API.Controllers
                 else
                 {
                     // rental does not exist in the database yet and does not have a valid Id, so we must relate rentalitem to the object rental
-                    rental.RentalItems.Add(new RentalItem(car.Id, car.QuantityForRenting, rental.Id,new Car(),rental));
+                    rental.RentalItems.Add(new RentalItem(car.Id, car.QuantityForRenting, rental.Id,new Car(),rental,user));
                     item.Car.RentingPrice = car.RentingPrice;
                 }
             }
@@ -140,8 +140,8 @@ namespace AppForSEII2526.API.Controllers
                  .Include(r => r.RentalItems) //join table RentalItems
                     .ThenInclude(ri => ri.Car) //then join table Cars
                         .ThenInclude(car => car.Model) //then join table Model
-             .Select(r => new RentalDetailDTO(r.RentalItems.user, r.Surname,
-                    r.DeliveryAddress, r.PaymentMethod,
+             .Select(r => new RentalDetailDTO(r.RentalItems[0].User.Name, r.RentalItems[0].User.Surname,
+                    r.RentalItems[0].User.DeliveryAddress, r.PaymentMethod,
                     r.StartDate, r.EndDate,r.RentingDate,
                     r.RentalItems
                         .Select(ri => new RentalItemDTO(ri.Car.Id,ri.Quantity,ri.RentalId)).ToList<RentalItemDTO>()))

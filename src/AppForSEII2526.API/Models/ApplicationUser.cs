@@ -8,16 +8,16 @@ public class ApplicationUser : IdentityUser
     public IList<Purchase>? Purchases { get; set; }
     public IList<Rental>? Rentals { get; set; }
     public IList<Booking>? Bookings { get; set; }
-
+    public string DeliveryAddress { get; set; }
     public ApplicationUser() { }
-    IdentityUser user = new IdentityUser();
+
     
-    public ApplicationUser(string id, string name, string surname, string email)
+    public ApplicationUser(string id, string name, string surname, string email,string deliveryAddress)
     {
         Id = id;
         Name = name;
         Surname = surname;
         Email = email;
-
+        DeliveryAddress = deliveryAddress;
     }
 }

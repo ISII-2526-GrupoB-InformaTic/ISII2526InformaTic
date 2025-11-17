@@ -54,12 +54,6 @@ namespace AppForSEII2526.API.Models
 
         public IList<RentalItem> RentalItems { get; set; }
 
-        public string Name { get; set; }
-
-        public string Surname { get; set; }
-
-        public string DeliveryAddress { get; set; }
-
         public override bool Equals(object? obj)
         {
             return obj is Rental rental &&
