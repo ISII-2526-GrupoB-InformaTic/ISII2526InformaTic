@@ -14,21 +14,22 @@ namespace AppForSEII2526.UT.CarsController_test
             //Arrange
             var models = new List<Model>()
             {
-                new Model {Id=1,Name="Toyota R"},
-                new Model {Id=2,Name="Toyota A"},
-                new Model {Id=3,Name="Toyota V"}
-            }; 
+                new Model(1,"Toyota R"),
+                new Model(2,"Toyota A"),
+                new Model(3,"Toyota V")
+            };
             var cars = new List<Car>()
             {
                 new Car {carClass = "coche",Color="rojo",Description="un coche rojo",Manufacturer="Toyota",
-                    QuantityForRenting= 1, RentingPrice=2000,Model= models[0],FuelType="Gasoline",ReviewItems="?" },
+                    QuantityForRenting= 1, RentingPrice=2000,Model= models[0],FuelType="Gasoline" },
                 new Car {carClass = "coche",Color="amarillo",Description="un coche amarillo",Manufacturer="Toyota",
-                    QuantityForRenting= 1, RentingPrice=3000,Model= models[1],FuelType="Gasoline",ReviewItems="?" },
+                    QuantityForRenting= 1, RentingPrice=3000,Model= models[1],FuelType="Gasoline" },
                 new Car {carClass = "coche",Color="verde",Description="un coche verde",Manufacturer="Toyota",
-                    QuantityForRenting= 1, RentingPrice=1500,Model= models[2],FuelType="Gasoline",ReviewItems="?" }
+                    QuantityForRenting= 1, RentingPrice=1500,Model= models[2],FuelType="Gasoline" }
             };
 
             ApplicationUser user = new ApplicationUser("1", "Pepe", "Viyuela", "pepeV@uclm.es", "Calle MiCasa Nº7");
+
 
             var startDate = DateTime.Today.AddDays(1);
             var endDate = DateTime.Today.AddDays(7);
@@ -44,22 +45,25 @@ namespace AppForSEII2526.UT.CarsController_test
             _context.AddRange(models);
             _context.AddRange(cars);
             _context.Add(rental);
+            _context.Add(rentalItem);
             _context.SaveChanges();
         }
         public static IEnumerable<object[]> TestCasesFor_GetCarsForRental_OK()
         {
             var models = new List<Model>()
             {
-                new Model {Id=1,Name="Toyota R"},
-                new Model {Id=2,Name="Toyota A"},
-                new Model {Id=3,Name="Toyota V"}
+                new Model(1,"Toyota R"),
+                new Model(2,"Toyota A"),
+                new Model(3,"Toyota V")
             };
+
 
             var carDTOs = new List<CarForRentalDTO>() {
                 new CarForRentalDTO(1,"un coche rojo","rojo","Toyota",2000,1,"Gasoline",models[0]),
                 new CarForRentalDTO(2,"un coche amarillo","amarillo","Toyota",3000,1,"Gasoline",models[1]),
                 new CarForRentalDTO(3,"un coche verde","verde","Toyota",1500,1,"Gasoline",models[2]),
             };
+
 
             var carDTOsTC1 = new List<CarForRentalDTO>() { carDTOs[0], carDTOs[1], carDTOs[2] }
                     //the GetMoviesForPurchase method returns the movies ordered by title
@@ -70,6 +74,7 @@ namespace AppForSEII2526.UT.CarsController_test
             var carDTOsTC3 = new List<CarForRentalDTO>() { carDTOs[0],carDTOs[2] }
                 //the GetMoviesForPurchase method returns the movies ordered by title
                 .OrderBy(c => c.Model.Name).ToList();
+
 
             var allTests = new List<object[]>
             {             //filters to apply - expected movies

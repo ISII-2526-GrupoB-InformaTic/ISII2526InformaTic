@@ -1,4 +1,5 @@
 ﻿
+
 namespace AppForSEII2526.API.DTOs
 {
     public class RentalDetailDTO : RentalForCreateDTO
@@ -29,9 +30,6 @@ namespace AppForSEII2526.API.DTOs
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime RentingDate { get; set; }
 
-        [Required]
-        IList<RentalItemDTO> RentalItemDTOs { get; set; }
-
         private int NumberOfDays
         {
             get
@@ -51,7 +49,7 @@ namespace AppForSEII2526.API.DTOs
         }
 
         public RentalDetailDTO(string name, string surname, string deliveryAddress,PaymentMethod paymentMethod,
-            DateTime startDate, DateTime endDate,DateTime rentingDate, IList<RentalItemDTO> rentalItems)
+            DateTime startDate, DateTime endDate,DateTime rentingDate, IList<RentalItemDTO> rentalItems) :base (name,surname,deliveryAddress,paymentMethod,startDate,endDate,rentalItems)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Surname = surname ?? throw new ArgumentNullException(nameof(surname));
@@ -60,8 +58,10 @@ namespace AppForSEII2526.API.DTOs
             StartDate = startDate;
             EndDate = endDate;
             RentingDate = rentingDate;
-            RentalItemDTOs = rentalItems;
 
+            DateTime.SpecifyKind(StartDate, DateTimeKind.Local);
+            DateTime.SpecifyKind(EndDate, DateTimeKind.Local);
+            DateTime.SpecifyKind(RentingDate, DateTimeKind.Local);
         }
 
         public override bool Equals(object? obj)
@@ -73,7 +73,7 @@ namespace AppForSEII2526.API.DTOs
                    DeliveryAddress == dTO.DeliveryAddress &&
                    PaymentMethod == dTO.PaymentMethod &&
                    Quantity == dTO.Quantity &&
-                   EqualityComparer<IList<RentalItemDTO>>.Default.Equals(RentalItems, dTO.RentalItems) &&
+                   RentalItems.SequenceEqual(dTO.RentalItems) &&
                    EndDate == dTO.EndDate &&
                    StartDate == dTO.StartDate &&
                    RentingDate == dTO.RentingDate &&
@@ -87,7 +87,6 @@ namespace AppForSEII2526.API.DTOs
                    EndDate == dTO.EndDate &&
                    StartDate == dTO.StartDate &&
                    RentingDate == dTO.RentingDate &&
-                   EqualityComparer<IList<RentalItemDTO>>.Default.Equals(RentalItemDTOs, dTO.RentalItemDTOs) &&
                    NumberOfDays == dTO.NumberOfDays &&
                    TotalPrice == dTO.TotalPrice;
         }
@@ -115,7 +114,6 @@ namespace AppForSEII2526.API.DTOs
             hash.Add(EndDate);
             hash.Add(StartDate);
             hash.Add(RentingDate);
-            hash.Add(RentalItemDTOs);
             hash.Add(NumberOfDays);
             hash.Add(TotalPrice);
             return hash.ToHashCode();

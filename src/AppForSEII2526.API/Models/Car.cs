@@ -30,9 +30,6 @@ namespace AppForSEII2526.API.Models
         public String Manufacturer {  get; set; }
 
         [Required]
-        public String? ReviewItems {  get; set; }
-
-        [Required]
         [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
         public int QuantityForPurchasing {  get; set; }
 
@@ -70,14 +67,13 @@ namespace AppForSEII2526.API.Models
 
         }
 
-        public Car(string carClass, string color, string description, string manufacturer, string reviewItems, int id,
+        public Car(string carClass, string color, string description, string manufacturer, int id,
             int quantityForPurchasing, int quantityForRenting, int purchasingPrice, int rentingPrice, Model model, IList<RentalItem> rentalItems, IList<PurchaseItem> purchaseItems)
         {
             this.carClass = carClass;
             Color = color;
             Description = description;
             Manufacturer = manufacturer;
-            ReviewItems = reviewItems;
             Id = id;
             QuantityForPurchasing = quantityForPurchasing;
             QuantityForRenting = quantityForRenting;
@@ -95,7 +91,6 @@ namespace AppForSEII2526.API.Models
                    Color == car.Color &&
                    Description == car.Description &&
                    Manufacturer == car.Manufacturer &&
-                   ReviewItems == car.ReviewItems &&
                    Id == car.Id &&
                    QuantityForPurchasing == car.QuantityForPurchasing &&
                    QuantityForRenting == car.QuantityForRenting &&
@@ -114,7 +109,6 @@ namespace AppForSEII2526.API.Models
             hash.Add(Color);
             hash.Add(Description);
             hash.Add(Manufacturer);
-            hash.Add(ReviewItems);
             hash.Add(Id);
             hash.Add(QuantityForPurchasing);
             hash.Add(QuantityForRenting);

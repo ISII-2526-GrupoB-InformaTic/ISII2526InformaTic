@@ -1,4 +1,5 @@
-﻿namespace AppForSEII2526.API.DTOs
+﻿
+namespace AppForSEII2526.API.DTOs
 {
     public class CarForRentalDTO
     {
@@ -56,29 +57,30 @@
 
         public override bool Equals(object? obj)
         {
-            return obj is Car car &&
-                   Color == car.Color &&
-                   Description == car.Description &&
-                   Manufacturer == car.Manufacturer &&
-                   Id == car.Id &&
-                   QuantityForRenting == car.QuantityForRenting &&
-                   RentingPrice == car.RentingPrice &&
-                   Model == car.Model &&
-                   RentalItems == car.RentalItems;
-
+            return obj is CarForRentalDTO dTO &&
+                   Id == dTO.Id &&
+                   Color == dTO.Color &&
+                   Description == dTO.Description &&
+                   Manufacturer == dTO.Manufacturer &&
+                   QuantityForRenting == dTO.QuantityForRenting &&
+                   RentingPrice == dTO.RentingPrice &&
+                   EqualityComparer<Model>.Default.Equals(Model, dTO.Model) &&
+                   RentalItems.SequenceEqual(dTO.RentalItems) &&
+                   FuelType == dTO.FuelType;
         }
 
         public override int GetHashCode()
         {
             HashCode hash = new HashCode();
+            hash.Add(Id);
             hash.Add(Color);
             hash.Add(Description);
             hash.Add(Manufacturer);
-            hash.Add(Id);
             hash.Add(QuantityForRenting);
             hash.Add(RentingPrice);
             hash.Add(Model);
             hash.Add(RentalItems);
+            hash.Add(FuelType);
             return hash.ToHashCode();
         }
     }

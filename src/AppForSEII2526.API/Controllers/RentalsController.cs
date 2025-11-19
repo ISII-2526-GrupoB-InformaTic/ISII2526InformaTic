@@ -33,12 +33,12 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("RentalDateFrom&RentalDateTo", "Error! Your rental must end later than it starts");
 
             if (rentalForCreate.RentalItems.Count == 0)
-                ModelState.AddModelError("RentalItems", "Error! You must include at least one movie to be rented");
+                ModelState.AddModelError("RentalItems", "Error! You must include at least one car to be rented");
 
             // if (!_context.ApplicationUsers.Any(au=>au.UserName==rentalForCreate.CustomerUserName))
-            var user = _context.ApplicationUsers.FirstOrDefault(au => au.UserName == rentalForCreate.Name);
+            var user = _context.ApplicationUsers.FirstOrDefault(au => au.Name == rentalForCreate.Name);
             if (user == null)
-                ModelState.AddModelError("RentalApplicationUser", "Error! UserName is not registered");
+                ModelState.AddModelError("RentalApplicationUser", "Error! User is not registered");
 
             if (ModelState.ErrorCount > 0)
                 return BadRequest(new ValidationProblemDetails(ModelState));

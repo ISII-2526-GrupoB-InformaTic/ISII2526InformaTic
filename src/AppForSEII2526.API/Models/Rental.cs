@@ -63,7 +63,7 @@ namespace AppForSEII2526.API.Models
                    RentingDate == rental.RentingDate &&
                    TotalPrice == rental.TotalPrice &&
                    DeliveryCarDealer == rental.DeliveryCarDealer &&
-                   RentalItems == rental.RentalItems &&
+                   RentalItems.SequenceEqual(rental.RentalItems) &&
                    PaymentMethod == rental.PaymentMethod;
 
         }
