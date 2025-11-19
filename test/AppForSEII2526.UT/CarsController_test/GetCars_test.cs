@@ -38,7 +38,7 @@ namespace AppForSEII2526.UT.CarsController_test
 
             };
 
-            ApplicationUser user = new ApplicationUser("1", "Elena", "Navarro Martinez", "elena@uclm.es","Calle Callejon");
+            ApplicationUser user = new ApplicationUser("Elena", "Navarro Martinez", "elena@uclm.es","Calle Callejon");
 
             var Purchase = new Purchase("Elena Navarro", PaymentMethod.TarjetaDeCredito, DateTime.Now, 55000, 1, new List<PurchaseItem>(), user);
             var purchaseItem = new PurchaseItem(1, 1, 30, coche[1], Purchase);
