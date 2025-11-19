@@ -16,8 +16,9 @@ public class ApplicationUser : IdentityUser {
     public ApplicationUser() { }
 
 
-    public ApplicationUser(string name, string surname, string email, string deliveryAddress)
+    public ApplicationUser(string id, string name, string surname, string email, string deliveryAddress)
     {
+        Id = id;
         Name = name;
         Surname = surname;
         Email = email;
