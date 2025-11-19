@@ -55,6 +55,7 @@ namespace AppForSEII2526.UT.RentalsController_test
             _context.AddRange(models);
             _context.AddRange(cars);
             _context.Add(rental);
+            _context.Add(rentalItem);
             _context.SaveChanges();
         }
 

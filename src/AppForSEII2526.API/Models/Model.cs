@@ -35,7 +35,7 @@ namespace AppForSEII2526.API.Models
             return obj is Model model &&
                    Id == model.Id &&
                    Name == model.Name &&
-                   EqualityComparer<IList<Car>>.Default.Equals(Cars, model.Cars);
+                   Cars.SequenceEqual(model.Cars);      
         }
 
         public override int GetHashCode()

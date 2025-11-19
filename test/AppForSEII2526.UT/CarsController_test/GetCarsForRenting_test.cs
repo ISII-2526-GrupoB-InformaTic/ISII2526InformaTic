@@ -35,9 +35,9 @@ namespace AppForSEII2526.UT.CarsController_test
             var endDate = DateTime.Today.AddDays(7);
             var numDays = (endDate - startDate).Days;
 
-            var rental = new Rental(endDate,startDate, DateTime.Now, (cars[1].RentingPrice * numDays), "Tony", new List<RentalItem>(), PaymentMethod.TarjetaDeCredito);
+            var rental = new Rental(endDate,startDate, DateTime.Now, (cars[0].RentingPrice * numDays), "Tony", new List<RentalItem>(), PaymentMethod.TarjetaDeCredito);
 
-            var rentalItem = new RentalItem(1, 5, 1, cars[0], rental,user);
+            var rentalItem = new RentalItem(1, 1, 1, cars[0], rental,user);
 
             rental.RentalItems.Add(rentalItem);
 
@@ -63,22 +63,30 @@ namespace AppForSEII2526.UT.CarsController_test
                 new CarForRentalDTO(2,"un coche amarillo","amarillo","Toyota",3000,1,"Gasoline",models[1]),
                 new CarForRentalDTO(3,"un coche verde","verde","Toyota",1500,1,"Gasoline",models[2]),
             };
-
+            
+            /*
+            models[0].Cars = new List<Car> {
+                new Car(1,"un coche rojo","rojo","Toyota",2000,1,"Gasoline"),
+            };
+            models[1].Cars = new List<Car> {
+                new Car(2,"un coche amarillo","amarillo","Toyota",3000,1,"Gasoline"),
+            };
+            models[2].Cars = new List<Car> {
+                new Car(3,"un coche verde","verde","Toyota",1500,1,"Gasoline"),
+            };
+            */
 
             var carDTOsTC1 = new List<CarForRentalDTO>() { carDTOs[0], carDTOs[1], carDTOs[2] }
-                    //the GetMoviesForPurchase method returns the movies ordered by title
                     .OrderBy(c => c.Model.Name).ToList();
 
 
             var carDTOsTC2 = new List<CarForRentalDTO>() { carDTOs[1] };
             var carDTOsTC3 = new List<CarForRentalDTO>() { carDTOs[0],carDTOs[2] }
-                //the GetMoviesForPurchase method returns the movies ordered by title
                 .OrderBy(c => c.Model.Name).ToList();
 
 
             var allTests = new List<object[]>
-            {             //filters to apply - expected movies
-                                          //by default datefrom=today +1, dateto=today+2, thus movieDTOs[0] cannot be returned
+            {             
                 new object[] {null, null, null,  carDTOsTC1,  },
                 new object[] {"Toyota A", null, null,  carDTOsTC2, },
                 new object[] {null, 1000, 2000,  carDTOsTC3, },
@@ -98,7 +106,7 @@ namespace AppForSEII2526.UT.CarsController_test
 
             // Act
             var result = await controller.GetCarsForRenting(modelFilter,priceMin,priceMax);
-
+            
             //Assert
             //we check that the response type is OK 
             var okResult = Assert.IsType<OkObjectResult>(result);

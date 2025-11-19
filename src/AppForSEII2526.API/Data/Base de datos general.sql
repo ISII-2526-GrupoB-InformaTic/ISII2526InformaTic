@@ -16,3 +16,15 @@ INSERT INTO [dbo].[Cars] ([Id], [carClass], [Color], [Description], [Manufacture
 INSERT INTO [dbo].[Cars] ([Id], [carClass], [Color], [Description], [Manufacturer], [ReviewItems], [QuantityForPurchasing], [QuantityForRenting], [PurchasingPrice], [RentingPrice], [ModelId]) VALUES (1009, N'C-HR', N'Negro', N'4 puertas', N'Toyota', N'Financiacion', 5, 2, 30750, 2000, 6)
 INSERT INTO [dbo].[Cars] ([Id], [carClass], [Color], [Description], [Manufacturer], [ReviewItems], [QuantityForPurchasing], [QuantityForRenting], [PurchasingPrice], [RentingPrice], [ModelId]) VALUES (1010, N'C3', N'Azul-Marino', N'4 puertas', N'Citroen', N'Primera mano', 8, 4, 15940, 1500, 1)
 SET IDENTITY_INSERT [dbo].[Cars] OFF
+
+Set identity_insert [dbo].[Rentals] ON
+insert into [dbo].[Rentals] ([Id],[EndDate],[StartDate],[RentingDate],[TotalPrice],[DeliveryCarDealer],[PaymentMethod],[ApplicationUserId]) Values (101,'20-11-2025','25-11-2025','19-11-2025',0,N'Tony',1,1)
+insert into [dbo].[Rentals] ([Id],[EndDate],[StartDate],[RentingDate],[TotalPrice],[DeliveryCarDealer],[PaymentMethod],[ApplicationUserId]) Values (102,'20-11-2025','25-11-2025','19-11-2025',0,N'Tony',1,2)
+insert into [dbo].[Rentals] ([Id],[EndDate],[StartDate],[RentingDate],[TotalPrice],[DeliveryCarDealer],[PaymentMethod],[ApplicationUserId]) Values (103,'20-11-2025','25-11-2025','19-11-2025',0,N'Tony',1,3)
+Set identity_insert [dbo].[Rentals] OFF
+
+Set identity_insert [dbo].[RentalItems] ON
+insert into [dbo].[RentalItems] ([CarId],[RentalId],[Quantity],[UserId]) Values (1001,101,1,1)
+insert into [dbo].[RentalItems] ([Id],[EndDate],[StartDate],[RentingDate],[TotalPrice],[DeliveryCarDealer],[PaymentMethod],[ApplicationUserId]) Values (102,'20-11-2025','25-11-2025','19-11-2025',0,N'Tony',1,2)
+insert into [dbo].[RentalItems] ([Id],[EndDate],[StartDate],[RentingDate],[TotalPrice],[DeliveryCarDealer],[PaymentMethod],[ApplicationUserId]) Values (103,'20-11-2025','25-11-2025','19-11-2025',0,N'Tony',1,3)
+Set identity_insert [dbo].[RentalItems] OFF
