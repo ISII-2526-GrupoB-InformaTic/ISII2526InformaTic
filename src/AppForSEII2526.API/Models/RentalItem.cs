@@ -1,17 +1,21 @@
 ﻿
 
+
 namespace AppForSEII2526.API.Models
 {
     public class RentalItem
     {
         public RentalItem() { }
 
-        public RentalItem(int carId, int quantity, int rentalId)
+        public RentalItem(int carId, int quantity, int rentalId,Car car, Rental rental)
         {
             CarId = carId;
             Quantity = quantity;
             RentalId = rentalId;
-        }
+            Car = car;
+            Rental = rental;
+
+        }   
 
         public int CarId { get; set; }
         [Required]
@@ -20,6 +24,8 @@ namespace AppForSEII2526.API.Models
         public int RentalId { get; set; }
         public Rental Rental { get; set; }
         public Car Car { get; set; }
+
+
         public override bool Equals(object? obj)
         {
             return obj is RentalItem item &&

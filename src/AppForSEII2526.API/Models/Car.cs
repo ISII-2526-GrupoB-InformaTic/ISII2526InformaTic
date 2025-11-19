@@ -30,9 +30,6 @@ namespace AppForSEII2526.API.Models
         public String Manufacturer {  get; set; }
 
         [Required]
-        public String ReviewItems {  get; set; }
-
-        [Required]
         [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
         public int QuantityForPurchasing {  get; set; }
 
@@ -57,14 +54,11 @@ namespace AppForSEII2526.API.Models
 
         public IList<PurchaseItem> PurchaseItems { get; set; }
 
-        [Required]
-        public string FuelType { get; set; }
+        public string? FuelType { get; set; }
 
-        [Required]
-        public string EngDisplacement {  get; set; }
+        public string? EngDisplacement {  get; set; }
 
-        [Required]
-        public string RimSize { get; set; }
+        public string? RimSize { get; set; }
 
         public IList<MaintenanceType> MaintenanceTypes { get; set; }
 
@@ -73,14 +67,13 @@ namespace AppForSEII2526.API.Models
 
         }
 
-        public Car(string carClass, string color, string description, string manufacturer, string reviewItems, int id,
+        public Car(string carClass, string color, string description, string manufacturer, int id,
             int quantityForPurchasing, int quantityForRenting, int purchasingPrice, int rentingPrice, Model model, IList<RentalItem> rentalItems, IList<PurchaseItem> purchaseItems)
         {
             this.carClass = carClass;
             Color = color;
             Description = description;
             Manufacturer = manufacturer;
-            ReviewItems = reviewItems;
             Id = id;
             QuantityForPurchasing = quantityForPurchasing;
             QuantityForRenting = quantityForRenting;
@@ -91,6 +84,18 @@ namespace AppForSEII2526.API.Models
             PurchaseItems = purchaseItems;
         }
 
+        public Car(int id, string description, string color, string manufacturer, int rentingPrice,
+            int quantityForRenting,string fuelType)
+        {
+            Id = id;
+            Color = color;
+            Description = description;
+            Manufacturer = manufacturer;
+            RentingPrice = rentingPrice;
+            QuantityForRenting = quantityForRenting;
+            FuelType = fuelType;
+        }
+
         public override bool Equals(object? obj)
         {
             return obj is Car car &&
@@ -98,7 +103,6 @@ namespace AppForSEII2526.API.Models
                    Color == car.Color &&
                    Description == car.Description &&
                    Manufacturer == car.Manufacturer &&
-                   ReviewItems == car.ReviewItems &&
                    Id == car.Id &&
                    QuantityForPurchasing == car.QuantityForPurchasing &&
                    QuantityForRenting == car.QuantityForRenting &&
@@ -117,7 +121,6 @@ namespace AppForSEII2526.API.Models
             hash.Add(Color);
             hash.Add(Description);
             hash.Add(Manufacturer);
-            hash.Add(ReviewItems);
             hash.Add(Id);
             hash.Add(QuantityForPurchasing);
             hash.Add(QuantityForRenting);

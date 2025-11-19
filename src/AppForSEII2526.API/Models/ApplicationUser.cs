@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace AppForSEII2526.API.Models;
-
-// Add profile data for application users by adding properties to the ApplicationUser class
-public class ApplicationUser : IdentityUser {
-
+﻿// Add profile data for application users by adding properties to the ApplicationUser class
+public class ApplicationUser : IdentityUser
+{
     [Required]
     public string Name { get; set; }
     [Required]
@@ -15,9 +11,10 @@ public class ApplicationUser : IdentityUser {
     public string DeliveryAddress { get; set; }
     public ApplicationUser() { }
 
-
-    public ApplicationUser(string name, string surname, string email, string deliveryAddress)
+    
+    public ApplicationUser(string id, string name, string surname, string email,string deliveryAddress)
     {
+        Id = id;
         Name = name;
         Surname = surname;
         Email = email;

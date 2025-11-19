@@ -9,7 +9,7 @@ namespace AppForSEII2526.API.Models
         }
 
         public Rental(DateTime endDate, DateTime startDate, DateTime rentingDate,
-            int totalPrice, string deliveryCarDealer, IList<RentalItem> rentalItems, PaymentMethod paymentMethod)
+            int totalPrice, string deliveryCarDealer, IList<RentalItem> rentalItems, PaymentMethod paymentMethod, ApplicationUser user)
         {
             EndDate = endDate;
             StartDate = startDate;
@@ -18,7 +18,7 @@ namespace AppForSEII2526.API.Models
             DeliveryCarDealer = deliveryCarDealer;
             RentalItems = rentalItems;
             PaymentMethod = paymentMethod;
-
+            User = user;
         }
         [Key]
         public int Id { get; set; }
@@ -53,14 +53,7 @@ namespace AppForSEII2526.API.Models
         public PaymentMethod PaymentMethod { get; set; }
 
         public IList<RentalItem> RentalItems { get; set; }
-
         public ApplicationUser User { get; set; }
-
-        public string Name { get; set; }
-
-        public string Surname { get; set; }
-
-        public string DeliveryAddress { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -71,9 +64,8 @@ namespace AppForSEII2526.API.Models
                    RentingDate == rental.RentingDate &&
                    TotalPrice == rental.TotalPrice &&
                    DeliveryCarDealer == rental.DeliveryCarDealer &&
-                   RentalItems == rental.RentalItems &&
-                   PaymentMethod == rental.PaymentMethod &&
-                   User == rental.User;
+                   RentalItems.SequenceEqual(rental.RentalItems) &&
+                   PaymentMethod == rental.PaymentMethod;
 
         }
 
@@ -88,7 +80,6 @@ namespace AppForSEII2526.API.Models
             hash.Add(DeliveryCarDealer);
             hash.Add(RentalItems);
             hash.Add(PaymentMethod);
-            hash.Add(User);
             return hash.ToHashCode();
         }
     }

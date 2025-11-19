@@ -1,6 +1,8 @@
 ﻿using AppForSEII2526.API.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AppForSEII2526.API.Controllers
 {
@@ -39,14 +41,22 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(IList<CarForRentalDTO>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetCarsForRenting(string? modelFilter, int? priceMin, int? priceMax)    //AÑADIMOS LOS FILTROS DE MODELO Y PRECIO MINIMO Y MAXIMO
         {
+
             IList<CarForRentalDTO> cars = await _context.Cars
                 .Include(c => c.Model)
                 .Where(c => ((modelFilter == null) || (c.Model.Name.Equals(modelFilter))) &&
                     ((c.RentingPrice <= priceMax) || (priceMax==null)) &&
                     ((c.RentingPrice >= priceMin) || (priceMin==null)))
                 .OrderBy(c=> c.Model.Name)  
-                .Select(c => new CarForRentalDTO(c.Id,c.Color,c.Manufacturer,c.RentingPrice,c.FuelType,c.Model))
+                .Select(c => new CarForRentalDTO(c.Id,c.Description,c.Color,c.Manufacturer,c.RentingPrice,c.QuantityForRenting,c.FuelType,c.Model.Name))
                 .ToListAsync();
+            if (cars.IsNullOrEmpty())
+            {
+                ModelState.AddModelError("nullSearch", "No cars could be found meeting that criteria");
+                _logger.LogError("Error: No cars could be found meeting that criteria");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
             return Ok(cars);
         }
 
