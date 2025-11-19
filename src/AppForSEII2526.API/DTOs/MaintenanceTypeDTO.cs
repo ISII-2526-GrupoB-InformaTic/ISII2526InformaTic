@@ -8,6 +8,12 @@ namespace AppForSEII2526.API.DTOs
         {
 
         }
+
+        public MaintenanceTypeDTO(int Id, string Type)
+        {
+            this.Id = Id;
+            this.Type = Type;
+        }
         public MaintenanceTypeDTO(int Id, string Type, Maintenance Maintenance) : base()
         {
             this.Id = Id;
@@ -21,5 +27,17 @@ namespace AppForSEII2526.API.DTOs
         public string Type { get; set; }
         public Maintenance Maintenance { get; set; }
 
+        public override bool Equals(object? obj)
+        {
+            return obj is MaintenanceTypeDTO dTO &&
+                   Id == dTO.Id &&
+                   Type == dTO.Type &&
+                   Maintenance == dTO.Maintenance;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Type, Maintenance);
+        }
     }
 }

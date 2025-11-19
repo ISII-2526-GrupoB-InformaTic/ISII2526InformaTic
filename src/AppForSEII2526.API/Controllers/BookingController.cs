@@ -2,6 +2,8 @@
 using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace AppForSEII2526.API.Controllers
 {
@@ -16,53 +18,6 @@ namespace AppForSEII2526.API.Controllers
         {
             _context = context;
             _logger = logger;
-        }
-
-        [HttpPost]
-        [Route("[action]")]
-        [ProducesResponseType(typeof(BookingDetailDTO), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
-        public async Task<ActionResult> CreateBooking(BookingForCreateDTO bookingForCreate)
-        {
-            if (bookingForCreate.BookingItems.Count == 0)
-                ModelState.AddModelError("BookingItems", "Error! You must include at least one maintenance for booking");
-
-            var user = _context.ApplicationUsers.FirstOrDefault(au => au.UserName == bookingForCreate.Name);
-            if (user == null)
-                ModelState.AddModelError("BookingApplicationUser", "Error! UserName is not registered");
-
-            if (ModelState.ErrorCount > 0)
-                return BadRequest(new ValidationProblemDetails(ModelState));
-
-            Booking booking = new Booking(bookingForCreate.DeliveryAddress, bookingForCreate.Surname, DateTime.Today.AddDays(20), 1, bookingForCreate.PaymentMethod,
-                new List<BookingItem>(), user);
-
-            foreach (var item in bookingForCreate.BookingItems)
-            {
-                booking.BookingItems.Add(new BookingItem(item.BookingId, item.Comment, item.MantID, booking,
-                    new Maintenance(item.Maintenance.Id, item.Maintenance.Name, item.Maintenance.NumberOfDays, item.Maintenance.Price, null, null)));
-            }
-
-            _context.Add(booking);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                ModelState.AddModelError("Booking", "Error! There was an error while saving your booking, please, try again later");
-                return Conflict("Error: " + ex.Message);
-            }
-
-            var bookingDetail = new BookingDetailDTO(bookingForCreate.Name, bookingForCreate.Surname,
-                bookingForCreate.DeliveryAddress, bookingForCreate.PaymentMethod,
-                DateTime.Now,
-                bookingForCreate.BookingItems);
-
-            return CreatedAtAction("GetBooking", new { id = booking.Id }, bookingDetail);
         }
         [HttpGet]
         [Route("[action]")]
@@ -80,15 +35,13 @@ namespace AppForSEII2526.API.Controllers
                 .Where(r => r.Id == id)
                 .Include(r => r.BookingItems)
                     .ThenInclude(ri => ri.Maintenance)
-                        .ThenInclude(ris => ris.MaintenanceTypes)
-                .Select(r => new BookingDetailDTO(r.clientName, r.clientSurname,
-                    r.clientAdress, r.PaymentMethod,
+                        .ThenInclude(maintenance => maintenance.MaintenanceTypes)
+                .Select(r => new BookingDetailDTO(r.Id,r.clientName, r.clientSurname,
+                    r.clientAdress, (PaymentMethod)r.PaymentMethod, r.clientPhoneNumber,
                     r.Date,
                     r.BookingItems
-                        .Select(ri => new BookingItemDTO(ri.BookingId,
-                                ri.Comment, ri.MantID,
-                                new BookingDTO(r.clientName, r.clientSurname, r.Date, r.Id, r.PaymentMethod, r.BookingItems.Select(bi => new BookingItemDTO(bi.BookingId, bi.Comment, bi.MantID, null, null)).ToList(), r.User),
-                                new MaintenanceDTO(ri.Maintenance.Id, ri.Maintenance.Name, ri.Maintenance.NumberOfDays, ri.Maintenance.Price, null)))
+                        .Select(ri => new BookingItemDTO(
+                                ri.Comment,new BookingDTO(ri.Booking.Date,ri.Booking.Id,ri.Booking.PaymentMethod,ri.Booking.User),new MaintenanceDTO(ri.Maintenance.Id,ri.Maintenance.Name,ri.Maintenance.NumberOfDays,ri.Maintenance.Price,ri.Maintenance.MaintenanceTypes.Select(mt=>new MaintenanceTypeDTO(mt.Id,mt.Type)).ToList())))
                         .ToList()))
                 .FirstOrDefaultAsync();
 
@@ -100,6 +53,99 @@ namespace AppForSEII2526.API.Controllers
 
             return Ok(booking);
         }
+        [HttpPost]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(BookingDetailDTO), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
+        public async Task<ActionResult> CreateBooking(BookingForCreateDTO bookingForCreate)
+        {
 
+            if (bookingForCreate.BookingItems == null || bookingForCreate.BookingItems.Count == 0)
+                ModelState.AddModelError("BookingItems", "Error! You must include at least one maintenance for booking");
+
+
+            if (string.IsNullOrWhiteSpace(bookingForCreate.Name))
+                ModelState.AddModelError(nameof(bookingForCreate.Name), "Error! Name is required");
+
+            if (string.IsNullOrWhiteSpace(bookingForCreate.Surname))
+                ModelState.AddModelError(nameof(bookingForCreate.Surname), "Error! Surname is required");
+
+            if (string.IsNullOrWhiteSpace(bookingForCreate.DeliveryAddress))
+                ModelState.AddModelError(nameof(bookingForCreate.DeliveryAddress), "Error! Delivery address is required");
+
+
+            if (!Enum.IsDefined(typeof(PaymentMethod), bookingForCreate.PaymentMethod))
+                ModelState.AddModelError(nameof(bookingForCreate.PaymentMethod), "Error! A valid payment method is required");
+
+            if (bookingForCreate.BookingItems != null)
+            {
+                for (int i = 0; i < bookingForCreate.BookingItems.Count; i++)
+                {
+                    var item = bookingForCreate.BookingItems[i];
+                    if (string.IsNullOrWhiteSpace(item.Comment) || item.Comment.Length < 20 || item.Comment.Length > 200)
+                    {
+                        ModelState.AddModelError($"BookingItems[{i}].Comment", "Error! Comment is required for each maintenance (min 20 characters)");
+                    }
+                }
+            }
+
+            var user = _context.ApplicationUsers.FirstOrDefault(au => au.Name == bookingForCreate.Name);
+            if (user == null)
+                ModelState.AddModelError("BookingApplicationUser", "Error! UserName is not registered");
+
+            if (ModelState.ErrorCount > 0)
+                return BadRequest(new ValidationProblemDetails(ModelState));
+
+            Booking booking = new Booking(DateTime.Today, bookingForCreate.PaymentMethod, new List<BookingItem>(), user);
+            booking.Price = bookingForCreate.Price;
+            booking.numberOfDays = bookingForCreate.numberOfDays;
+            foreach (var itemDto in bookingForCreate.BookingItems)
+            {
+                var maintenance = await _context.Maintenances
+                    .FirstOrDefaultAsync(m => m.Id == itemDto.MantID);
+
+                if (maintenance == null)
+                {
+                    ModelState.AddModelError("BookingItems",
+                        $"The maintenance with id {itemDto.MantID} does not exist");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
+                }
+
+                var bookingItem = new BookingItem
+                {
+                    Comment = itemDto.Comment,
+                    Booking = booking,              
+                    Maintenance = maintenance,       
+                    MantID = maintenance.Id
+                };
+
+                booking.BookingItems.Add(bookingItem);
+            }
+            if (ModelState.ErrorCount > 0)
+            {
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+            _context.Add(booking);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                ModelState.AddModelError("Booking", $"Error! There was an error while saving your booking, plese, try again later");
+                return Conflict("Error" + ex.Message);
+
+            }
+            var bookingDetail= new BookingDetailDTO(booking.Id, booking.clientName, booking.clientSurname,
+                    booking.clientAdress, (PaymentMethod)booking.PaymentMethod, booking.clientPhoneNumber,
+                    booking.Date,
+                    booking.BookingItems
+                        .Select(ri => new BookingItemDTO(
+                                ri.Comment,new BookingDTO(ri.Booking.Date,ri.Booking.Id,ri.Booking.PaymentMethod,ri.Booking.User),new MaintenanceDTO(ri.Maintenance.Id,ri.Maintenance.Name,ri.Maintenance.NumberOfDays,ri.Maintenance.Price,ri.Maintenance.MaintenanceTypes.Select(mt=>new MaintenanceTypeDTO(mt.Id,mt.Type)).ToList())))
+                        .ToList());
+            return CreatedAtAction("GetBooking", new { id = booking.Id }, bookingDetail);
+        }
     }
 }
