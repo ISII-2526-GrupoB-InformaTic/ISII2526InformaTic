@@ -5,7 +5,7 @@ namespace AppForSEII2526.API.DTOs
     public class MaintenanceDTO
     {
         public MaintenanceDTO() { }
-        public MaintenanceDTO(int Id, string Name, int NumberOfDays, float Price, IList<MaintenanceTypeDTO> MaintenanceTypes) : base()
+        public MaintenanceDTO(int Id, string Name, int NumberOfDays, int Price, IList<MaintenanceTypeDTO> MaintenanceTypes) : base()
         {
             this.Id = Id;
             this.Name = Name;
@@ -21,8 +21,22 @@ namespace AppForSEII2526.API.DTOs
         public string Name { get; set; }
         [Range(1, 10, ErrorMessage = "Minimo 1, Maximo 10")]
         public int NumberOfDays { get; set; }
-        public float Price { get; set; }
+        public int Price { get; set; }
         public IList<MaintenanceTypeDTO> MaintenanceTypes { get; set; }
 
+        public override bool Equals(object? obj)
+        {
+            return obj is MaintenanceDTO dTO &&
+                   Id == dTO.Id &&
+                   Name == dTO.Name &&
+                   NumberOfDays == dTO.NumberOfDays &&
+                   Price == dTO.Price &&
+                   MaintenanceTypes.SequenceEqual(dTO.MaintenanceTypes);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name, NumberOfDays, Price, MaintenanceTypes);
+        }
     }
 }
