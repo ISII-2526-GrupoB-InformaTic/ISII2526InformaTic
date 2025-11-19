@@ -3,6 +3,7 @@ using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 
 builder.Services.AddControllers()
@@ -114,5 +115,9 @@ app.MapControllers();
 
 app.Run();
 
+
 //Expose the implicitly defined Program class to the test project by doing:
-public partial class Program { }
+public partial class Program {
+
+
+}

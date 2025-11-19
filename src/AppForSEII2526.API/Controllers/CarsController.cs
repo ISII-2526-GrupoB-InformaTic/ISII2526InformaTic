@@ -21,6 +21,7 @@ namespace AppForSEII2526.API.Controllers
             _logger = logger;
         }
 
+        /*
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(decimal), (int)HttpStatusCode.OK)]
@@ -35,6 +36,9 @@ namespace AppForSEII2526.API.Controllers
             decimal result = decimal.Round(op1 / op2, 2);
             return Ok(result);
         }
+
+        */
+
 
         [HttpGet]
         [Route("[action]")]
@@ -65,21 +69,20 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<CarForPurchasingDTO>), (int)HttpStatusCode.OK)]
 
-        public async Task<ActionResult> GetCarForPurchase(string? name, string? color)      //AÑADIMOS LOS FILTROS DE NOMBRE Y COLOR
+        public async Task<ActionResult> GetCarForPurchase(string? name, string? color)      //AÑADIMOS LOS FILTROS DE NOMBRE Y COLOR    (GET)
         {
 
             IList<CarForPurchasingDTO> cars = await _context.Cars
                 .Include(m => m.Model)
                 .Where(m => (m.Model.Name.Contains(name) || (name == null)) &&
                 (m.Color.Equals(color) || (color == null)))
-                .Select(m => new CarForPurchasingDTO(m.Id, m.Model, m.Color, m.FuelType, m.Manufacturer, m.PurchasingPrice))
+                .OrderBy (c=> c.Model.Name)
+                .Select(m => new CarForPurchasingDTO(m.Id, m.Model.Name, m.Color, m.FuelType, m.Manufacturer, m.PurchasingPrice))
                 .ToListAsync();
 
             return Ok(cars);
 
         }
-
-
 
 
     }

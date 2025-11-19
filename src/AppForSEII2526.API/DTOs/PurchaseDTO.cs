@@ -60,7 +60,7 @@
 
                 PaymentMethod == purchase.PaymentMethod &&
 
-                PurchasingDate == purchase.PurchasingDate &&
+                PurchasingDate == purchase.PurchaseDate &&
 
                 PurchasingPrice == purchase.PurchasingPrice &&
 
