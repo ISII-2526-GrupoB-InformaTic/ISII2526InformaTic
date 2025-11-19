@@ -8,7 +8,7 @@ namespace AppForSEII2526.API.Models
         {
 
         }
-        public Maintenance(int Id, string Name, int NumberOfDays, float Price, IList<BookingItem> BookingItems, IList<MaintenanceType> MaintenanceTypes) : base()
+        public Maintenance(int Id, string Name, int NumberOfDays, int Price, IList<BookingItem> BookingItems, IList<MaintenanceType> MaintenanceTypes) : base()
         {
             this.Id = Id;
             this.Name = Name;
@@ -24,7 +24,7 @@ namespace AppForSEII2526.API.Models
         public string Name { get; set; }
         [Range(1, 10, ErrorMessage = "Minimo 1, Maximo 10")]
         public int NumberOfDays { get; set; }
-        public float Price { get; set; }
+        public int Price { get; set; }
         public IList<BookingItem> BookingItems { get; set; }
         public IList<MaintenanceType> MaintenanceTypes { get; set; }
 
@@ -35,7 +35,7 @@ namespace AppForSEII2526.API.Models
                    Name == maintenance.Name &&
                    NumberOfDays == maintenance.NumberOfDays &&
                    Price == maintenance.Price &&
-                   EqualityComparer<IList<BookingItem>>.Default.Equals(BookingItems, maintenance.BookingItems) &&
+                   BookingItems.SequenceEqual( maintenance.BookingItems) &&
                    EqualityComparer<IList<MaintenanceType>>.Default.Equals(MaintenanceTypes, maintenance.MaintenanceTypes);
         }
 

@@ -183,7 +183,7 @@ namespace AppForSEII2526.API.Controllers
                 ))
                 .FirstOrDefaultAsync();
 
-            if (purchases == null )
+            if (purchases == null)
             {
 
                 _logger.LogError($"Error: Purchase with id {id} does not exist");

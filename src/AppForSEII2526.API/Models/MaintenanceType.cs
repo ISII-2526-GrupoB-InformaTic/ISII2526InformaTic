@@ -8,6 +8,11 @@ namespace AppForSEII2526.API.Models
         {
 
         }
+
+        public MaintenanceType(string Type)
+        {
+            this.Type = Type;
+        }
         public MaintenanceType(int Id, string Type, Maintenance Maintenance) : base()
         {
             this.Id = Id;
