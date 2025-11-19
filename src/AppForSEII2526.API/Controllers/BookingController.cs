@@ -103,12 +103,12 @@ namespace AppForSEII2526.API.Controllers
             foreach (var itemDto in bookingForCreate.BookingItems)
             {
                 var maintenance = await _context.Maintenances
-                    .FirstOrDefaultAsync(m => m.Id == itemDto.MantID);
+                    .FirstOrDefaultAsync(m => m.Id == itemDto.MaintenanceId);
 
                 if (maintenance == null)
                 {
                     ModelState.AddModelError("BookingItems",
-                        $"The maintenance with id {itemDto.MantID} does not exist");
+                        $"The maintenance with id {itemDto.MaintenanceId} does not exist");
                     return BadRequest(new ValidationProblemDetails(ModelState));
                 }
 
@@ -116,8 +116,9 @@ namespace AppForSEII2526.API.Controllers
                 {
                     Comment = itemDto.Comment,
                     Booking = booking,              
-                    Maintenance = maintenance,       
-                    MantID = maintenance.Id
+                    Maintenance = maintenance,
+                    BookingId = booking.Id,
+                    MaintenanceId = maintenance.Id
                 };
 
                 booking.BookingItems.Add(bookingItem);

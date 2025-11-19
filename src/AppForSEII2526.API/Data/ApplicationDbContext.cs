@@ -19,7 +19,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<Model>().HasKey(pi => new { pi.Id });
         builder.Entity<Purchase>().HasKey(pi => new { pi.Id });
         builder.Entity<PurchaseItem>().HasKey(pi => new { pi.PurchaseId,pi.CarId });
-        builder.Entity<BookingItem>().HasKey(pi => new { pi.BookingId, pi.MantID });
+        builder.Entity<BookingItem>().HasKey(pi => new { pi.BookingId, pi.MaintenanceId });
         builder.Entity<Maintenance>().HasKey(pi => new { pi.Id });
         builder.Entity<MaintenanceType>().HasKey(pi => new { pi.Id });
         builder.Entity<ApplicationUser>().HasKey(pi => new { pi.Id });
