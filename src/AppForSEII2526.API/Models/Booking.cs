@@ -9,16 +9,26 @@ namespace AppForSEII2526.API.Models
         {
 
         }
-        public Booking(string clientAddress,string clientSurname, DateTime Date, int Id, PaymentMethod PaymentMethod, IList<BookingItem> BookingItems, ApplicationUser usuario ) : base()
+        public Booking(DateTime Date, PaymentMethod PaymentMethod, ApplicationUser usuario) : base()
         {
-            this.clientAdress = clientAddress;
             this.Date = Date;
-            this.Id = Id;
+            this.PaymentMethod = PaymentMethod;
+            this.User = usuario;
+            clientAdress = usuario.DeliveryAddress;
+            clientName = usuario.Name;
+            clientSurname = usuario.Surname;
+            clientPhoneNumber = usuario.PhoneNumber;
+        }
+        public Booking(DateTime Date, PaymentMethod PaymentMethod, IList<BookingItem> BookingItems, ApplicationUser usuario) : base()
+        {
+            this.Date = Date;
             this.PaymentMethod = PaymentMethod;
             this.BookingItems = BookingItems;
-            this.clientSurname = clientSurname;
             this.User = usuario;
-            clientName = usuario.UserName;
+            this.UserId = usuario.Id;
+            clientAdress = usuario.DeliveryAddress;
+            clientName = usuario.Name;
+            clientSurname = usuario.Surname;
             clientPhoneNumber = usuario.PhoneNumber;
         }
 
@@ -36,22 +46,45 @@ namespace AppForSEII2526.API.Models
         public DateTime Date { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public IList<BookingItem> BookingItems { get; set; }
+        public string UserId { get; set; }
         public ApplicationUser User { get; set; }
+        public int numberOfDays { get; set; }
+        public int Price { get; set; }
+
 
         public override bool Equals(object? obj)
         {
             return obj is Booking booking &&
                    Id == booking.Id &&
+                   UserId == booking.UserId &&
                    clientAdress == booking.clientAdress &&
+                   clientName == booking.clientName &&
                    clientPhoneNumber == booking.clientPhoneNumber &&
+                   clientSurname == booking.clientSurname &&
                    Date == booking.Date &&
+                   numberOfDays == booking.numberOfDays &&
+                   Price == booking.Price &&
                    PaymentMethod == booking.PaymentMethod &&
-                   EqualityComparer<IList<BookingItem>>.Default.Equals(BookingItems, booking.BookingItems);
+                   BookingItems.SequenceEqual( booking.BookingItems) &&
+                   EqualityComparer<ApplicationUser>.Default.Equals(User, booking.User);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, clientAdress, clientName, clientPhoneNumber, clientSurname, Date, PaymentMethod, BookingItems);
+            HashCode hash = new HashCode();
+            hash.Add(Id);
+            hash.Add(UserId);
+            hash.Add(clientAdress);
+            hash.Add(clientName);
+            hash.Add(clientPhoneNumber);
+            hash.Add(clientSurname);
+            hash.Add(Date);
+            hash.Add(numberOfDays);
+            hash.Add(Price);
+            hash.Add(PaymentMethod);
+            hash.Add(BookingItems);
+            hash.Add(User);
+            return hash.ToHashCode();
         }
     }
 }

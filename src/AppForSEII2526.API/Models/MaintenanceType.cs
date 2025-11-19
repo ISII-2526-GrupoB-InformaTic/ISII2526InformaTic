@@ -8,6 +8,11 @@ namespace AppForSEII2526.API.Models
         {
 
         }
+
+        public MaintenanceType(string Type)
+        {
+            this.Type = Type;
+        }
         public MaintenanceType(int Id, string Type, Maintenance Maintenance) : base()
         {
             this.Id = Id;
@@ -17,7 +22,7 @@ namespace AppForSEII2526.API.Models
 
         [Key]
         public int Id { get; set; }
-        [StringLength(10, ErrorMessage = "El nombre debe tener menos de 10 caracteres y mas de 3.", MinimumLength = 3)]
+        [StringLength(30, ErrorMessage = "El nombre debe tener menos de 30 caracteres y mas de 3.", MinimumLength = 3)]
         public string Type { get; set; }
         public Maintenance Maintenance { get; set; }
 

@@ -39,19 +39,25 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(IList<MaintenanceDTO>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetMaintenance(string? type, string? name)
         {
-
+            if ((type != null && type.Length <= 2) ||(name != null && name.Length <= 2))
+            {
+                ModelState.AddModelError("busquedaPequeña", "debes rellenar al menos un campo con mas de 2 caracteres");
+                _logger.LogError($"Name y Type son demasiado pequeños");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
 
 
             IList<MaintenanceDTO> maintenance = await _context.Maintenances
                 .Include(m => m.MaintenanceTypes)
                 .Where(m => (type == null || m.MaintenanceTypes.Any(mt => mt.Type != null && mt.Type.Contains(type))) &&
                             (name == null || m.Name.Contains(name)))
+                .OrderBy(m => m.Name)
                 .Select(m => new MaintenanceDTO(
                     m.Id,
                     m.Name,
                     m.NumberOfDays,
                     m.Price,
-                    m.MaintenanceTypes.Select(mt => new MaintenanceTypeDTO(mt.Id, mt.Type, m)).ToList()
+                    m.MaintenanceTypes.OrderBy(mt => mt.Id).Select(mt => new MaintenanceTypeDTO(mt.Id, mt.Type, null)).ToList()
                 ))
                 .ToListAsync();
 

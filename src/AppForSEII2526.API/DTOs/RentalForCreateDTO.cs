@@ -59,14 +59,15 @@ namespace AppForSEII2526.API.DTOs
             }
         }
         public RentalForCreateDTO(string name, string surname, string deliveryAddress,
-            PaymentMethod paymentMethod, IList<RentalItemDTO> rentalItem)
+            PaymentMethod paymentMethod, DateTime startDate, DateTime endDate, IList<RentalItemDTO> rentalItem)
         {
             Name = name;
             Surname = surname;
             DeliveryAddress = deliveryAddress;
             PaymentMethod = paymentMethod;
             RentalItems = rentalItem;
-
+            StartDate = startDate;
+            EndDate = endDate;
         }
         public RentalForCreateDTO()
         {
@@ -81,7 +82,7 @@ namespace AppForSEII2526.API.DTOs
                    DeliveryAddress == dTO.DeliveryAddress &&
                    PaymentMethod == dTO.PaymentMethod &&
                    Quantity == dTO.Quantity &&
-                   EqualityComparer<IList<RentalItemDTO>>.Default.Equals(RentalItems, dTO.RentalItems) &&
+                   RentalItems.SequenceEqual(dTO.RentalItems) &&
                    EndDate == dTO.EndDate &&
                    StartDate == dTO.StartDate &&
                    RentingDate == dTO.RentingDate &&

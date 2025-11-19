@@ -3,78 +3,89 @@ namespace AppForSEII2526.API.DTOs
 {
     public class PurchaseForCreateDTO   //DTO para enseñar los datos de los coches seleccionados por el cliente (DTO del create)
     {
-        public String color { get; set; }
-        public String descripcion { get; set; }
-        public int precio { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set your Name")]
+        [StringLength(50, MinimumLength = 10, ErrorMessage = "Name and Surname must have at least 10 characters")]
+        public string Name { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set your Surname")]
+        [StringLength(50, MinimumLength = 10, ErrorMessage = "Name and Surname must have at least 10 characters")]
+        public string Surname { get; set; }
+
+        [DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]
+        [Display(Name = "Delivery Address")]
+        [StringLength(50, MinimumLength = 10, ErrorMessage = "Delivery address must have at least 10 characters")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set your address for delivery")]
+        public string DeliveryAddress { get; set; }
 
         [Required]
-        public PaymentMethod paymentMethod { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
 
         [Required]
-        [StringLength(10, ErrorMessage = "Nombre no valido")]
-        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
-        public String nombre { get; set; }
+        public int Quantity { get; set; }
+
+        public IList<PurchaseItemDTO> PurchaseItemDTO { get; set; }
 
         [Required]
-        [StringLength(10, ErrorMessage = "Apellido no valido")]
-        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
-        public String apellido { get; set; }
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime PurchaseDate { get; set; }
 
-        [Required]
-        [StringLength(10, ErrorMessage = "Direccion no valido")]
-        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]+[0-100]*$")]
-        public String direccion { get; set; }
-        public IList<PurchaseItemDTO> purchaseItems { get; set; }
+        public int Price { get; set; }
 
-        public PurchaseForCreateDTO(String Color, String Descripcion, int Precio, String Nombre, String Apellido, String Direccion, PaymentMethod PaymentMethod, IList<PurchaseItemDTO> purchaseItems)
+        [Display(Name = "Total Price")]
+        [JsonPropertyName("TotalPrice")]
+        public int TotalPrice
         {
-            color = Color;
-            descripcion = Descripcion;
-            precio = Precio;
-            nombre = Nombre;
-            apellido = Apellido;
-            direccion = Direccion;
-            paymentMethod = PaymentMethod;
-            this.purchaseItems = purchaseItems;
-
-
+            get
+            {
+                return (Price * Quantity);
+            }
         }
 
+
+        public PurchaseForCreateDTO(string name, string surname, string deliveryAddress,
+            PaymentMethod paymentMethod, DateTime startDate, IList<PurchaseItemDTO> purchaseItemDTOs)
+        {
+            Name = name;
+            Surname = surname;
+            DeliveryAddress = deliveryAddress;
+            PaymentMethod = paymentMethod;
+            PurchaseDate = startDate;
+            PurchaseItemDTO = purchaseItemDTOs;
+            
+        }
         public PurchaseForCreateDTO()
         {
-
-            purchaseItems = new List<PurchaseItemDTO>();
-
+            PurchaseItemDTO = new List<PurchaseItemDTO>();
         }
 
         public override bool Equals(object? obj)
         {
             return obj is PurchaseForCreateDTO dTO &&
-                   color == dTO.color &&
-                   descripcion == dTO.descripcion &&
-                   precio == dTO.precio &&
-                   paymentMethod == dTO.paymentMethod &&
-                   nombre == dTO.nombre &&
-                   apellido == dTO.apellido &&
-                   direccion == dTO.direccion &&
-                   EqualityComparer<IList<PurchaseItemDTO>>.Default.Equals(purchaseItems, dTO.purchaseItems);
+                   Name == dTO.Name &&
+                   Surname == dTO.Surname &&
+                   DeliveryAddress == dTO.DeliveryAddress &&
+                   PaymentMethod == dTO.PaymentMethod &&
+                   Quantity == dTO.Quantity &&
+                   PurchaseItemDTO.SequenceEqual(dTO.PurchaseItemDTO) &&
+                   PurchaseDate == dTO.PurchaseDate &&
+                   Price == dTO.Price &&
+                   TotalPrice == dTO.TotalPrice;
         }
-
 
         public override int GetHashCode()
         {
-            
             HashCode hash = new HashCode();
-            hash.Add(color);
-            hash.Add(descripcion);
-            hash.Add(precio);
-            hash.Add(paymentMethod);
-            hash.Add(nombre);
-            hash.Add(apellido);
-            hash.Add(direccion);
-            hash.Add(purchaseItems);
+            hash.Add(Name);
+            hash.Add(Surname);
+            hash.Add(DeliveryAddress);
+            hash.Add(PaymentMethod);
+            hash.Add(Quantity);
+            hash.Add(PurchaseItemDTO);
+            hash.Add(PurchaseDate);
+            hash.Add(Price);
+            hash.Add(TotalPrice);
             return hash.ToHashCode();
-
         }
 
     }

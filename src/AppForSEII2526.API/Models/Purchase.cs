@@ -9,16 +9,16 @@ namespace AppForSEII2526.API.Models
         [Required]
         [StringLength(10, ErrorMessage = "Nombre no valido")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
-        public String DeliveryCarDealer {get; set;}
+        public String DeliveryCarDealer { get; set; }
 
         [Required]
         public PaymentMethod PaymentMethod { get; set; }
 
 
         [Required]
-        [DataType(System.ComponentModel.DataAnnotations.DataType.Date), Display(Name ="Purchase Date")]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date), Display(Name = "Purchase Date")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime PurchasingDate {get; set;}
+        public DateTime PurchaseDate { get; set; }
 
 
         [Required]
@@ -31,14 +31,11 @@ namespace AppForSEII2526.API.Models
 
 
         [Key]
-        public int Id {get; set; }
+        public int Id { get; set; }
 
         public IList<PurchaseItem> purchaseItems { get; set; }   //Es una lista de PurchaseItems, Lo hemos hecho de tipo Ilist porque para relacionarlo con la clase Car necesitas la clase intermedia que es PurchaseItem
         public ApplicationUser User { get; set; }
-        public DateTime DateTime { get; set; }
-        public string Direccion { get; set; }
-        public string Apellidos { get; set; }
-        public string Name { get; set; }
+        
 
         public Purchase()
         {
@@ -50,45 +47,42 @@ namespace AppForSEII2526.API.Models
         {
             DeliveryCarDealer = deliveryCarDealer;
             PaymentMethod = paymentMethod;
-            PurchasingDate = purchasingDate;
+            PurchaseDate = purchasingDate;
             PurchasingPrice = purchasingPrice;
             Id = id;
             purchaseItems = purchaseItem;
             this.User = User;
-            Name = User.Name;
-            Apellidos = User.Surname;
-            Direccion = User.DeliveryAddress;
 
         }
 
         public override bool Equals(object? obj)
         {
-
             return obj is Purchase purchase &&
-
-                DeliveryCarDealer == purchase.DeliveryCarDealer &&
-
-                PaymentMethod == purchase.PaymentMethod &&
-
-                PurchasingDate == purchase.PurchasingDate &&
-
-                PurchasingPrice == purchase.PurchasingPrice &&
-
-                Id == purchase.Id &&
-
-                purchaseItems == purchase.purchaseItems &&
-                
-                this.User == purchase.User;
-
+                   purchasing == purchase.purchasing &&
+                   DeliveryCarDealer == purchase.DeliveryCarDealer &&
+                   PaymentMethod == purchase.PaymentMethod &&
+                   PurchaseDate == purchase.PurchaseDate &&
+                   PurchasingPrice == purchase.PurchasingPrice &&
+                   TotalPrice == purchase.TotalPrice &&
+                   Id == purchase.Id &&
+                   EqualityComparer<IList<PurchaseItem>>.Default.Equals(purchaseItems, purchase.purchaseItems) &&
+                   EqualityComparer<ApplicationUser>.Default.Equals(User, purchase.User);
         }
 
         public override int GetHashCode()
         {
-
-            return HashCode.Combine(DeliveryCarDealer, PaymentMethod, PurchasingDate, PurchasingPrice, Id, purchaseItems, User);
-
+            HashCode hash = new HashCode();
+            hash.Add(purchasing);
+            hash.Add(DeliveryCarDealer);
+            hash.Add(PaymentMethod);
+            hash.Add(PurchaseDate);
+            hash.Add(PurchasingPrice);
+            hash.Add(TotalPrice);
+            hash.Add(Id);
+            hash.Add(purchaseItems);
+            hash.Add(User);
+            return hash.ToHashCode();
         }
-
     }
 
 

@@ -1,4 +1,6 @@
-﻿namespace AppForSEII2526.API.Models
+﻿
+
+namespace AppForSEII2526.API.Models
 {
     public class Model
     {
@@ -16,30 +18,30 @@
 
         }
 
+        public Model(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
         public Model(int id, string name, IList<Car> car)
         {
             Id = id;
             Name = name;
-            this.Cars = car;
+            Cars = car;
         }
 
         public override bool Equals(object? obj)
         {
-
             return obj is Model model &&
                    Id == model.Id &&
                    Name == model.Name &&
-                   Cars == model.Cars;
-
+                   Cars.SequenceEqual(model.Cars);      
         }
 
         public override int GetHashCode()
         {
-
-            return HashCode.Combine(Id, Name,Cars);
-
+            return HashCode.Combine(Id, Name, Cars);
         }
-
     }
 
 }

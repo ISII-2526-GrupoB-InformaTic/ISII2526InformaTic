@@ -8,35 +8,37 @@ namespace AppForSEII2526.API.Models
         {
 
         }
-        public BookingItem(int BookingId, string Comment, int MantID, Booking Booking, Maintenance Maintenance) : base()
+        public BookingItem(string comment, Booking booking, Maintenance maintenance)
         {
-            this.BookingId = BookingId;
-            this.Comment = Comment;
-            this.MantID = MantID;
-            this.Booking = Booking;
-            this.Maintenance = Maintenance;
+            Comment = comment;
+            Booking = booking;
+            Maintenance = maintenance;
+
+            BookingId = booking.Id;
+            MaintenanceId = maintenance.Id;
         }
 
         public int BookingId { get; set; }
+        public Booking Booking { get; set; }
+        public int MaintenanceId { get; set; }
+        public Maintenance Maintenance { get; set; }
+
         [StringLength(200, ErrorMessage = "El comentario debe tener menos de 200 caracteres y mas de 20.", MinimumLength = 20)]
         public string Comment { get; set; }
-        public int MantID { get; set; }
-        public Booking Booking { get; set; }
-        public Maintenance Maintenance { get; set; }
 
         public override bool Equals(object? obj)
         {
             return obj is BookingItem item &&
                    BookingId == item.BookingId &&
                    Comment == item.Comment &&
-                   MantID == item.MantID &&
+                   MaintenanceId == item.MaintenanceId &&
                    EqualityComparer<Booking>.Default.Equals(Booking, item.Booking) &&
                    EqualityComparer<Maintenance>.Default.Equals(Maintenance, item.Maintenance);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(BookingId, Comment, MantID, Booking, Maintenance);
+            return HashCode.Combine(BookingId, Comment, MaintenanceId, Booking, Maintenance);
         }
     }
 }

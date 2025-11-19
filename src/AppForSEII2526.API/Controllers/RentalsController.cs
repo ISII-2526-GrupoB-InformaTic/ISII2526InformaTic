@@ -33,19 +33,19 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("RentalDateFrom&RentalDateTo", "Error! Your rental must end later than it starts");
 
             if (rentalForCreate.RentalItems.Count == 0)
-                ModelState.AddModelError("RentalItems", "Error! You must include at least one movie to be rented");
+                ModelState.AddModelError("RentalItems", "Error! You must include at least one car to be rented");
 
             // if (!_context.ApplicationUsers.Any(au=>au.UserName==rentalForCreate.CustomerUserName))
-            var user = _context.ApplicationUsers.FirstOrDefault(au => au.UserName == rentalForCreate.Name);
+            var user = _context.ApplicationUsers.FirstOrDefault(au => au.Name == rentalForCreate.Name);
             if (user == null)
-                ModelState.AddModelError("RentalApplicationUser", "Error! UserName is not registered");
+                ModelState.AddModelError("RentalApplicationUser", "Error! User is not registered");
 
             if (ModelState.ErrorCount > 0)
                 return BadRequest(new ValidationProblemDetails(ModelState));
 
 
             var carModels = rentalForCreate.RentalItems
-                .Select(ri => ri.Car.Model.Name).ToList<string>();
+                .Select(ri => ri.Car.Model).ToList<string>();
 
             var cars = _context.Cars.Include(c => c.RentalItems)
                 .ThenInclude(ri => ri.Rental)
@@ -67,7 +67,7 @@ namespace AppForSEII2526.API.Controllers
 
             Rental rental = new Rental(rentalForCreate.EndDate, rentalForCreate.StartDate,
                 DateTime.Now, rentalForCreate.TotalPrice,"DeliveryCarDealer",
-                new List<RentalItem>(), rentalForCreate.PaymentMethod);
+                new List<RentalItem>(), rentalForCreate.PaymentMethod,user);
 
 
             rental.TotalPrice = 0;
@@ -76,16 +76,16 @@ namespace AppForSEII2526.API.Controllers
 
             foreach (var item in rentalForCreate.RentalItems)
             {
-                var car = cars.FirstOrDefault(c => c.Name == item.Car.Model.Name);
+                var car = cars.FirstOrDefault(c => c.Name == item.Car.Model);
                 //we must check that there is enough quantity to be rented in the database
                 if ((car == null) || (car.NumberOfRentedItems >= car.QuantityForRenting))
                 {
-                    ModelState.AddModelError("RentalItems", $"Error! Car model named '{item.Car.Model.Name}' is not available for being rented from {rentalForCreate.StartDate.ToShortDateString()} to {rentalForCreate.EndDate.ToShortDateString()}");
+                    ModelState.AddModelError("RentalItems", $"Error! Car model named '{item.Car.Model}' is not available for being rented from {rentalForCreate.StartDate.ToShortDateString()} to {rentalForCreate.EndDate.ToShortDateString()}");
                 }
                 else
                 {
                     // rental does not exist in the database yet and does not have a valid Id, so we must relate rentalitem to the object rental
-                    rental.RentalItems.Add(new RentalItem(car.Id, car.QuantityForRenting, rental.Id));
+                    rental.RentalItems.Add(new RentalItem(car.Id, car.QuantityForRenting, rental.Id,new Car(),rental));
                     item.Car.RentingPrice = car.RentingPrice;
                 }
             }
@@ -138,10 +138,10 @@ namespace AppForSEII2526.API.Controllers
             var rental = await _context.Rentals
              .Where(r => r.Id == id)
                  .Include(r => r.RentalItems) //join table RentalItems
-                    .ThenInclude(ri => ri.Car) //then join table Movies
-                        .ThenInclude(car => car.Model) //then join table Genre
-             .Select(r => new RentalDetailDTO(r.Name, r.Surname,
-                    r.DeliveryAddress, r.PaymentMethod,
+                    .ThenInclude(ri => ri.Car) //then join table Cars
+                        .ThenInclude(car => car.Model) //then join table Model
+             .Select(r => new RentalDetailDTO(r.User.Name, r.User.Surname,
+                    r.User.DeliveryAddress, r.PaymentMethod,
                     r.StartDate, r.EndDate,r.RentingDate,
                     r.RentalItems
                         .Select(ri => new RentalItemDTO(ri.Car.Id,ri.Quantity,ri.RentalId)).ToList<RentalItemDTO>()))

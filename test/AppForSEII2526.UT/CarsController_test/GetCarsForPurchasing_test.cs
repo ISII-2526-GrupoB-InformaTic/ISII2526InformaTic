@@ -18,7 +18,7 @@ namespace AppForSEII2526.UT.CarsController_test
 
     public class GetCarsPurchasing_test : AppForSEII25264SqliteUT
     {
-        /*
+        
         public GetCarsPurchasing_test()
         {
 
@@ -35,14 +35,14 @@ namespace AppForSEII2526.UT.CarsController_test
             var coche = new List<Car>()
             {
 
-                new Car("coche", "Red", "Un coche rojo", "Ford", "", 1, 5000, 2000, 50000, 30000, modelo[0], null, null)
+                new Car("coche", "Red", "Un coche rojo", "Ford Company", 1, 5000, 2000, 50000, 30000, modelo[0], null, null)
                 {
                     FuelType = "Diesel",
                     EngDisplacement = "",
                     RimSize = ""
                 },
 
-                new Car("coche","Blue", "Un coche azul", "Citroen", "", 2, 5000, 2000, 60000, 30000, modelo[1], null, null)
+                new Car("coche","Blue", "Un coche azul", "Citroen Company", 2, 5000, 2000, 60000, 30000, modelo[1], null, null)
                 {
                     FuelType = "Gasoleo",
                     EngDisplacement = "",
@@ -86,14 +86,14 @@ namespace AppForSEII2526.UT.CarsController_test
             var carDTO = new List<CarForPurchasingDTO>()
                 {
 
-                    new CarForPurchasingDTO(1, modelo[0] , "Red", "Diesel", "Ford", 50000),
+                    new CarForPurchasingDTO(1, "Model X" , "Red", "Diesel", "Ford Company", 50000),
 
-                    new CarForPurchasingDTO(2, modelo[1]  ,"Blue", "Gasoleo", "Citroen", 60000),
+                    new CarForPurchasingDTO(2, "Mustang"  ,"Blue", "Gasoleo", "Citroen Company", 60000),
 
                 };
 
             var carDTOsExpected = new List<CarForPurchasingDTO>() { carDTO[0], carDTO[1] }
-                .OrderBy(c => c.model.Name).ToList();
+                .OrderBy(c => c.model).ToList();
 
             var carDTOsExpected2 = new List<CarForPurchasingDTO>() { carDTO[0] };
 
@@ -104,7 +104,7 @@ namespace AppForSEII2526.UT.CarsController_test
 
                     new object[] { null, null, carDTOsExpected },
 
-                    new object[] { "Ford", null, carDTOsExpected2, },
+                    new object[] { "Model X", null, carDTOsExpected2, },
 
                     new object[] { null, "Blue", carDTOsExpected3, },
 

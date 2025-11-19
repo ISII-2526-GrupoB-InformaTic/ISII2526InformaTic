@@ -30,13 +30,13 @@ namespace AppForSEII2526.API.Controllers
         public async Task<ActionResult> CreatePurchase(PurchaseForCreateDTO purchaseForCreate)   //ESTAMOS CREANDO UNA NUEVA COMPRA A TRAVES DE ESTE METODO (POST)
         {
 
-            if (purchaseForCreate.nombre == null || purchaseForCreate.apellido == null || purchaseForCreate.direccion == null)
+            if (purchaseForCreate.Name == null || purchaseForCreate.Surname == null || purchaseForCreate.DeliveryAddress == null)
             {
                 return BadRequest("Faltan datos obligatorios");
             }
             
 
-            if (purchaseForCreate.paymentMethod == null)
+            if (purchaseForCreate.PaymentMethod == null)
             {
                 return BadRequest("Falta el metodo de pago");
 
@@ -58,7 +58,7 @@ namespace AppForSEII2526.API.Controllers
             }
 
 
-            var carModels = purchaseForCreate.purchaseItems.Select(pi => pi.Car.model.Name).ToList<String>();
+            var carModels = purchaseForCreate.PurchaseItemDTO.Select(pi => pi.Car.model).ToList<String>();
 
             var cars = _context.Cars
                 .Include(c => c.PurchaseItems)
@@ -77,10 +77,10 @@ namespace AppForSEII2526.API.Controllers
                 .ToList();
 
             Purchase purchase = new Purchase(
-                purchaseForCreate.nombre + " " + purchaseForCreate.apellido,
-                purchaseForCreate.paymentMethod,
+                purchaseForCreate.Name + " " + purchaseForCreate.Surname,
+                purchaseForCreate.PaymentMethod,
                 DateTime.Now,
-                purchaseForCreate.precio,
+                purchaseForCreate.Price,
                 0,
                 new List<PurchaseItem>(),
                 user
@@ -88,16 +88,16 @@ namespace AppForSEII2526.API.Controllers
 
             purchase.TotalPrice = 0;
 
-            foreach (var item in purchaseForCreate.purchaseItems)
+            foreach (var item in purchaseForCreate.PurchaseItemDTO)
             {
-                var car = cars.FirstOrDefault(c => c.Name == item.Car.model.Name);
+                var car = cars.FirstOrDefault(c => c.Name == item.Car.model);
                 if (car == null)
                 {
-                    return BadRequest($"El coche {item.Car.model.Name} no existe");
+                    return BadRequest($"El coche {item.Car.model} no existe");
                 }
                 if (car.QuantityForPurchasing < item.Quantity)
                 {
-                    return Conflict($"No hay suficiente cantidad del coche {item.Car.model.Name} para comprar");
+                    return Conflict($"No hay suficiente cantidad del coche {item.Car.model} para comprar");
                 }
                 PurchaseItem purchaseItem = new PurchaseItem(
                     car.Id,
@@ -137,8 +137,8 @@ namespace AppForSEII2526.API.Controllers
 
             }
 
-            var purchaseDetails = new PurchaseForDetailsDTO(purchaseForCreate.nombre, purchaseForCreate.apellido,
-                purchaseForCreate.direccion, purchase.PurchasingDate, purchase.PurchasingPrice, purchaseForCreate.purchaseItems);
+            var purchaseDetails = new PurchaseForDetailsDTO(purchaseForCreate.Name, purchaseForCreate.Surname,
+                purchaseForCreate.DeliveryAddress, purchase.PaymentMethod, purchase.PurchaseDate, purchaseForCreate.PurchaseItemDTO);
 
             _logger.LogInformation("Creada las compras a realizar");
 
@@ -171,11 +171,11 @@ namespace AppForSEII2526.API.Controllers
                 .ThenInclude(pi => pi.car)
                 .ThenInclude(c => c.Model)
                 .Select(p => new PurchaseForDetailsDTO(
-                    p.Name,
-                    p.Apellidos,
-                    p.Direccion,
-                    p.DateTime,
-                    p.purchasing,
+                    p.User.Name,
+                    p.User.Surname,
+                    p.User.DeliveryAddress,
+                    p.PaymentMethod,
+                    p.PurchaseDate,
                     p.purchaseItems
                         .Select(pi => new PurchaseItemDTO
                         {
@@ -187,7 +187,7 @@ namespace AppForSEII2526.API.Controllers
                 ))
                 .FirstOrDefaultAsync();
 
-            if (purchases == null )
+            if (purchases == null)
             {
 
                 _logger.LogError($"Error: Purchase with id {id} does not exist");

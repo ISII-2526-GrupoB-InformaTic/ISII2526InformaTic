@@ -1,19 +1,17 @@
 ﻿using AppForSEII2526.API.Controllers;
 using AppForSEII2526.API.DTOs;
-using AppForSEII2526.API.Models;
+using Humanizer.Localisation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppForSEII2526.UT.PurchasesController_test
+namespace AppForSEII2526.UT.RentalsController_test
 {
-    public class GetPurchase_test : AppForSEII25264SqliteUT     // PRUEBAS DE QUE ESTE METODO NOS PERMITE OBTENER LAS COMPRAS REALIZADAS (DETAILS) 
+    public class GetRentals_test : AppForSEII25264SqliteUT
     {
-
-        public GetPurchase_test()
-        {
+        public GetRentals_test() {
             var models = new List<Model>()
             {
                 new Model {Id=1,Name="Toyota R"},
@@ -36,33 +34,32 @@ namespace AppForSEII2526.UT.PurchasesController_test
             var endDate = DateTime.Today.AddDays(7);
             var numDays = (endDate - startDate).Days;
 
-            var purchase = new Purchase("Tony", PaymentMethod.TarjetaDeCredito, startDate, 500000, 1, new List<PurchaseItem>(), user);
+            var rental = new Rental(endDate, startDate, DateTime.Today, (cars[1].RentingPrice * numDays), "Tony", new List<RentalItem>(), PaymentMethod.TarjetaDeCredito, user);
 
-            var purchaseItem = new PurchaseItem(1, 1, 10, cars[0], purchase);
+            var rentalItem = new RentalItem(1, 5, 1, cars[0], rental);
 
-            purchase.purchaseItems.Add(purchaseItem);
+            rental.RentalItems.Add(rentalItem);
 
             _context.ApplicationUsers.Add(user);
             _context.AddRange(models);
             _context.AddRange(cars);
-            _context.Add(purchase);
-            _context.Add(purchaseItem);
+            _context.Add(rental);
             _context.SaveChanges();
         }
 
         [Fact]
         [Trait("Database", "WithoutFixture")]
         [Trait("LevelTesting", "Unit Testing")]
-        public async Task GetPurchase_NotFound_test()
+        public async Task GetRental_NotFound_test()
         {
             // Arrange
-            var mock = new Mock<ILogger<PurchasesController>>();
-            ILogger<PurchasesController> logger = mock.Object;
+            var mock = new Mock<ILogger<RentalsController>>();
+            ILogger<RentalsController> logger = mock.Object;
 
-            var controller = new PurchasesController(_context, logger);
+            var controller = new RentalsController(_context, logger);
 
             // Act
-            var result = await controller.GetPurchase(0);
+            var result = await controller.GetRental(0);
 
             //Assert
             //we check that the response type is OK and obtain the list of movies
@@ -73,35 +70,37 @@ namespace AppForSEII2526.UT.PurchasesController_test
         [Fact]
         [Trait("LevelTesting", "Unit Testing")]
         [Trait("Database", "WithoutFixture")]
-        public async Task GetPurchase_Found_test()
+        public async Task GetRental_Found_test()
         {
             // Arrange
-            var mock = new Mock<ILogger<PurchasesController>>();
-            ILogger<PurchasesController> logger = mock.Object;
-            var controller = new PurchasesController(_context, logger);
+            var mock = new Mock<ILogger<RentalsController>>();
+            ILogger<RentalsController> logger = mock.Object;
+            var controller = new RentalsController(_context, logger);
 
             var startDate = DateTime.Today.AddDays(1);
+            var endDate = DateTime.Today.AddDays(7);
+            var rentingDate = DateTime.Today;
 
             var startdateUnspecified = DateTime.SpecifyKind(startDate, DateTimeKind.Unspecified);
+            var enddateUnspecified = DateTime.SpecifyKind(endDate, DateTimeKind.Unspecified);
+            var rentingdateUnspecified = DateTime.SpecifyKind(rentingDate, DateTimeKind.Unspecified);
 
-            var expectedPurchase = new PurchaseForDetailsDTO("Pepe", "Viyuela", "Calle MiCasa Nº7", PaymentMethod.TarjetaDeCredito, startdateUnspecified, new List<PurchaseItemDTO>());
-            expectedPurchase.PurchaseItemDTO.Add(new PurchaseItemDTO(1, 1, 10));
+            var expectedRental = new RentalDetailDTO("Pepe","Viyuela", "Calle MiCasa Nº7",PaymentMethod.TarjetaDeCredito,
+                startdateUnspecified,enddateUnspecified,rentingdateUnspecified, new List<RentalItemDTO>());
+            expectedRental.RentalItems.Add(new RentalItemDTO(1,5,1));
 
             // Act 
-            var result = await controller.GetPurchase(1);
+            var result = await controller.GetRental(1);
 
             //Assert
             //we check that the response type is OK and obtain the rental
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var purchaseDTOActual = Assert.IsType<PurchaseForDetailsDTO>(okResult.Value);
-            var eq = expectedPurchase.Equals(purchaseDTOActual);
+            var rentalDTOActual = Assert.IsType<RentalDetailDTO>(okResult.Value);
+            var eq = expectedRental.Equals(rentalDTOActual);
             //we check that the expected and actual are the same
-            Assert.Equal(expectedPurchase, purchaseDTOActual);
+            Assert.Equal(expectedRental, rentalDTOActual);
 
         }
-
-
-
 
     }
 }
