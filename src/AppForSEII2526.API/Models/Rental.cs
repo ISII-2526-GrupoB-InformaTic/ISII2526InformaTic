@@ -9,7 +9,7 @@ namespace AppForSEII2526.API.Models
         }
 
         public Rental(DateTime endDate, DateTime startDate, DateTime rentingDate,
-            int totalPrice, string deliveryCarDealer, IList<RentalItem> rentalItems, PaymentMethod paymentMethod)
+            int totalPrice, string deliveryCarDealer, IList<RentalItem> rentalItems, PaymentMethod paymentMethod, ApplicationUser user)
         {
             EndDate = endDate;
             StartDate = startDate;
@@ -18,7 +18,7 @@ namespace AppForSEII2526.API.Models
             DeliveryCarDealer = deliveryCarDealer;
             RentalItems = rentalItems;
             PaymentMethod = paymentMethod;
-
+            User = user;
         }
         [Key]
         public int Id { get; set; }
@@ -53,6 +53,7 @@ namespace AppForSEII2526.API.Models
         public PaymentMethod PaymentMethod { get; set; }
 
         public IList<RentalItem> RentalItems { get; set; }
+        public ApplicationUser User { get; set; }
 
         public override bool Equals(object? obj)
         {

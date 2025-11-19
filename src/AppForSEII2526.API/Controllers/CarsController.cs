@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AppForSEII2526.API.Controllers
 {
@@ -47,7 +48,7 @@ namespace AppForSEII2526.API.Controllers
                     ((c.RentingPrice <= priceMax) || (priceMax==null)) &&
                     ((c.RentingPrice >= priceMin) || (priceMin==null)))
                 .OrderBy(c=> c.Model.Name)  
-                .Select(c => new CarForRentalDTO(c.Id,c.Description,c.Color,c.Manufacturer,c.RentingPrice,c.QuantityForRenting,c.FuelType,c.Model))
+                .Select(c => new CarForRentalDTO(c.Id,c.Description,c.Color,c.Manufacturer,c.RentingPrice,c.QuantityForRenting,c.FuelType,c.Model.Name))
                 .ToListAsync();
             if (cars.IsNullOrEmpty())
             {

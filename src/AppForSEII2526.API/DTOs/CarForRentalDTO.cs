@@ -1,4 +1,5 @@
 ﻿
+
 namespace AppForSEII2526.API.DTOs
 {
     public class CarForRentalDTO
@@ -32,8 +33,7 @@ namespace AppForSEII2526.API.DTOs
         [Precision(5, 2)]
         public int RentingPrice { get; set; }
 
-        public Model Model { get; set; }
-        public IList<RentalItemDTO> RentalItems { get; set; }
+        public string Model { get; set; }
 
         public string FuelType { get; set; }
 
@@ -43,7 +43,7 @@ namespace AppForSEII2526.API.DTOs
         }
 
 
-        public CarForRentalDTO(int id,string description, string color, string manufacturer, int rentingPrice,int quantity, string fuelType, Model model)
+        public CarForRentalDTO(int id,string description, string color, string manufacturer, int rentingPrice,int quantity, string fuelType, string model)
         {
             Id = id;
             Description = description;
@@ -55,19 +55,7 @@ namespace AppForSEII2526.API.DTOs
             QuantityForRenting = quantity;
         }
 
-        public override bool Equals(object? obj)
-        {
-            return obj is CarForRentalDTO dTO &&
-                   Id == dTO.Id &&
-                   Color == dTO.Color &&
-                   Description == dTO.Description &&
-                   Manufacturer == dTO.Manufacturer &&
-                   QuantityForRenting == dTO.QuantityForRenting &&
-                   RentingPrice == dTO.RentingPrice &&
-                   EqualityComparer<Model>.Default.Equals(Model, dTO.Model) &&
-                   RentalItems.SequenceEqual(dTO.RentalItems) &&
-                   FuelType == dTO.FuelType;
-        }
+
 
         public override int GetHashCode()
         {
@@ -79,9 +67,21 @@ namespace AppForSEII2526.API.DTOs
             hash.Add(QuantityForRenting);
             hash.Add(RentingPrice);
             hash.Add(Model);
-            hash.Add(RentalItems);
             hash.Add(FuelType);
             return hash.ToHashCode();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is CarForRentalDTO dTO &&
+                   Id == dTO.Id &&
+                   Color == dTO.Color &&
+                   Description == dTO.Description &&
+                   Manufacturer == dTO.Manufacturer &&
+                   QuantityForRenting == dTO.QuantityForRenting &&
+                   RentingPrice == dTO.RentingPrice &&
+                   Model == dTO.Model &&
+                   FuelType == dTO.FuelType;
         }
     }
 }

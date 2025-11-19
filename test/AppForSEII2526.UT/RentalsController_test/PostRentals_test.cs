@@ -45,9 +45,9 @@ namespace AppForSEII2526.UT.RentalsController_test
             var endDate = DateTime.Today.AddDays(7);
             var numDays = (endDate - startDate).Days;
 
-            var rental = new Rental(endDate, startDate, DateTime.Today, (cars[1].RentingPrice * numDays), "Tony", new List<RentalItem>(), PaymentMethod.TarjetaDeCredito);
+            var rental = new Rental(endDate, startDate, DateTime.Today, (cars[1].RentingPrice * numDays), "Tony", new List<RentalItem>(), PaymentMethod.TarjetaDeCredito, user);
 
-            var rentalItem = new RentalItem(1, 5, 1, cars[0], rental, user);
+            var rentalItem = new RentalItem(1, 5, 1, cars[0], rental);
 
             rental.RentalItems.Add(rentalItem);
 

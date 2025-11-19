@@ -45,7 +45,7 @@ namespace AppForSEII2526.API.Controllers
 
 
             var carModels = rentalForCreate.RentalItems
-                .Select(ri => ri.Car.Model.Name).ToList<string>();
+                .Select(ri => ri.Car.Model).ToList<string>();
 
             var cars = _context.Cars.Include(c => c.RentalItems)
                 .ThenInclude(ri => ri.Rental)
@@ -67,7 +67,7 @@ namespace AppForSEII2526.API.Controllers
 
             Rental rental = new Rental(rentalForCreate.EndDate, rentalForCreate.StartDate,
                 DateTime.Now, rentalForCreate.TotalPrice,"DeliveryCarDealer",
-                new List<RentalItem>(), rentalForCreate.PaymentMethod);
+                new List<RentalItem>(), rentalForCreate.PaymentMethod,user);
 
 
             rental.TotalPrice = 0;
@@ -76,16 +76,16 @@ namespace AppForSEII2526.API.Controllers
 
             foreach (var item in rentalForCreate.RentalItems)
             {
-                var car = cars.FirstOrDefault(c => c.Name == item.Car.Model.Name);
+                var car = cars.FirstOrDefault(c => c.Name == item.Car.Model);
                 //we must check that there is enough quantity to be rented in the database
                 if ((car == null) || (car.NumberOfRentedItems >= car.QuantityForRenting))
                 {
-                    ModelState.AddModelError("RentalItems", $"Error! Car model named '{item.Car.Model.Name}' is not available for being rented from {rentalForCreate.StartDate.ToShortDateString()} to {rentalForCreate.EndDate.ToShortDateString()}");
+                    ModelState.AddModelError("RentalItems", $"Error! Car model named '{item.Car.Model}' is not available for being rented from {rentalForCreate.StartDate.ToShortDateString()} to {rentalForCreate.EndDate.ToShortDateString()}");
                 }
                 else
                 {
                     // rental does not exist in the database yet and does not have a valid Id, so we must relate rentalitem to the object rental
-                    rental.RentalItems.Add(new RentalItem(car.Id, car.QuantityForRenting, rental.Id,new Car(),rental,user));
+                    rental.RentalItems.Add(new RentalItem(car.Id, car.QuantityForRenting, rental.Id,new Car(),rental));
                     item.Car.RentingPrice = car.RentingPrice;
                 }
             }
@@ -140,8 +140,8 @@ namespace AppForSEII2526.API.Controllers
                  .Include(r => r.RentalItems) //join table RentalItems
                     .ThenInclude(ri => ri.Car) //then join table Cars
                         .ThenInclude(car => car.Model) //then join table Model
-             .Select(r => new RentalDetailDTO(r.RentalItems[0].User.Name, r.RentalItems[0].User.Surname,
-                    r.RentalItems[0].User.DeliveryAddress, r.PaymentMethod,
+             .Select(r => new RentalDetailDTO(r.User.Name, r.User.Surname,
+                    r.User.DeliveryAddress, r.PaymentMethod,
                     r.StartDate, r.EndDate,r.RentingDate,
                     r.RentalItems
                         .Select(ri => new RentalItemDTO(ri.Car.Id,ri.Quantity,ri.RentalId)).ToList<RentalItemDTO>()))

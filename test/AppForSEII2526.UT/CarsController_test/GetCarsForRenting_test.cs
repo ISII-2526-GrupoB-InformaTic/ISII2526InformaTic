@@ -35,9 +35,9 @@ namespace AppForSEII2526.UT.CarsController_test
             var endDate = DateTime.Today.AddDays(7);
             var numDays = (endDate - startDate).Days;
 
-            var rental = new Rental(endDate,startDate, DateTime.Now, (cars[0].RentingPrice * numDays), "Tony", new List<RentalItem>(), PaymentMethod.TarjetaDeCredito);
+            var rental = new Rental(endDate,startDate, DateTime.Now, (cars[0].RentingPrice * numDays), "Tony", new List<RentalItem>(), PaymentMethod.TarjetaDeCredito, user);
 
-            var rentalItem = new RentalItem(1, 1, 1, cars[0], rental,user);
+            var rentalItem = new RentalItem(1, 1, 1, cars[0], rental);
 
             rental.RentalItems.Add(rentalItem);
 
@@ -59,9 +59,9 @@ namespace AppForSEII2526.UT.CarsController_test
 
 
             var carDTOs = new List<CarForRentalDTO>() {
-                new CarForRentalDTO(1,"un coche rojo","rojo","Toyota",2000,1,"Gasoline",models[0]),
-                new CarForRentalDTO(2,"un coche amarillo","amarillo","Toyota",3000,1,"Gasoline",models[1]),
-                new CarForRentalDTO(3,"un coche verde","verde","Toyota",1500,1,"Gasoline",models[2]),
+                new CarForRentalDTO(1,"un coche rojo","rojo","Toyota",2000,1,"Gasoline","Toyota R"),
+                new CarForRentalDTO(2,"un coche amarillo","amarillo","Toyota",3000,1,"Gasoline","Toyota A"),
+                new CarForRentalDTO(3,"un coche verde","verde","Toyota",1500,1,"Gasoline","Toyota V"),
             };
             
             /*
@@ -77,12 +77,12 @@ namespace AppForSEII2526.UT.CarsController_test
             */
 
             var carDTOsTC1 = new List<CarForRentalDTO>() { carDTOs[0], carDTOs[1], carDTOs[2] }
-                    .OrderBy(c => c.Model.Name).ToList();
+                    .OrderBy(c => c.Model).ToList();
 
 
             var carDTOsTC2 = new List<CarForRentalDTO>() { carDTOs[1] };
             var carDTOsTC3 = new List<CarForRentalDTO>() { carDTOs[0],carDTOs[2] }
-                .OrderBy(c => c.Model.Name).ToList();
+                .OrderBy(c => c.Model).ToList();
 
 
             var allTests = new List<object[]>
