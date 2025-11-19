@@ -38,7 +38,7 @@ namespace AppForSEII2526.UT.BookingsController_test
             maintenances[1].MaintenanceTypes.Add(maintenanceTypes[1]);
             maintenances[2].MaintenanceTypes.Add(maintenanceTypes[0]);
             maintenances[2].MaintenanceTypes.Add(maintenanceTypes[1]);
-            ApplicationUser usuario = new ApplicationUser(nombre_cliente, apellido_cliente, correo, deliveryAddress);
+            ApplicationUser usuario = new ApplicationUser("1", nombre_cliente, apellido_cliente, correo, deliveryAddress);
             var booking = new Booking(DateTime.Today, PaymentMethod.GooglePay, new List<BookingItem>(), usuario);
             booking.BookingItems.Add(new BookingItem("Facil de aplicar y tremendamente economico", booking, maintenances[0]));
             _context.ApplicationUsers.Add(usuario);
@@ -52,16 +52,16 @@ namespace AppForSEII2526.UT.BookingsController_test
             var maintenanceNoItems = new BookingForCreateDTO(nombre_cliente, apellido_cliente, deliveryAddress, PaymentMethod.Paypal, null, new List<BookingItemDTO>());
             var bookingItems = new List<BookingItemDTO>()
             {
-                new BookingItemDTO() { Comment="Facil de aplicar y tremendamente economico",MaintenanceId=1 },
-                new BookingItemDTO() { Comment="Dificil de aplicar y tremendamente efectivo",MaintenanceId=2 }
+                new BookingItemDTO() { Comment="Facil de aplicar y tremendamente economico",MantID=1 },
+                new BookingItemDTO() { Comment="Dificil de aplicar y tremendamente efectivo",MantID=2 }
             };
             var bookingItemsNoComment = new List<BookingItemDTO>()
             {
-                new BookingItemDTO() { Comment="",MaintenanceId=1 },
+                new BookingItemDTO() { Comment="",MantID=1 },
             };
             var bookingItemsCommentShort = new List<BookingItemDTO>()
             {
-                new BookingItemDTO() { Comment="Muy bueno",MaintenanceId=1 },
+                new BookingItemDTO() { Comment="Muy bueno",MantID=1 },
             };
             var maintenanceNoName = new BookingForCreateDTO("", apellido_cliente, deliveryAddress, PaymentMethod.Paypal, null, bookingItems);
             var maintenanceNoSurname = new BookingForCreateDTO(nombre_cliente, "", deliveryAddress, PaymentMethod.Paypal, null, bookingItems);

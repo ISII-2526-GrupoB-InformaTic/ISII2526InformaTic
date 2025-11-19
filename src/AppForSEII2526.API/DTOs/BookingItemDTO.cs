@@ -9,15 +9,13 @@ namespace AppForSEII2526.API.DTOs
         {
 
         }
-
-        public BookingItemDTO(string comment, BookingDTO booking, MaintenanceDTO maintenance)
+        public BookingItemDTO(string Comment, BookingDTO Booking, MaintenanceDTO Maintenance) : base()
         {
-            Booking = booking;
-            Maintenance = maintenance;
-
-            BookingId = booking.Id;
-            MaintenanceId = maintenance.Id;
-            Comment = comment;
+            this.Booking = Booking;
+            this.Maintenance = Maintenance;
+            BookingId = Booking.Id;
+            this.Comment = Comment;
+            MantID = Maintenance.Id;
         }
 
         public int BookingId { get; set; }
@@ -33,14 +31,14 @@ namespace AppForSEII2526.API.DTOs
             return obj is BookingItemDTO dTO &&
                    BookingId == dTO.BookingId &&
                    Comment == dTO.Comment &&
-                   MaintenanceId == dTO.MaintenanceId &&
+                   MantID == dTO.MantID &&
                    EqualityComparer<MaintenanceDTO>.Default.Equals(Maintenance, dTO.Maintenance);
                    EqualityComparer<BookingDTO>.Default.Equals(Booking, dTO.Booking);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(BookingId, Comment, MaintenanceId, Booking, Maintenance);
+            return HashCode.Combine(BookingId, Comment, MantID, Booking, Maintenance);
         }
     }
 }

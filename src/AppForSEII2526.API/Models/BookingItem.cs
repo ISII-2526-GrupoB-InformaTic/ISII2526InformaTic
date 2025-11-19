@@ -8,14 +8,13 @@ namespace AppForSEII2526.API.Models
         {
 
         }
-        public BookingItem(string comment, Booking booking, Maintenance maintenance)
+        public BookingItem(string Comment, Booking Booking, Maintenance Maintenance) : base()
         {
-            Comment = comment;
-            Booking = booking;
-            Maintenance = maintenance;
-
-            BookingId = booking.Id;
-            MaintenanceId = maintenance.Id;
+            this.Comment = Comment;
+            this.Booking = Booking;
+            this.Maintenance = Maintenance;
+            this.BookingId = Booking.Id;
+            this.MantID = Maintenance.Id;
         }
 
         public int BookingId { get; set; }

@@ -28,7 +28,7 @@ namespace AppForSEII2526.UT.BookingsController_test
                 new Maintenance() {Id=2, Name="A-321", NumberOfDays=4, Price=200, MaintenanceTypes=new List<MaintenanceType>{ maintenanceTypes[2], maintenanceTypes[3]} },
                 new Maintenance() {Id=3, Name="H-123", NumberOfDays=6, Price=300, MaintenanceTypes=new List<MaintenanceType>{ maintenanceTypes[4]} }
             };
-            ApplicationUser usuario = new ApplicationUser("Alfonso", "Gutierrez", "alfonsogutierrez@gmail.es", "Avenida 1");
+            ApplicationUser usuario = new ApplicationUser("1", "Alfonso", "Gutierrez", "alfonsogutierrez@gmail.es", "Avenida 1");
             var bookings = new List<Booking>()
             {
                 new Booking(DateTime.Today, PaymentMethod.GooglePay ,usuario),
@@ -74,7 +74,7 @@ namespace AppForSEII2526.UT.BookingsController_test
                 new MaintenanceTypeDTO (1,"Cambio de aceite"),
                 new MaintenanceTypeDTO (2,"Ajustar frenos"),
             };
-            ApplicationUser usuario = new ApplicationUser("Alfonso", "Gutierrez", "alfonsogutierrez@gmail.es", "Avenida 1");
+            ApplicationUser usuario = new ApplicationUser("1", "Alfonso", "Gutierrez", "alfonsogutierrez@gmail.es", "Avenida 1");
 
             var expectedBookingDTO = new BookingDetailDTO(1,"Alfonso", "Gutierrez", "Avenida 1", PaymentMethod.GooglePay,null, DateTime.Today.ToUniversalTime(), new List<BookingItemDTO>());
             expectedBookingDTO.BookingItems.Add(new BookingItemDTO("Facil de contratar y tremendamente efectivo", new BookingDTO(DateTime.Today.ToUniversalTime(), 1, PaymentMethod.GooglePay, usuario), new MaintenanceDTO(1, "R-512", 2, 100, new List<MaintenanceTypeDTO>())));

@@ -25,7 +25,6 @@ namespace AppForSEII2526.API.Models
             this.PaymentMethod = PaymentMethod;
             this.BookingItems = BookingItems;
             this.User = usuario;
-            this.UserId = usuario.Id;
             clientAdress = usuario.DeliveryAddress;
             clientName = usuario.Name;
             clientSurname = usuario.Surname;
@@ -73,7 +72,6 @@ namespace AppForSEII2526.API.Models
         {
             HashCode hash = new HashCode();
             hash.Add(Id);
-            hash.Add(UserId);
             hash.Add(clientAdress);
             hash.Add(clientName);
             hash.Add(clientPhoneNumber);
