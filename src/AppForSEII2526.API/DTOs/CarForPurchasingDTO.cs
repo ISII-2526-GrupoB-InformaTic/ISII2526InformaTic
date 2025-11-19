@@ -5,6 +5,23 @@ namespace AppForSEII2526.API.DTOs
     public class CarForPurchasingDTO    //DTO para enseñar los datos de los coches disponibles para comprar (DTO del select)
     {
 
+       /* public CarForPurchasingDTO(int id, String modelo, String Color, String FuelType, String Manufacture, int PurchasingPrice)
+        {
+
+            Id = id;
+
+           this.modelo = modelo;
+
+            color = Color;
+
+            fuelType = FuelType;
+
+            manufacture = Manufacture;
+
+            purchasingPrice = PurchasingPrice;
+
+        }*/
+
         public CarForPurchasingDTO(int id, Model Model,String Color, String FuelType, String Manufacture, int PurchasingPrice)
         {
 
@@ -27,6 +44,9 @@ namespace AppForSEII2526.API.DTOs
         [StringLength(50, ErrorMessage = "Title name cannot be longer than 50 characters. ")]
         public Model model { get; set; }
 
+
+       // public String modelo { get; set; }
+
         public String color { get; set; }
 
         public String fuelType { get; set; }
@@ -35,5 +55,6 @@ namespace AppForSEII2526.API.DTOs
 
         public int purchasingPrice { get; set; }
 
+        
     }
 }

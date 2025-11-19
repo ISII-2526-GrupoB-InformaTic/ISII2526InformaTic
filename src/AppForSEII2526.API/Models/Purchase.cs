@@ -35,7 +35,6 @@ namespace AppForSEII2526.API.Models
 
         public IList<PurchaseItem> purchaseItems { get; set; }   //Es una lista de PurchaseItems, Lo hemos hecho de tipo Ilist porque para relacionarlo con la clase Car necesitas la clase intermedia que es PurchaseItem
         public ApplicationUser User { get; set; }
-        public IEnumerable<object> PurchaseItems { get; set; }
         public DateTime DateTime { get; set; }
         public string Direccion { get; set; }
         public string Apellidos { get; set; }
@@ -56,6 +55,9 @@ namespace AppForSEII2526.API.Models
             Id = id;
             purchaseItems = purchaseItem;
             this.User = User;
+            Name = User.Name;
+            Apellidos = User.Surname;
+            Direccion = User.DeliveryAddress;
 
         }
 

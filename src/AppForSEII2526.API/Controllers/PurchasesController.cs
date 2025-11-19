@@ -27,16 +27,14 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(PurchaseForDetailsDTO), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
-        public async Task<ActionResult> CreatePurchase(PurchaseForCreateDTO purchaseForCreate)   //ESTAMOS CREANDO UNA NUEVA COMPRA A TRAVES DE ESTE METODO
+        public async Task<ActionResult> CreatePurchase(PurchaseForCreateDTO purchaseForCreate)   //ESTAMOS CREANDO UNA NUEVA COMPRA A TRAVES DE ESTE METODO (POST)
         {
 
             if (purchaseForCreate.nombre == null || purchaseForCreate.apellido == null || purchaseForCreate.direccion == null)
             {
                 return BadRequest("Faltan datos obligatorios");
             }
-            // Lógica para crear la compra utilizando los datos del DTO
-            // Aquí deberías agregar la lógica para guardar la compra en la base de datos
-            return CreatedAtAction(nameof(CreatePurchase), new { id = 1 }, purchaseForCreate); // Retorna un ejemplo de respuesta creada
+            
 
             if (purchaseForCreate.paymentMethod == null)
             {
@@ -142,7 +140,13 @@ namespace AppForSEII2526.API.Controllers
             var purchaseDetails = new PurchaseForDetailsDTO(purchaseForCreate.nombre, purchaseForCreate.apellido,
                 purchaseForCreate.direccion, purchase.PurchasingDate, purchase.PurchasingPrice, purchaseForCreate.purchaseItems);
 
+            _logger.LogInformation("Creada las compras a realizar");
+
             return CreatedAtAction("GetPurchase", new { id = purchase.Id }, purchaseDetails);
+
+            // Lógica para crear la compra utilizando los datos del DTO
+            // Aquí deberías agregar la lógica para guardar la compra en la base de datos
+            return CreatedAtAction(nameof(CreatePurchase), new { id = 1 }, purchaseForCreate); // Retorna un ejemplo de respuesta creada
 
         }
 
@@ -150,7 +154,7 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(typeof(PurchaseForDetailsDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult> GetPurchase(int id)   //ESTE METODO NOS PERMITE OBTENER LAS COMPRAS REALIZADAS
+        public async Task<ActionResult> GetPurchase(int id)   //ESTE METODO NOS PERMITE OBTENER LAS COMPRAS REALIZADAS  (DETAILS)
         {
 
             if (_context.Purchases == null)

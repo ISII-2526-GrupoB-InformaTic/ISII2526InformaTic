@@ -30,9 +30,6 @@ namespace AppForSEII2526.API.Models
         public String Manufacturer {  get; set; }
 
         [Required]
-        public String ReviewItems {  get; set; }
-
-        [Required]
         [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
         public int QuantityForPurchasing {  get; set; }
 
@@ -73,19 +70,19 @@ namespace AppForSEII2526.API.Models
 
         }
 
-        public Car(string carClass, string color, string description, string manufacturer, string reviewItems, int id,
-            int quantityForPurchasing, int quantityForRenting, int purchasingPrice, int rentingPrice, Model model, IList<RentalItem> rentalItems, IList<PurchaseItem> purchaseItems)
+        public Car(string carClass, string color, string description, string manufacturer, int id,
+            int quantityForPurchasing, int quantityForRenting, int purchasingPrice, int rentingPrice, string FuelType, Model model, IList<RentalItem> rentalItems, IList<PurchaseItem> purchaseItems)
         {
             this.carClass = carClass;
             Color = color;
             Description = description;
             Manufacturer = manufacturer;
-            ReviewItems = reviewItems;
             Id = id;
             QuantityForPurchasing = quantityForPurchasing;
             QuantityForRenting = quantityForRenting;
             PurchasingPrice = purchasingPrice;
             RentingPrice = rentingPrice;
+            this.FuelType = FuelType;
             Model = model;
             RentalItems = rentalItems;
             PurchaseItems = purchaseItems;
