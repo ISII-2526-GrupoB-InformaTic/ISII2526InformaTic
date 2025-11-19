@@ -29,7 +29,7 @@ namespace AppForSEII2526.UT.MaintenanceController_test
                 new Maintenance() {Id=2, Name="A-321", NumberOfDays=4, Price=200, MaintenanceTypes=new List<MaintenanceType>{ maintenanceTypes[2], maintenanceTypes[3]} },
                 new Maintenance() {Id=3, Name="H-123", NumberOfDays=6, Price=300, MaintenanceTypes=new List<MaintenanceType>{ maintenanceTypes[4]} }
             };
-            ApplicationUser usuario = new ApplicationUser("Alfonso", "Gutierrez", "alfonsogutierrez@gmail.es", "Avenida 1");
+            ApplicationUser usuario = new ApplicationUser("1", "Alfonso", "Gutierrez", "alfonsogutierrez@gmail.es", "Avenida 1");
             var bookings = new List<Booking>()
             {
                 new Booking(DateTime.Today, PaymentMethod.GooglePay ,usuario),

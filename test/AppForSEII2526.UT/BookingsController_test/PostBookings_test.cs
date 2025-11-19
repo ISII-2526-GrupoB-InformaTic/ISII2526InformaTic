@@ -38,7 +38,7 @@ namespace AppForSEII2526.UT.BookingsController_test
             maintenances[1].MaintenanceTypes.Add(maintenanceTypes[1]);
             maintenances[2].MaintenanceTypes.Add(maintenanceTypes[0]);
             maintenances[2].MaintenanceTypes.Add(maintenanceTypes[1]);
-            ApplicationUser usuario = new ApplicationUser(nombre_cliente, apellido_cliente, correo, deliveryAddress);
+            ApplicationUser usuario = new ApplicationUser("1",nombre_cliente, apellido_cliente, correo, deliveryAddress);
             var booking = new Booking(DateTime.Today, PaymentMethod.GooglePay, new List<BookingItem>(), usuario);
             booking.BookingItems.Add(new BookingItem("Facil de aplicar y tremendamente economico", booking, maintenances[0]));
             _context.ApplicationUsers.Add(usuario);
