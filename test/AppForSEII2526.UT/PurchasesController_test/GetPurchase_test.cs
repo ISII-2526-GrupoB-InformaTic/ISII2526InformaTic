@@ -62,7 +62,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
             var controller = new PurchasesController(_context, logger);
 
             // Act
-            var result = await controller.GetPurchase(0);
+            var result = await controller.GetPurchase(-1);
 
             //Assert
             //we check that the response type is OK and obtain the list of movies
