@@ -165,6 +165,12 @@ namespace AppForSEII2526.API.Controllers
 
             }
 
+            if(id < 0)
+            {
+                _logger.LogError($"Error: El id {id} introducido no es correcto");
+                return NotFound();
+            }
+
             var purchases = await _context.Purchases
                 .Where(p => p.Id == id)
                 .Include(p => p.purchaseItems)
