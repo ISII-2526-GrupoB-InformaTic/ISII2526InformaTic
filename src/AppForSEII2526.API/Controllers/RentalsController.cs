@@ -134,7 +134,11 @@ namespace AppForSEII2526.API.Controllers
                 _logger.LogError("Error: Rentals table does not exist");
                 return NotFound();
             }
-
+            if (id < 0)
+            {
+                _logger.LogError("Error: Id cannot be lower than 0");
+                return NotFound();
+            }
             var rental = await _context.Rentals
              .Where(r => r.Id == id)
                  .Include(r => r.RentalItems) //join table RentalItems
@@ -147,13 +151,11 @@ namespace AppForSEII2526.API.Controllers
                         .Select(ri => new RentalItemDTO(ri.Car.Id,ri.Quantity,ri.RentalId)).ToList<RentalItemDTO>()))
              .FirstOrDefaultAsync();
 
-
             if (rental == null)
             {
                 _logger.LogError($"Error: Rental with id {id} does not exist");
                 return NotFound();
             }
-
 
             return Ok(rental);
         }
