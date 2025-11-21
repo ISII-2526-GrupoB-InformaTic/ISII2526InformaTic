@@ -64,6 +64,20 @@ namespace AppForSEII2526.UT.BookingsController_test
         [Fact]
         [Trait("Database", "WithoutFixture")]
         [Trait("LevelTesting", "Unit Testing")]
+        public async Task GetBooking_NotFoundMenor_test()
+        {
+            //Arrange
+            var mock = new Mock<ILogger<BookingController>>();
+            ILogger<BookingController> logger = mock.Object;
+            var controller = new BookingController(_context, logger);
+            //Act
+            var result = await controller.GetBookings(-1);
+            //Assert
+            Assert.IsType<NotFoundResult>(result);
+        }
+        [Fact]
+        [Trait("Database", "WithoutFixture")]
+        [Trait("LevelTesting", "Unit Testing")]
         public async Task GetBooking_OK_test()
         {
             //Arrange
