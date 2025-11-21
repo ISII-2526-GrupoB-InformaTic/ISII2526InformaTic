@@ -31,6 +31,11 @@ namespace AppForSEII2526.API.Controllers
                 return NotFound();
             }
 
+            if (id < 0) {
+                _logger.LogError("Error: La id no puede ser menos que 0");
+                return NotFound();
+            }
+
             var booking = await _context.Bookings
                 .Where(r => r.Id == id)
                 .Include(r => r.BookingItems)
