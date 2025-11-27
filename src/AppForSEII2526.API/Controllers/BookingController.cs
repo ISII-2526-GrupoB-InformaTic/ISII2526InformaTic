@@ -102,12 +102,11 @@ namespace AppForSEII2526.API.Controllers
             if (ModelState.ErrorCount > 0)
                 return BadRequest(new ValidationProblemDetails(ModelState));
 
-            Booking booking = new Booking(DateTime.Today, bookingForCreate.PaymentMethod, new List<BookingItem>(), user);
-            booking.Price = bookingForCreate.Price;
-            booking.numberOfDays = bookingForCreate.numberOfDays;
+            Booking booking = new Booking(DateTime.Today.ToUniversalTime(), bookingForCreate.PaymentMethod, new List<BookingItem>(), user);
             foreach (var itemDto in bookingForCreate.BookingItems)
             {
                 var maintenance = await _context.Maintenances
+                    .Include(m => m.MaintenanceTypes)
                     .FirstOrDefaultAsync(m => m.Id == itemDto.MaintenanceId);
 
                 if (maintenance == null)
@@ -144,14 +143,25 @@ namespace AppForSEII2526.API.Controllers
                 return Conflict("Error" + ex.Message);
 
             }
+            foreach (var item in booking.BookingItems)
+            {
+                _context.Entry(item.Maintenance)
+                    .Collection(m => m.MaintenanceTypes)
+                    .Load();
+            }
             var bookingDetail= new BookingDetailDTO(booking.Id, booking.clientName, booking.clientSurname,
                     booking.clientAdress, (PaymentMethod)booking.PaymentMethod, booking.clientPhoneNumber,
                     booking.Date,
                     booking.BookingItems
-                        .Select(ri => new BookingItemDTO(
-                                ri.Comment,new BookingDTO(ri.Booking.Date,ri.Booking.Id,ri.Booking.PaymentMethod,ri.Booking.User),new MaintenanceDTO(ri.Maintenance.Id,ri.Maintenance.Name,ri.Maintenance.NumberOfDays,ri.Maintenance.Price,ri.Maintenance.MaintenanceTypes.Select(mt=>new MaintenanceTypeDTO(mt.Id,mt.Type)).ToList())))
+                        .Select(ri => new BookingItemDTO
+                        {
+                            BookingId = booking.Id,
+                            Comment = ri.Comment,
+                            MaintenanceId = ri.Maintenance.Id,
+                            Maintenance = new MaintenanceDTO(ri.Maintenance.Id, ri.Maintenance.Name, ri.Maintenance.NumberOfDays, ri.Maintenance.Price, ri.Maintenance.MaintenanceTypes.Select(mt => new MaintenanceTypeDTO(mt.Id, mt.Type)).ToList())
+                        })
                         .ToList());
-            return CreatedAtAction("GetBooking", new { id = booking.Id }, bookingDetail);
+            return CreatedAtAction(nameof(GetBookings), new { id = booking.Id }, bookingDetail);
         }
     }
 }

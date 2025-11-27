@@ -90,7 +90,7 @@ namespace AppForSEII2526.UT.BookingsController_test
             };
             ApplicationUser usuario = new ApplicationUser("1","Alfonso", "Gutierrez", "alfonsogutierrez@gmail.es", "Avenida 1");
 
-            var expectedBookingDTO = new BookingDetailDTO(1,"Alfonso", "Gutierrez", "Avenida 1", PaymentMethod.GooglePay,null, DateTime.Today.ToUniversalTime(), new List<BookingItemDTO>());
+            var expectedBookingDTO = new BookingDetailDTO(1,"Alfonso", "Gutierrez", "Avenida 1", PaymentMethod.GooglePay,null,DateTime.Today.ToUniversalTime(), new List<BookingItemDTO>());
             expectedBookingDTO.BookingItems.Add(new BookingItemDTO("Facil de contratar y tremendamente efectivo", new BookingDTO(DateTime.Today.ToUniversalTime(), 1, PaymentMethod.GooglePay, usuario), new MaintenanceDTO(1, "R-512", 2, 100, new List<MaintenanceTypeDTO>())));
             expectedBookingDTO.BookingItems[0].Maintenance.MaintenanceTypes.Add(maintenanceTypesDTO[0]);
             expectedBookingDTO.BookingItems[0].Maintenance.MaintenanceTypes.Add(maintenanceTypesDTO[1]);

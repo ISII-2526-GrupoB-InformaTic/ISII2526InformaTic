@@ -12,7 +12,6 @@ namespace AppForSEII2526.API.DTOs
 
         public BookingItemDTO(string comment, BookingDTO booking, MaintenanceDTO maintenance)
         {
-            Booking = booking;
             Maintenance = maintenance;
 
             BookingId = booking.Id;
@@ -35,7 +34,6 @@ namespace AppForSEII2526.API.DTOs
                    Comment == dTO.Comment &&
                    MaintenanceId == dTO.MaintenanceId &&
                    EqualityComparer<MaintenanceDTO>.Default.Equals(Maintenance, dTO.Maintenance);
-                   EqualityComparer<BookingDTO>.Default.Equals(Booking, dTO.Booking);
         }
 
         public override int GetHashCode()
