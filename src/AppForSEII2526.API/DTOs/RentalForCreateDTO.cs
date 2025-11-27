@@ -4,16 +4,16 @@ namespace AppForSEII2526.API.DTOs
     public class RentalForCreateDTO
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set your Name")]
-        [StringLength(50, MinimumLength = 10, ErrorMessage = "Name and Surname must have at least 10 characters")]
+        [StringLength(50, ErrorMessage = "Name can't be longer than 50 characters")]
         public string Name { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set your Surname")]
-        [StringLength(50, MinimumLength = 10, ErrorMessage = "Name and Surname must have at least 10 characters")]
+        [StringLength(50, ErrorMessage = "Surname can't be longer than 5 characters")]
         public string Surname { get; set; }
 
         [DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]
         [Display(Name = "Delivery Address")]
-        [StringLength(50, MinimumLength = 10, ErrorMessage = "Delivery address must have at least 10 characters")]
+        [StringLength(50,  ErrorMessage = "Delivery address can't be longer than 50 characters")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set your address for delivery")]
         public string DeliveryAddress { get; set; }
 
