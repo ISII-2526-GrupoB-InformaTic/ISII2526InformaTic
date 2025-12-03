@@ -45,28 +45,21 @@ namespace AppForSEII2526.API.Controllers
 
 
             var carModels = rentalForCreate.RentalItems
-                .Select(ri => ri.Car.Model).ToList<string>();
+                .Select(ri => ri.Car).ToList<string>();
 
             var cars = _context.Cars.Include(c => c.RentalItems)
                 .ThenInclude(ri => ri.Rental)
+                .ThenInclude(ri => ri.RentalItems)
+                .ThenInclude(ri => ri.Car)
+                .ThenInclude(ri => ri.Model)
                 .Where(m => carModels.Contains(m.Model.Name))
 
                 //we use an anonymous type https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/anonymous-types
-                .Select(m => new {
-                    m.Id,
-                    m.Model.Name,
-                    m.Manufacturer,
-                    m.QuantityForRenting,
-                    m.RentingPrice,
-                    //we count the number of rentalItems that are within the rental period
-                    NumberOfRentedItems = m.RentalItems.Count(ri => ri.Rental.StartDate <= rentalForCreate.EndDate
-                            && ri.Rental.EndDate >= rentalForCreate.StartDate)
-                })
                 .ToList();
 
 
             Rental rental = new Rental(rentalForCreate.EndDate, rentalForCreate.StartDate,
-                DateTime.Now, rentalForCreate.TotalPrice,"DeliveryCarDealer",
+                DateTime.Today, rentalForCreate.TotalPrice,"Tony",
                 new List<RentalItem>(), rentalForCreate.PaymentMethod,user);
 
 
@@ -76,17 +69,19 @@ namespace AppForSEII2526.API.Controllers
 
             foreach (var item in rentalForCreate.RentalItems)
             {
-                var car = cars.FirstOrDefault(c => c.Name == item.Car.Model);
+                var counter = 0;
+                var car = cars.FirstOrDefault(c => c.Model.Name == item.Car);
                 //we must check that there is enough quantity to be rented in the database
-                if ((car == null) || (car.NumberOfRentedItems >= car.QuantityForRenting))
+                if ((car == null) || (rentalForCreate.RentalItems[counter].Quantity > car.QuantityForRenting))
                 {
-                    ModelState.AddModelError("RentalItems", $"Error! Car model named '{item.Car.Model}' is not available for being rented from {rentalForCreate.StartDate.ToShortDateString()} to {rentalForCreate.EndDate.ToShortDateString()}");
+                    ModelState.AddModelError("RentalItems", $"Error! That car is not available for renting at this moment");
                 }
                 else
                 {
                     // rental does not exist in the database yet and does not have a valid Id, so we must relate rentalitem to the object rental
-                    rental.RentalItems.Add(new RentalItem(car.Id, car.QuantityForRenting, rental.Id,new Car(),rental));
-                    item.Car.RentingPrice = car.RentingPrice;
+                    rental.RentalItems.Add(new RentalItem(car.Id, car.QuantityForRenting, rental.Id, cars[counter],rental));
+                    item.RentingPrice = car.RentingPrice;
+                    counter++;
                 }
             }
             rental.TotalPrice = (int)rental.RentalItems.Sum(ri => ri.Car.RentingPrice * numDays);
@@ -116,7 +111,7 @@ namespace AppForSEII2526.API.Controllers
             //it returns rentalDetail
             var rentalDetail = new RentalDetailDTO(rentalForCreate.Name, rentalForCreate.Surname,
                 rentalForCreate.DeliveryAddress, rentalForCreate.PaymentMethod,
-                rental.StartDate, rental.EndDate, DateTime.Now,
+                rental.StartDate, rental.EndDate, DateTime.Today,
                 rentalForCreate.RentalItems);
 
             return CreatedAtAction("GetRental", new { id = rental.Id }, rentalDetail);

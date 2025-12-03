@@ -1,4 +1,5 @@
 ﻿
+
 namespace AppForSEII2526.API.DTOs
 {
     public class RentalItemDTO
@@ -11,16 +12,21 @@ namespace AppForSEII2526.API.DTOs
                 Quantity = quantity;
                 RentalId = rentalId;
             }
-
-            public int CarId { get; set; }
+            public RentalItemDTO(int carId, int quantity, int rentalId,int rentingPrice, string car)
+            {
+                CarId = carId;
+                Quantity = quantity;
+                RentalId = rentalId;
+                Car = car;
+                RentingPrice = rentingPrice;
+            }
+        public int CarId { get; set; }
             [Required]
             [Range(1, 100, ErrorMessage = "Minimum 1, Maximum 100")]
             public int Quantity { get; set; }
             public int RentalId { get; set; }
-            public RentalDTO Rental { get; set; }
-            public CarForRentalDTO Car { get; set; }
-            
-            public ApplicationUser User {  get; set; }
+            public int RentingPrice { get; set; }
+            public string Car { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -28,13 +34,13 @@ namespace AppForSEII2526.API.DTOs
                    CarId == dTO.CarId &&
                    Quantity == dTO.Quantity &&
                    RentalId == dTO.RentalId &&
-                   EqualityComparer<RentalDTO>.Default.Equals(Rental, dTO.Rental) &&
-                   EqualityComparer<CarForRentalDTO>.Default.Equals(Car, dTO.Car);
+                   RentingPrice == dTO.RentingPrice &&
+                   Car == dTO.Car;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(CarId, Quantity, RentalId, Rental, Car);
+            return HashCode.Combine(CarId, Quantity, RentalId, RentingPrice, Car);
         }
     }
     }

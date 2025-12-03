@@ -95,6 +95,16 @@ namespace AppForSEII2526.API.Models
             QuantityForRenting = quantityForRenting;
             FuelType = fuelType;
         }
+        public Car(string description, string color, string manufacturer, int rentingPrice,
+        int quantityForRenting, string fuelType)
+        {
+            Color = color;
+            Description = description;
+            Manufacturer = manufacturer;
+            RentingPrice = rentingPrice;
+            QuantityForRenting = quantityForRenting;
+            FuelType = fuelType;
+        }
 
         public override bool Equals(object? obj)
         {
