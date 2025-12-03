@@ -1,0 +1,62 @@
+﻿@page "/rental/selectcarsforrental"
+
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APICLient apiclient
+@inject ILogger<SelectCarsForRental> logger
+
+<h3>Rentals</h3>
+<div class="container-fluid">
+    <div class="row" hidden="@hideErrors">
+        <p>here i will show the errors</p>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <p>here i will show the filters</p>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" @onclick=@SearchCars id="searchMovies">Search movies</button>
+                </div>
+            </div>
+            <div class="row">
+                @if (cars == null)
+                {
+                    <p>Loading cars....</p>
+                }
+                else
+                {
+                    <p>number of cars available @cars.Count</p>
+
+                }
+            </div>
+        </div>
+        <div class="col-2">
+            <p>here i will show the renting cart</p>
+        </div>
+
+    </div>
+
+</div>
+@code {
+    private ICollection<CarForRentalDTO> cars;
+    private bool hideErrors { get { return errors.Length == 0; } }
+    private string errors = "";
+    private string carModel { get; set; }
+    private string minimumPrice { get; set; }
+    private string maximumPrice { get; set; }
+
+    public async void SearchCars()
+    {
+        try
+        {
+            cars = await apiclient.GetMoviesForRentingAsync(carModel, minimumPrice, maximumPrice);
+
+        }
+        catch (ApiException ex)
+        {
+            logger.LogError($"{DateTime.Now} Error: {ex}");
+            errors = "Error while connecting to the system";
+        }
+        StateHasChanged();
+    }
+
+}
