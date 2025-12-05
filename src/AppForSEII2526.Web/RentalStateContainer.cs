@@ -15,8 +15,8 @@ namespace AppForSEII2526.Web
         {
             get
             {
-                int numberOfDays = (Rental.RentalDateTo - Rental.RentalDateFrom).Days;
-                return Convert.ToDecimal(Rental.RentalItems.Sum(ri => ri.PriceForRenting * numberOfDays));
+                int numberOfDays = (Rental.EndDate - Rental.StartDate).Days;
+                return Convert.ToDecimal(Rental.RentalItems.Sum(ri => ri.RentingPrice * numberOfDays));
             }
         }
 
@@ -26,17 +26,18 @@ namespace AppForSEII2526.Web
 
 
 
-        public void AddMovieToRental(MovieForRentalDTO movie)
+        public void AddCarToRental(CarForRentalDTO car)
         {
             //before adding a movie we checked whether it has been already added
-            if (!Rental.RentalItems.Any(ri => ri.MovieID == movie.Id))
+            if (!Rental.RentalItems.Any(ri => ri.CarId == car.Id))
                 //we add it if it is not in the list
                 Rental.RentalItems.Add(new RentalItemDTO()
                 {
-                    MovieID = movie.Id,
-                    Genre = movie.Genre,
-                    Title = movie.Title,
-                    PriceForRenting = movie.PriceForRenting,
+                    CarId = car.Id,
+                    Car = car.Model,
+                    Quantity = car.QuantityForRenting,
+                    RentingPrice = car.RentingPrice,
+                    
                 }
             );
 
