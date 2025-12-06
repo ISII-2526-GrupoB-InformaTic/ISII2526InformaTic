@@ -16,13 +16,13 @@ namespace AppForSEII2526.API.DTOs
 
         public IList<BookingItemDTO> BookingItems { get; set; }
 
-        public int NumberOfDays => BookingItems.Sum(bi => bi.Maintenance.NumberOfDays);
-        public int Price => BookingItems.Sum(bi => bi.Maintenance.Price);
+        public int NumberOfDays { get; set; }
+        public int Price { get; set; }
 
         public BookingDetailDTO(
             int id, string name, string surname,
             string deliveryAddress, PaymentMethod paymentMethod,
-            string? clientPhoneNumber, DateTime bookingDate,
+            string? clientPhoneNumber, DateTime bookingDate,int precio, int dias,
             IList<BookingItemDTO> bookingItemDTOs)
         {
             Id = id;
@@ -32,6 +32,8 @@ namespace AppForSEII2526.API.DTOs
             PaymentMethod = paymentMethod;
             ClientPhoneNumber = clientPhoneNumber;
             BookingDate = bookingDate.ToUniversalTime();
+            NumberOfDays = dias;
+            Price = precio;
             BookingItems = bookingItemDTOs;
         }
 

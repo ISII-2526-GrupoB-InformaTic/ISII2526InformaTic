@@ -26,9 +26,9 @@ namespace AppForSEII2526.API.DTOs
         public PaymentMethod PaymentMethod { get; set; }
 
         public string? clientPhoneNumber { get; set; }
-        public IList<BookingItemForCreateDTO> BookingItems { get; set; }
+        public IList<BookingItemDTO> BookingItems { get; set; }
 
-        public BookingForCreateDTO(string name, string surname, string deliveryAddress, PaymentMethod paymentMethod, string? clientPhoneNumber, IList<BookingItemForCreateDTO> bookingItems)
+        public BookingForCreateDTO(string name, string surname, string deliveryAddress, PaymentMethod paymentMethod, string? clientPhoneNumber, IList<BookingItemDTO> bookingItems)
         {
             Name = name;
             Surname = surname;
@@ -40,7 +40,7 @@ namespace AppForSEII2526.API.DTOs
 
         public BookingForCreateDTO()
         {
-            BookingItems = new List<BookingItemForCreateDTO>();
+            BookingItems = new List<BookingItemDTO>();
         }
 
         public override bool Equals(object? obj)

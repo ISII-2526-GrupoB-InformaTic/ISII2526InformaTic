@@ -31,7 +31,8 @@ namespace AppForSEII2526.API.Controllers
                 return NotFound();
             }
 
-            if (id < 0) {
+            if (id < 0)
+            {
                 _logger.LogError("Error: La id no puede ser menos que 0");
                 return NotFound();
             }
@@ -40,14 +41,24 @@ namespace AppForSEII2526.API.Controllers
                 .Where(r => r.Id == id)
                 .Include(r => r.BookingItems)
                     .ThenInclude(ri => ri.Maintenance)
-                        .ThenInclude(maintenance => maintenance.MaintenanceTypes)
-                .Select(r => new BookingDetailDTO(r.Id,r.clientName, r.clientSurname,
-                    r.clientAdress, (PaymentMethod)r.PaymentMethod, r.clientPhoneNumber,
+                        .ThenInclude(m => m.MaintenanceTypes)
+                .Select(r => new BookingDetailDTO(
+                    r.Id,
+                    r.clientName,
+                    r.clientSurname,
+                    r.clientAdress,
+                    (PaymentMethod)r.PaymentMethod,
+                    r.clientPhoneNumber,
                     r.Date,
+                    r.BookingItems.Sum(bi => bi.Maintenance.Price),
+                    r.BookingItems.Sum(bi => bi.Maintenance.NumberOfDays),
                     r.BookingItems
                         .Select(ri => new BookingItemDTO(
-                                ri.Comment,new BookingDTO(ri.Booking.Date,ri.Booking.Id,ri.Booking.PaymentMethod,ri.Booking.User),new MaintenanceDTO(ri.Maintenance.Id,ri.Maintenance.Name,ri.Maintenance.NumberOfDays,ri.Maintenance.Price,ri.Maintenance.MaintenanceTypes.Select(mt=>new MaintenanceTypeDTO(mt.Id,mt.Type)).ToList())))
-                        .ToList()))
+                            ri.Comment,
+                            ri.BookingId,
+                            ri.MaintenanceId
+                        )).ToList()
+                ))
                 .FirstOrDefaultAsync();
 
             if (booking == null)
@@ -131,6 +142,9 @@ namespace AppForSEII2526.API.Controllers
             {
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
+            booking.numberOfDays = booking.BookingItems.Sum(bi => bi.Maintenance.NumberOfDays);
+            booking.Price = booking.BookingItems.Sum(bi => bi.Maintenance.Price);
+
             _context.Add(booking);
             try
             {
@@ -139,28 +153,37 @@ namespace AppForSEII2526.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                ModelState.AddModelError("Booking", $"Error! There was an error while saving your booking, plese, try again later");
-                return Conflict("Error" + ex.Message);
-
+                ModelState.AddModelError("Booking", $"Error! There was an error while saving your booking");
+                return Conflict("Error: " + ex.Message);
             }
+
             foreach (var item in booking.BookingItems)
             {
                 _context.Entry(item.Maintenance)
                     .Collection(m => m.MaintenanceTypes)
                     .Load();
             }
-            var bookingDetail= new BookingDetailDTO(booking.Id, booking.clientName, booking.clientSurname,
-                    booking.clientAdress, (PaymentMethod)booking.PaymentMethod, booking.clientPhoneNumber,
-                    booking.Date,
-                    booking.BookingItems
-                        .Select(ri => new BookingItemDTO
-                        {
-                            BookingId = booking.Id,
-                            Comment = ri.Comment,
-                            MaintenanceId = ri.Maintenance.Id,
-                            Maintenance = new MaintenanceDTO(ri.Maintenance.Id, ri.Maintenance.Name, ri.Maintenance.NumberOfDays, ri.Maintenance.Price, ri.Maintenance.MaintenanceTypes.Select(mt => new MaintenanceTypeDTO(mt.Id, mt.Type)).ToList())
-                        })
-                        .ToList());
+
+            var bookingDetail = new BookingDetailDTO(
+                booking.Id,
+                booking.clientName,
+                booking.clientSurname,
+                booking.clientAdress,
+                (PaymentMethod)booking.PaymentMethod,
+                booking.clientPhoneNumber,
+                booking.Date,
+                booking.Price,
+                booking.numberOfDays,
+                booking.BookingItems
+                    .Select(ri => new BookingItemDTO
+                    {
+                        BookingId = booking.Id,
+                        Comment = ri.Comment,
+                        MaintenanceId = ri.Maintenance.Id
+                    })
+                    .ToList()
+            );
+
             return CreatedAtAction(nameof(GetBookings), new { id = booking.Id }, bookingDetail);
         }
     }
