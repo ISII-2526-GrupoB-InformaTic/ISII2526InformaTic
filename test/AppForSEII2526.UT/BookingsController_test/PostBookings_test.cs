@@ -40,11 +40,13 @@ namespace AppForSEII2526.UT.BookingsController_test
             maintenances[2].MaintenanceTypes.Add(maintenanceTypes[1]);
             ApplicationUser usuario = new ApplicationUser("1",nombre_cliente, apellido_cliente, correo, deliveryAddress);
             var booking = new Booking(DateTime.Today, PaymentMethod.GooglePay, new List<BookingItem>(), usuario);
-            booking.BookingItems.Add(new BookingItem("Facil de aplicar y tremendamente economico", booking, maintenances[0]));
+            var bookingItem = new BookingItem("Facil de aplicar y tremendamente economico", booking, maintenances[0]);
+            booking.BookingItems.Add(bookingItem);
             _context.ApplicationUsers.Add(usuario);
             _context.AddRange(maintenanceTypes);
             _context.AddRange(maintenances);
             _context.Add(booking);
+            _context.Add(bookingItem);
             _context.SaveChanges();
         }
         public static IEnumerable<object[]> TestCasesFor_CreateMaintenance()
@@ -110,7 +112,7 @@ namespace AppForSEII2526.UT.BookingsController_test
             var controller = new BookingController(_context, logger);
 
             var maintenanceTypes = new List<MaintenanceTypeDTO>() {
-        new MaintenanceTypeDTO(1, "Cambio de aceite")
+            new MaintenanceTypeDTO(1, "Cambio de aceite")
     };
             var maintenanceDTO = new MaintenanceDTO(
                 1,             
@@ -120,11 +122,10 @@ namespace AppForSEII2526.UT.BookingsController_test
                 maintenanceTypes
             );
 
-            var bookingItemDTO = new BookingItemDTO(
-                "Facil de aplicar y tremendamente economico",
-                new BookingDTO(),
-                maintenanceDTO
-            );
+            var bookingItemDTO = new BookingItemDTO() {
+                Comment="Facil de aplicar y tremendamente economico",
+                MaintenanceId=maintenanceDTO.Id}
+            ;
             var bookingItemList = new List<BookingItemDTO>() { bookingItemDTO };
 
             var bookingForCreateDTO = new BookingForCreateDTO(
@@ -135,6 +136,11 @@ namespace AppForSEII2526.UT.BookingsController_test
                 null,
                 new List<BookingItemDTO>() { bookingItemDTO }
             );
+            var expectedBookingItemDTO = new BookingItemDTO(
+                 "Facil de aplicar y tremendamente economico",
+                  bookingID: 2,
+                  maintenanceDTO.Id
+            );
 
             var expectedBookingDetailDTO = new BookingDetailDTO(
                 2, 
@@ -143,8 +149,10 @@ namespace AppForSEII2526.UT.BookingsController_test
                 deliveryAddress,
                 PaymentMethod.Paypal,
                 null,
-                DateTime.Today,
-                new List<BookingItemDTO>() { bookingItemDTO }
+                DateTime.Today.ToUniversalTime(),
+                100,
+                2,
+                new List<BookingItemDTO>() { expectedBookingItemDTO }
             );
 
 
