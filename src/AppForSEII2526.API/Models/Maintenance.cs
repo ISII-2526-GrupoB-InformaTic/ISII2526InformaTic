@@ -6,7 +6,8 @@ namespace AppForSEII2526.API.Models
     {
         public Maintenance()
         {
-
+            BookingItems = new List<BookingItem>();
+            MaintenanceTypes = new List<MaintenanceType>();
         }
         public Maintenance(int Id, string Name, int NumberOfDays, int Price, IList<BookingItem> BookingItems, IList<MaintenanceType> MaintenanceTypes) : base()
         {
@@ -36,7 +37,7 @@ namespace AppForSEII2526.API.Models
                    NumberOfDays == maintenance.NumberOfDays &&
                    Price == maintenance.Price &&
                    BookingItems.SequenceEqual( maintenance.BookingItems) &&
-                   EqualityComparer<IList<MaintenanceType>>.Default.Equals(MaintenanceTypes, maintenance.MaintenanceTypes);
+                   MaintenanceTypes.SequenceEqual(maintenance.MaintenanceTypes);
         }
 
         public override int GetHashCode()

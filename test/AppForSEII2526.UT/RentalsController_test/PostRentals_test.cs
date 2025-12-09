@@ -31,12 +31,12 @@ namespace AppForSEII2526.UT.RentalsController_test
             };
             var cars = new List<Car>()
             {
-                new Car {carClass = "coche",Color="rojo",Description="un coche rojo",Manufacturer="Toyota",
+                new Car {Id=1,carClass = "coche",Color="rojo",Description="un coche rojo",Manufacturer="Toyota",
                     QuantityForRenting= 1, RentingPrice=2000,Model= models[0],FuelType="Gasoline" },
-                new Car {carClass = "coche",Color="amarillo",Description="un coche amarillo",Manufacturer="Toyota",
-                    QuantityForRenting= 1, RentingPrice=3000,Model= models[1],FuelType="Gasoline" },
-                new Car {carClass = "coche",Color="verde",Description="un coche verde",Manufacturer="Toyota",
-                    QuantityForRenting= 1, RentingPrice=1500,Model= models[2],FuelType="Gasoline" }
+                new Car {Id=2,carClass = "coche",Color="amarillo",Description="un coche amarillo",Manufacturer="Toyota",
+                    QuantityForRenting= 100, RentingPrice=3000,Model= models[1],FuelType="Gasoline" },
+                new Car {Id=3,carClass = "coche",Color="verde",Description="un coche verde",Manufacturer="Toyota",
+                    QuantityForRenting= 100, RentingPrice=1500,Model= models[2],FuelType="Gasoline" }
             };
 
             ApplicationUser user = new ApplicationUser("1", _Name, _Surname, _email,_deliveryAddress);
@@ -76,7 +76,7 @@ namespace AppForSEII2526.UT.RentalsController_test
                 DateTime.Today.AddDays(1), DateTime.Today.AddDays(5), rentalItems);
 
             var rentalCarNotAvailable = new RentalForCreateDTO(_Name, _Surname, _deliveryAddress, PaymentMethod.TarjetaDeCredito,
-                DateTime.Today.AddDays(1), DateTime.Today.AddDays(5), new List<RentalItemDTO>() { new RentalItemDTO(1,5,1) });
+                DateTime.Today.AddDays(1), DateTime.Today.AddDays(5), new List<RentalItemDTO>() { new RentalItemDTO(1,2,1,2000,"Toyota R") });
 
 
             var allTests = new List<object[]>
@@ -138,10 +138,10 @@ namespace AppForSEII2526.UT.RentalsController_test
             var rentingdateUnspecified = DateTime.SpecifyKind(rentingDate, DateTimeKind.Unspecified);
 
             var rentalDTO = new RentalForCreateDTO(_Name, _Surname,_deliveryAddress, PaymentMethod.TarjetaDeCredito,
-                startdateUnspecified, enddateUnspecified, new List<RentalItemDTO>() { new RentalItemDTO(2,1,2) });
+                startdateUnspecified, enddateUnspecified, new List<RentalItemDTO>() { new RentalItemDTO(2,10,0,3000,"Toyota A") });
 
             var expectedrentalDetailDTO = new RentalDetailDTO(_Name,_Surname,_deliveryAddress,PaymentMethod.TarjetaDeCredito,
-                startdateUnspecified,enddateUnspecified,rentingdateUnspecified,new List<RentalItemDTO>() { new RentalItemDTO(2,1,2) });
+                startdateUnspecified,enddateUnspecified,rentingdateUnspecified,new List<RentalItemDTO>() { new RentalItemDTO(2,10,0,3000,"Toyota A") });
 
             // Act
             var result = await controller.CreateRental(rentalDTO);
