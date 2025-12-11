@@ -32,18 +32,17 @@ namespace AppForSEII2526.API.Controllers
 
             if (purchaseForCreate.Name == null || purchaseForCreate.Surname == null || purchaseForCreate.DeliveryAddress == null)
             {
-                return BadRequest("Faltan datos obligatorios");
+                ModelState.AddModelError("Purchase", "Error! Faltan datos obligatorios");
+                return BadRequest(new ValidationProblemDetails(ModelState));
             }
             
-
-            if (purchaseForCreate.PaymentMethod == null)
+            if(purchaseForCreate.PurchaseDate < DateTime.Today)
             {
-                return BadRequest("Falta el metodo de pago");
-
+                ModelState.AddModelError("Purchase", "Error! No puedes comprarlo antes de hoy");
+                return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-
-            var user = _context.ApplicationUsers.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            var user = _context.ApplicationUsers.FirstOrDefault(u => u.Name == purchaseForCreate.Name);
 
             if (user == null)
             {
@@ -58,28 +57,23 @@ namespace AppForSEII2526.API.Controllers
             }
 
 
-            var carModels = purchaseForCreate.PurchaseItemDTO.Select(pi => pi.Car.model).ToList<String>();
+            var carModels = purchaseForCreate.PurchaseItemDTO?
+                .Select(pi => pi.Car)
+                .ToList<String>();
 
             var cars = _context.Cars
                 .Include(c => c.PurchaseItems)
                 .ThenInclude(pi => pi.purchase)
-                .Where(c => carModels.Contains(c.Model.Name)).ToList()
-                .Select(m => new
-                {
-                    m.Id,
-                    m.Model.Name,
-                    m.Color,
-                    m.Description,
-                    m.PurchasingPrice,
-                    m.QuantityForPurchasing
-
-                })
+                .ThenInclude(c => c.purchaseItems)
+                .ThenInclude(pi => pi.car)
+                .ThenInclude(c => c.Model)
+                .Where(c => c.Model != null && carModels.Contains(c.Model.Name))
                 .ToList();
 
             Purchase purchase = new Purchase(
-                purchaseForCreate.Name + " " + purchaseForCreate.Surname,
+                purchaseForCreate.Name,
                 purchaseForCreate.PaymentMethod,
-                DateTime.Now,
+                DateTime.Today,
                 purchaseForCreate.Price,
                 0,
                 new List<PurchaseItem>(),
@@ -90,20 +84,23 @@ namespace AppForSEII2526.API.Controllers
 
             foreach (var item in purchaseForCreate.PurchaseItemDTO)
             {
-                var car = cars.FirstOrDefault(c => c.Name == item.Car.model);
-                if (car == null)
+                var car = cars.FirstOrDefault(c => c.Model.Name == item.Car); //ESTA ES LA DE LA BASE DE DATOS
+
+                if (car == null || item.CarId != car.Id)
                 {
-                    return BadRequest($"El coche {item.Car.model} no existe");
+                    ModelState.AddModelError("Purchase", $"Error! El coche no existe");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
                 }
                 if (car.QuantityForPurchasing < item.Quantity)
                 {
-                    return Conflict($"No hay suficiente cantidad del coche {item.Car.model} para comprar");
+                    ModelState.AddModelError("Purchase", $"Error! No hay suficiente cantidad para comprar");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
                 }
                 PurchaseItem purchaseItem = new PurchaseItem(
                     car.Id,
                     purchase.Id,
                     item.Quantity,
-                    null,
+                    car,
                     purchase
                 );
                 purchase.purchaseItems.Add(purchaseItem);

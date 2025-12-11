@@ -19,6 +19,19 @@
 
         }
 
+        public PurchaseItemDTO(int carId, int purchaseId, int quantity, String car)
+        {
+
+            CarId = carId;
+
+            PurchaseId = purchaseId;
+
+            Quantity = quantity;
+
+            Car = car;
+
+        }
+
 
         public int CarId { get; set; }      //Ponemos el get y set para poder modificar luego los valores en la base de datos
 
@@ -29,8 +42,8 @@
         [Display(Name = "Quantity")]
         public int Quantity { get; set; }
 
-        public PurchaseDTO Purchase { get; set; }
-        public CarForPurchasingDTO Car { get; set; }
+        //public PurchaseDTO Purchase { get; set; }   //DABA ERROR DEBIDO A QUE PURCHASE LLAMABA A PURCHASEITEM, Y PURCHASEITEM LLAMABA A USER Y USER LLAMABA PURCHASE Y ASI TODO EL RATO
+        public String Car { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -43,19 +56,14 @@
 
                 Quantity == item.Quantity &&
 
-                EqualityComparer<PurchaseDTO>.Default.Equals(Purchase, item.Purchase) &&
-
-                EqualityComparer<CarForPurchasingDTO>.Default.Equals(Car, item.Car);
-
-
-
+                Car == item.Car;
 
         }
 
         public override int GetHashCode()
         {
 
-            return HashCode.Combine(CarId, PurchaseId, Quantity, Purchase, Car);
+            return HashCode.Combine(CarId, PurchaseId, Quantity, Car);
 
         }
 
