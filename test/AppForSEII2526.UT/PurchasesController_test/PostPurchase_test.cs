@@ -1,4 +1,5 @@
-﻿using AppForSEII2526.API.DTOs;
+﻿using AppForSEII2526.API.Controllers;
+using AppForSEII2526.API.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
 {
     public class PostPurchase_test : AppForSEII25264SqliteUT
     {
-        /*
+        
 
         private const string _userName = "elena.navarro@uclm.es";
         private const string _customerName = "Elena ";
@@ -34,8 +35,8 @@ namespace AppForSEII2526.UT.PurchasesController_test
             var coche = new List<Car>()
             {
 
-                new Car("coche", _carColor1, "Un coche rojo", "Ford", "", 1, 5000, 2000, 50000, 30000, modelo[0], null, null),
-                new Car("coche",_carColor2, "Un coche azul", "Citroen", "", 2, 5000, 2000, 60000, 30000, modelo[1], null, null)
+                new Car("coche", _carColor1, "Un coche rojo", "Ford", 1, 5, 2000, 50000, 30000, modelo[0], null, null),
+                new Car("coche",_carColor2, "Un coche azul", "Citroen", 2, 4, 2000, 60000, 30000, modelo[1], null, null)
 
             };
 
@@ -57,18 +58,96 @@ namespace AppForSEII2526.UT.PurchasesController_test
         }
 
 
-      /*  public static IEnumerable<object[]> TestCasesFor_CreatePurchase()
+        public static IEnumerable<object[]> TestCasesFor_CreatePurchase()
         {
 
-            var purchaseNoItem = new PurchaseForCreateDTO(_carColor1, "", 50000, 
-                                 _customerName, _customerSurName, _deliveryAddress, 
-                                 PaymentMethod.TarjetaDeCredito,
-                                 new List<PurchaseItemDTO>());
+            var purchaseItems = new List<PurchaseItemDTO>() {new PurchaseItemDTO(1, 1, 3, _carModel1)};
 
-            var purchaseItems = new List<PurchaseItemDTO>() {new PurchaseItemDTO(1, 1, 25000)};
+            var purchaseBeforeToday = new PurchaseForCreateDTO(_customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today.AddDays(-1), purchaseItems);
+
+            var purchaseNotName = new PurchaseForCreateDTO(null, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, purchaseItems);
+
+            var purchaseNotSurName = new PurchaseForCreateDTO(_customerName, null, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, purchaseItems);
+
+            var purchaseNotDelivery= new PurchaseForCreateDTO(_customerName, _customerSurName, null, PaymentMethod.TarjetaDeCredito, DateTime.Today, purchaseItems);
+
+            var purchaseCarNotExist = new PurchaseForCreateDTO(_customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, new List<PurchaseItemDTO>(){ 
+                new PurchaseItemDTO(3, 1, 25000, "Toyota") 
+            });
+
+            var purchaseQuantityNotEnough = new PurchaseForCreateDTO(_customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, new List<PurchaseItemDTO>(){
+                new PurchaseItemDTO(1, 1, 7, _carModel1)
+            });
+
+            var allTest = new List<object[]>
+            {
+                new object[] {purchaseBeforeToday, "Error! No puedes comprarlo antes de hoy", },
+                new object[] {purchaseNotName, "Error! Faltan datos obligatorios", },
+                new object[] {purchaseNotSurName, "Error! Faltan datos obligatorios", },
+                new object[] {purchaseNotDelivery, "Error! Faltan datos obligatorios", },
+                new object[] {purchaseCarNotExist, "Error! El coche no existe", },
+                new object[] {purchaseQuantityNotEnough, "Error! No hay suficiente cantidad para comprar"}
+            };
+
+            return allTest;
 
         }
-      */
+
+        [Theory]
+        [Trait("LevelTesting", "Unit Testing")]
+        [Trait("Database", "WithoutFixture")]
+        [MemberData(nameof(TestCasesFor_CreatePurchase))]
+        public async Task CreatePurchase_Error_test(PurchaseForCreateDTO purchaseDTO, string errorExpected)
+        {
+            //Arrange
+            var mock = new Mock<ILogger<PurchasesController>>();
+            ILogger<PurchasesController> logger = mock.Object;
+
+            
+            var controller = new PurchasesController(_context, logger);
+
+            //Act
+            var result = await controller.CreatePurchase(purchaseDTO);
+
+            //Assert
+            //we check that the response type is BadRequest and obtain the error returned
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
+
+            var errorActual = problemDetails.Errors.First().Value[0];
+
+            //we check that the expected error message and actual are the same
+            Assert.StartsWith(errorExpected, errorActual);
+
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        [Trait("Database", "WithoutFixture")]
+        public async Task CreatePurchase_Success_test()
+        {
+            //Arrange
+            var mock = new Mock<ILogger<PurchasesController>>();
+            ILogger<PurchasesController> logger = mock.Object;
+
+            //Act
+            var controller = new PurchasesController(_context, logger);
+
+            var purchaseDTO = new PurchaseForCreateDTO(_customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, new List<PurchaseItemDTO>() { new PurchaseItemDTO(1, 1, 2, _carModel1) });
+
+            var expectedPurchaseDetailDTO = new PurchaseForDetailsDTO(_customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, new List<PurchaseItemDTO>() { new PurchaseItemDTO(1, 1, 2, _carModel1) });
+
+            // Act
+            var result = await controller.CreatePurchase(purchaseDTO);
+
+            //Assert
+            //we check that the response type is BadRequest and obtain the error returned
+            var createdResult = Assert.IsType<CreatedAtActionResult>(result);
+            var actualPurchaseDetailDTO = Assert.IsType<PurchaseForDetailsDTO>(createdResult.Value);
+
+            Assert.Equal(expectedPurchaseDetailDTO, actualPurchaseDetailDTO);
+        }
+
 
     }
 }
