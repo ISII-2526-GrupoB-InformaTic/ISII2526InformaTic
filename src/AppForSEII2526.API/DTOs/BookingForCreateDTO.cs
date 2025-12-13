@@ -15,6 +15,9 @@ namespace AppForSEII2526.API.DTOs
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set your Surname")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Name and Surname must have at least 3 characters")]
         public string Surname { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set your Username")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Username must have at least 3 characters")]
+        public string Username { get; set; }
 
         [DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]
         [Display(Name = "Delivery Address")]
@@ -28,10 +31,11 @@ namespace AppForSEII2526.API.DTOs
         public string? clientPhoneNumber { get; set; }
         public IList<BookingItemDTO> BookingItems { get; set; }
 
-        public BookingForCreateDTO(string name, string surname, string deliveryAddress, PaymentMethod paymentMethod, string? clientPhoneNumber, IList<BookingItemDTO> bookingItems)
+        public BookingForCreateDTO(string name, string surname, string username, string deliveryAddress, PaymentMethod paymentMethod, string? clientPhoneNumber, IList<BookingItemDTO> bookingItems)
         {
             Name = name;
             Surname = surname;
+            Username = username;
             DeliveryAddress = deliveryAddress;
             PaymentMethod = paymentMethod;
             this.clientPhoneNumber = clientPhoneNumber;

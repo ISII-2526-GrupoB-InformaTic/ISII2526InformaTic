@@ -51,7 +51,7 @@ namespace AppForSEII2526.UT.BookingsController_test
         }
         public static IEnumerable<object[]> TestCasesFor_CreateMaintenance()
         {
-            var maintenanceNoItems = new BookingForCreateDTO(nombre_cliente, apellido_cliente, deliveryAddress, PaymentMethod.Paypal, null, new List<BookingItemDTO>());
+            var maintenanceNoItems = new BookingForCreateDTO(nombre_cliente, apellido_cliente,correo, deliveryAddress, PaymentMethod.Paypal, null, new List<BookingItemDTO>());
             var bookingItems = new List<BookingItemDTO>()
             {
                 new BookingItemDTO() { Comment="Facil de aplicar y tremendamente economico",MaintenanceId=1 },
@@ -65,18 +65,20 @@ namespace AppForSEII2526.UT.BookingsController_test
             {
                 new BookingItemDTO() { Comment="Muy bueno",MaintenanceId=1 },
             };
-            var maintenanceNoName = new BookingForCreateDTO("", apellido_cliente, deliveryAddress, PaymentMethod.Paypal, null, bookingItems);
-            var maintenanceNoSurname = new BookingForCreateDTO(nombre_cliente, "", deliveryAddress, PaymentMethod.Paypal, null, bookingItems);
-            var maintenanceNoAddress = new BookingForCreateDTO(nombre_cliente, apellido_cliente, "", PaymentMethod.Paypal, null, bookingItems);
-            var maintenanceInvalidPaymentMethod = new BookingForCreateDTO(nombre_cliente, apellido_cliente, deliveryAddress, (PaymentMethod)999, null, bookingItems);
-            var maintenanceNoUser = new BookingForCreateDTO("Maradona", "Huseopos", "El inframundo greco romano", PaymentMethod.Paypal, null, bookingItems);
-            var maintenanceNoComment = new BookingForCreateDTO(nombre_cliente, apellido_cliente, deliveryAddress, PaymentMethod.Paypal, null, bookingItemsNoComment);
-            var maintenanceNoCommentShort = new BookingForCreateDTO(nombre_cliente, apellido_cliente, deliveryAddress, PaymentMethod.Paypal, null, bookingItemsCommentShort);
+            var maintenanceNoName = new BookingForCreateDTO("", apellido_cliente, correo, deliveryAddress, PaymentMethod.Paypal, null, bookingItems);
+            var maintenanceNoSurname = new BookingForCreateDTO(nombre_cliente, "", correo, deliveryAddress, PaymentMethod.Paypal, null, bookingItems);
+            var maintenanceNoUsername = new BookingForCreateDTO(nombre_cliente, apellido_cliente, "", deliveryAddress, PaymentMethod.Paypal, null, bookingItems);
+            var maintenanceNoAddress = new BookingForCreateDTO(nombre_cliente, apellido_cliente, correo,"", PaymentMethod.Paypal, null, bookingItems);
+            var maintenanceInvalidPaymentMethod = new BookingForCreateDTO(nombre_cliente, apellido_cliente, correo, deliveryAddress, (PaymentMethod)999, null, bookingItems);
+            var maintenanceNoUser = new BookingForCreateDTO("Maradona", "Huseopos", correo, "El inframundo greco romano", PaymentMethod.Paypal, null, bookingItems);
+            var maintenanceNoComment = new BookingForCreateDTO(nombre_cliente, apellido_cliente, correo, deliveryAddress, PaymentMethod.Paypal, null, bookingItemsNoComment);
+            var maintenanceNoCommentShort = new BookingForCreateDTO(nombre_cliente, apellido_cliente, correo, deliveryAddress, PaymentMethod.Paypal, null, bookingItemsCommentShort);
             var allTestCases = new List<object[]>
             {
                 new object[] { maintenanceNoItems, "Error! You must include at least one maintenance for booking" },
                 new object[] { maintenanceNoName, "Error! Name is required" },
                 new object[] { maintenanceNoSurname, "Error! Surname is required" },
+                new object[] { maintenanceNoUsername, "Error! Username is required" },
                 new object[] { maintenanceNoAddress, "Error! Delivery address is required" },
                 new object[] { maintenanceInvalidPaymentMethod, "Error! A valid payment method is required" },
                 new object[] { maintenanceNoComment, "Error! Comment is required for each maintenance (min 20 characters)" },
@@ -134,6 +136,7 @@ namespace AppForSEII2526.UT.BookingsController_test
             var bookingForCreateDTO = new BookingForCreateDTO(
                 nombre_cliente,
                 apellido_cliente,
+                correo,
                 deliveryAddress,
                 PaymentMethod.Paypal,
                 null,
