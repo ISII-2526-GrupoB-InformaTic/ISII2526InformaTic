@@ -16,12 +16,16 @@ namespace AppForSEII2526.API.Models
 
             BookingId = booking.Id;
             MaintenanceId = maintenance.Id;
+            Price=maintenance.Price;
+            MaintName=maintenance.Name;
         }
 
         public int BookingId { get; set; }
         public Booking Booking { get; set; }
         public int MaintenanceId { get; set; }
         public Maintenance Maintenance { get; set; }
+        public string MaintName { get; set; }
+        public int Price { get; set; }
 
         [StringLength(200, ErrorMessage = "El comentario debe tener menos de 200 caracteres y mas de 20.", MinimumLength = 20)]
         public string Comment { get; set; }
@@ -32,6 +36,8 @@ namespace AppForSEII2526.API.Models
                    BookingId == item.BookingId &&
                    Comment == item.Comment &&
                    MaintenanceId == item.MaintenanceId &&
+                   Price == item.Price &&
+                   MaintName == item.MaintName &&
                    EqualityComparer<Booking>.Default.Equals(Booking, item.Booking) &&
                    EqualityComparer<Maintenance>.Default.Equals(Maintenance, item.Maintenance);
         }

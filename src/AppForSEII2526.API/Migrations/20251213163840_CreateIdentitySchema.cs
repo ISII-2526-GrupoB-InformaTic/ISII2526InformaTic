@@ -220,7 +220,7 @@ namespace AppForSEII2526.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DeliveryCarDealer = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    DeliveryCarDealer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentMethod = table.Column<int>(type: "int", nullable: false),
                     PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PurchasingPrice = table.Column<int>(type: "int", nullable: false),
@@ -299,6 +299,8 @@ namespace AppForSEII2526.API.Migrations
                 {
                     BookingId = table.Column<int>(type: "int", nullable: false),
                     MaintenanceId = table.Column<int>(type: "int", nullable: false),
+                    MaintName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
@@ -325,8 +327,8 @@ namespace AppForSEII2526.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    MaintenanceId = table.Column<int>(type: "int", nullable: false),
-                    CarId = table.Column<int>(type: "int", nullable: true)
+                    CarId = table.Column<int>(type: "int", nullable: true),
+                    MaintenanceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -340,8 +342,7 @@ namespace AppForSEII2526.API.Migrations
                         name: "FK_MaintenanceTypes_Maintenances_MaintenanceId",
                         column: x => x.MaintenanceId,
                         principalTable: "Maintenances",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

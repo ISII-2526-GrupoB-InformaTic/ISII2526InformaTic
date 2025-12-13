@@ -56,7 +56,9 @@ namespace AppForSEII2526.API.Controllers
                         .Select(ri => new BookingItemDTO(
                             ri.Comment,
                             ri.BookingId,
-                            ri.MaintenanceId
+                            ri.MaintenanceId,
+                            ri.Maintenance.Name,
+                            ri.Maintenance.Price
                         )).ToList()
                 ))
                 .FirstOrDefaultAsync();
@@ -133,7 +135,9 @@ namespace AppForSEII2526.API.Controllers
                     Booking = booking,              
                     Maintenance = maintenance,
                     BookingId = booking.Id,
-                    MaintenanceId = maintenance.Id
+                    MaintenanceId = maintenance.Id,
+                    MaintName = maintenance.Name,
+                    Price = maintenance.Price
                 };
 
                 booking.BookingItems.Add(bookingItem);
@@ -143,7 +147,7 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
             booking.numberOfDays = booking.BookingItems.Sum(bi => bi.Maintenance.NumberOfDays);
-            booking.Price = booking.BookingItems.Sum(bi => bi.Maintenance.Price);
+            booking.Price = booking.BookingItems.Sum(bi => bi.Price);
 
             _context.Add(booking);
             try
@@ -179,7 +183,9 @@ namespace AppForSEII2526.API.Controllers
                     {
                         BookingId = booking.Id,
                         Comment = ri.Comment,
-                        MaintenanceId = ri.Maintenance.Id
+                        MaintenanceId = ri.Maintenance.Id,
+                        MaintName= ri.Maintenance.Name,
+                        Price = ri.Maintenance.Price
                     })
                     .ToList()
             );

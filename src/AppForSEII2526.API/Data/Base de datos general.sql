@@ -7,7 +7,6 @@ INSERT INTO [dbo].[Models] ([Id], [Name]) VALUES (5, N'Mercedes')
 INSERT INTO [dbo].[Models] ([Id], [Name]) VALUES (6, N'Toyota')
 SET IDENTITY_INSERT [dbo].[Models] OFF
 
-
 SET IDENTITY_INSERT [dbo].[Cars] ON
 INSERT INTO [dbo].[Cars] ([Id], [carClass], [Color], [Description], [Manufacturer], [QuantityForPurchasing], [QuantityForRenting], [PurchasingPrice], [RentingPrice], [ModelId], [FuelType]) VALUES (1001, N'Mondeo', N'Rojo', N'5 puertas', N'Ford Company', 2, 1, 5600, 800, 3, N'Gasolina')
 INSERT INTO [dbo].[Cars] ([Id], [carClass], [Color], [Description], [Manufacturer], [QuantityForPurchasing], [QuantityForRenting], [PurchasingPrice], [RentingPrice], [ModelId],  [FuelType]) VALUES (1002, N'F80', N'Azul', N'2 puertas', N'Ferrari Company', 1, 0, 500000, 0, 4, N'Gasolina')
@@ -15,11 +14,6 @@ INSERT INTO [dbo].[Cars] ([Id], [carClass], [Color], [Description], [Manufacture
 INSERT INTO [dbo].[Cars] ([Id], [carClass], [Color], [Description], [Manufacturer], [QuantityForPurchasing], [QuantityForRenting], [PurchasingPrice], [RentingPrice], [ModelId],  [FuelType]) VALUES (1009, N'C-HR', N'Negro', N'4 puertas', N'Toyota', 5, 2, 30750, 2000, 6, N'Electrico')
 INSERT INTO [dbo].[Cars] ([Id], [carClass], [Color], [Description], [Manufacturer], [QuantityForPurchasing], [QuantityForRenting], [PurchasingPrice], [RentingPrice], [ModelId],  [FuelType]) VALUES (1010, N'C3', N'Azul-Marino', N'4 puertas', N'Citroen', 8, 4, 15940, 1500, 1, N'Gasoleo')
 SET IDENTITY_INSERT [dbo].[Cars] OFF
-
-
-INSERT INTO [dbo].[AspNetUsers] ([Id], [Name], [Surname], [DeliveryAddress], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'1', N'Pepe', N'Viyuela', N'Calle MiCasa Nº7', N'pepeV@uclm.es', N'pepeV', N'pepeV@uclm.es', N'pepeV@uclm.es', 1, N'', NULL, NULL, NULL, 0, 0, N'10/11/2025 0:00:00 +01:00', 1, 0)
-INSERT INTO [dbo].[AspNetUsers] ([Id], [Name], [Surname], [DeliveryAddress], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'2', N'Alicia', N'Magentano', N'Calle Termina Nº5', N'aliciaM@uclm.es', N'aliciaM', N'aliciaM@uclm.es', N'aliciaM@uclm.es', 1, N'', NULL, NULL, NULL, 0, 0, N'10/11/2025 0:00:00 +01:00', 1, 0)
-INSERT INTO [dbo].[AspNetUsers] ([Id], [Name], [Surname], [DeliveryAddress], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'3', N'Mark', N'Fischbach', N'Avda. Unnus Nº1', N'markF@uclm.es', N'markF', N'markF@uclm.es', N'markF@uclm.es', 1, N'', NULL, NULL, NULL, 0, 0, N'10/11/2025 0:00:00 +01:00', 1, 0)
 
 
 Set identity_insert [dbo].[Rentals] ON
@@ -52,8 +46,8 @@ INSERT INTO [dbo].[Bookings] ([Id],[UserId],[Date],[PaymentMethod],[Price],[numb
 SET IDENTITY_INSERT [dbo].[Bookings] OFF
 
 
-INSERT INTO [dbo].[BookingItems] ([BookingId],[MaintenanceId],[Comment]) Values (1,1,N'Muy buen servicio')
-INSERT INTO [dbo].[BookingItems] ([BookingId],[MaintenanceId],[Comment]) Values (2,2,N'Rapido y eficiente')
+INSERT INTO [dbo].[BookingItems] ([BookingId],[MaintenanceId],[Comment],[MaintName],[Price]) Values (1,1,N'Muy buen servicio',N'A-312',100)
+INSERT INTO [dbo].[BookingItems] ([BookingId],[MaintenanceId],[Comment],[MaintName],[Price]) Values (2,2,N'Rapido y eficiente',N'B-312',150)
 
 
 Set identity_insert [dbo].[Purchases] ON

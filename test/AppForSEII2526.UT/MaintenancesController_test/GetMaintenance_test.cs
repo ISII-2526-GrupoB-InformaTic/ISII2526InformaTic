@@ -38,9 +38,9 @@ namespace AppForSEII2526.UT.MaintenanceController_test
             };
             var bookingItems = new List<BookingItem>()
             {
-                new BookingItem() { Comment="Facil",Booking=bookings[0], Maintenance=maintenances[0]},
-                new BookingItem() { Comment = "Dificil",Booking=bookings[1], Maintenance=maintenances[1]},
-                new BookingItem() { Comment = "Intermedio",Booking=bookings[2], Maintenance=maintenances[2]}
+                new BookingItem() { Comment="Facil",Booking=bookings[0], Maintenance=maintenances[0],MaintName=maintenances[0].Name,Price=maintenances[0].Price},
+                new BookingItem() { Comment = "Dificil",Booking=bookings[1], Maintenance=maintenances[1],MaintName=maintenances[1].Name,Price=maintenances[1].Price},
+                new BookingItem() { Comment = "Intermedio",Booking=bookings[2], Maintenance=maintenances[2],MaintName=maintenances[2].Name,Price=maintenances[2].Price}
             };
 
             _context.AddRange(maintenanceTypes);

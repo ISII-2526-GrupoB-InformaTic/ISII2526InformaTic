@@ -57,7 +57,7 @@ namespace AppForSEII2526.API.Controllers
                     m.Name,
                     m.NumberOfDays,
                     m.Price,
-                    m.MaintenanceTypes.OrderBy(mt => mt.Id).Select(mt => new MaintenanceTypeDTO(mt.Id, mt.Type, null)).ToList()
+                    m.MaintenanceTypes.OrderBy(mt => mt.Id).Select(mt => new MaintenanceTypeDTO(mt.Id, mt.Type)).ToList()
                 ))
                 .ToListAsync();
 

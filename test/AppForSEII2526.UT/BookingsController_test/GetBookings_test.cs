@@ -37,9 +37,9 @@ namespace AppForSEII2526.UT.BookingsController_test
             };
             var bookingItems = new List<BookingItem>()
             {
-                new BookingItem() { Comment="Facil de contratar y tremendamente efectivo",Booking=bookings[0], Maintenance=maintenances[0]},
-                new BookingItem() { Comment = "Dificil y tremendamente efectivo",Booking=bookings[1], Maintenance=maintenances[1]},
-                new BookingItem() { Comment = "Intermedio de contratar y tremendamente efectivo",Booking=bookings[2], Maintenance=maintenances[2]}
+                new BookingItem() { Comment="Facil de contratar y tremendamente efectivo",Booking=bookings[0], Maintenance=maintenances[0],MaintName=maintenances[0].Name,Price=maintenances[0].Price},
+                new BookingItem() { Comment = "Dificil y tremendamente efectivo",Booking=bookings[1], Maintenance=maintenances[1],MaintName=maintenances[1].Name,Price=maintenances[1].Price},
+                new BookingItem() { Comment = "Intermedio de contratar y tremendamente efectivo",Booking=bookings[2], Maintenance=maintenances[2],MaintName=maintenances[0].Name,Price=maintenances[2].Price}
             };
             _context.AddRange(maintenanceTypes);
             _context.AddRange(maintenances);
@@ -88,7 +88,7 @@ namespace AppForSEII2526.UT.BookingsController_test
             ApplicationUser usuario = new ApplicationUser("1","Alfonso", "Gutierrez", "alfonsogutierrez@gmail.es", "Avenida 1");
 
             var expectedBookingDTO = new BookingDetailDTO(1,"Alfonso", "Gutierrez", "Avenida 1", PaymentMethod.GooglePay,null,DateTime.Today.ToUniversalTime(),100,2, new List<BookingItemDTO>());
-            expectedBookingDTO.BookingItems.Add(new BookingItemDTO("Facil de contratar y tremendamente efectivo", 1, 1));
+            expectedBookingDTO.BookingItems.Add(new BookingItemDTO("Facil de contratar y tremendamente efectivo", 1, 1,"R-512", 100));
             //Act
             var result = await controller.GetBookings(1);
             //Assert
