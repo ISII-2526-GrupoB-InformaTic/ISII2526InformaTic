@@ -823,6 +823,10 @@
           "price": {
             "type": "integer",
             "format": "int32"
+          },
+          "numberOfDays": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

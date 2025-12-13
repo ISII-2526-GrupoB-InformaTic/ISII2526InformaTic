@@ -1,0 +1,115 @@
+﻿@page "/booking/detailbooking"
+@using AppForSEII2526.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject AppForSEII2526APIClient apiclient
+
+<h3>DetailBooking</h3>
+
+@attribute [Authorize]
+@if (booking == null)
+{
+    <p>@error</p>
+}
+else
+{
+    <table class="table table-borderless table-sm">
+        <tr>
+            <th>Name and Surname</th>
+            <td id="NameSurname">@booking.Name @booking.Surname</td>
+        </tr>
+        <tr>
+            <th>Delivery Address</th>
+            <td id="DeliveryAddress">@booking.DeliveryAddress</td>
+        </tr>
+        <tr>
+            <th>Payment Method</th>
+            <td id="PaymentMethod">@booking.PaymentMethod</td>
+        </tr>
+        <tr>
+            <th>Booking Date</th>
+            <td id="BookingDate">@booking.BookingDate.ToString("dd/MM/yyyy hh:mm:ss")</td>
+        </tr>
+        <tr>
+            <th>Number of Days</th>
+            <td id="BookingDays">@booking.NumberOfDays</td>
+        </tr>
+    </table>
+
+    <h4>Booked Maintenances</h4>
+
+    <table class="table" id="BookedMaintenaces">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">NumberOfDays</th>
+                <th scope="col">Comment</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (BookingItemDTO item in booking.BookingItems)
+            {
+                <tr id="BookingItem_@item.MaintName">
+                    <td>@item.MaintName</td>
+                    <td>@item.Price€</td>
+                    <td>@item.NumberOfDays</td>
+                    <td>@item.Comment</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            @*colspan is used to state that TWO columns are collapsed*@
+        <th scope="row" colspan="2" class="text-end">Total Price</th>
+        <td id="TotalPrice">@booking.Price €</td>
+        </tfoot>
+
+    </table>
+
+}
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int BookingId { get; set; }
+    private BookingDetailDTO booking;
+    private string error = "";
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+
+        //we check the user is logged in
+        string userName = "";
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            //we retrieve the id of the user logged in
+            if (user is not null)
+            {
+                if (user.Identity is not null && user.Identity.IsAuthenticated && user.IsInRole("User"))
+                {
+                    userName = user.Identity.Name;
+                }
+            }
+        }
+
+        try
+        {
+            booking = await apiclient.GetBookingsAsync(BookingId);
+        }
+        catch (ApiException exception)
+        {
+            booking = null;
+        }
+        if ((booking == null) || (booking.Name != userName))
+        {
+            error = $"Error! You are not authorized to see this rental or there is not a rental with id={BookingId}";
+        }
+
+
+    }
+
+}

@@ -301,6 +301,7 @@ namespace AppForSEII2526.API.Migrations
                     MaintenanceId = table.Column<int>(type: "int", nullable: false),
                     MaintName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
+                    NumberOfDays = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
