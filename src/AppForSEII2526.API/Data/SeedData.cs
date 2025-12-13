@@ -40,7 +40,7 @@
                 {
                     IdentityRole role = new IdentityRole();
                     role.Name = roleName;
-                    role.NormalizedName = roleName;
+                    role.NormalizedName = roleName.ToUpper();
                     IdentityResult roleResult = roleManager.CreateAsync(role).Result;
                 }
             }
@@ -53,6 +53,8 @@
             if (userManager.FindByNameAsync("pepeV@uclm.es").Result == null)
             {
                 ApplicationUser user = new ApplicationUser("1", "Pepe", "Viyuela", "pepeV@uclm.es", "Calle MiCasa Nº7");
+                user.UserName = "pepeV@uclm.es";
+                user.NormalizedUserName = "PEPEV@UCLM.ES";
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "Password1234%");
@@ -68,6 +70,8 @@
             if (userManager.FindByNameAsync("aliciaM@uclm.es").Result == null)
             {
                 ApplicationUser user = new ApplicationUser("2", "Alicia", "Magentano", "aliciaM@uclm.es", "Calle Termina Nº5");
+                user.UserName = "aliciaM@uclm.es";
+                user.NormalizedUserName = "ALICIAM@UCLM.ES";
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "APassword1234%");
@@ -84,6 +88,8 @@
             {
                 //A customer class has been defined because it has different attributes (purchase, rental, etc.)
                 ApplicationUser user = new ApplicationUser("3", "Mark", "Fischbach", "markF@uclm.es", "Avda. Unnus Nº1");
+                user.UserName = "markF@uclm.es";
+                user.NormalizedUserName = "MARKF@UCLM.ES";
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "OtherPass12$");
