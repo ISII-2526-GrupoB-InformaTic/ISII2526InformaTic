@@ -46,8 +46,8 @@ INSERT INTO [dbo].[Bookings] ([Id],[UserId],[Date],[PaymentMethod],[Price],[numb
 SET IDENTITY_INSERT [dbo].[Bookings] OFF
 
 
-INSERT INTO [dbo].[BookingItems] ([BookingId],[MaintenanceId],[Comment],[MaintName],[Price]) Values (1,1,N'Muy buen servicio',N'A-312',100)
-INSERT INTO [dbo].[BookingItems] ([BookingId],[MaintenanceId],[Comment],[MaintName],[Price]) Values (2,2,N'Rapido y eficiente',N'B-312',150)
+INSERT INTO [dbo].[BookingItems] ([BookingId],[MaintenanceId],[Comment],[MaintName],[Price],[NumberOfDays]) Values (1,1,N'Muy buen servicio',N'A-312',100,4)
+INSERT INTO [dbo].[BookingItems] ([BookingId],[MaintenanceId],[Comment],[MaintName],[Price],[NumberOfDays]) Values (2,2,N'Rapido y eficiente',N'B-312',150,8)
 
 
 Set identity_insert [dbo].[Purchases] ON

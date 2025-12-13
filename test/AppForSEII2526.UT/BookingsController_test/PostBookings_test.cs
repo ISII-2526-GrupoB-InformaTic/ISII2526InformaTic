@@ -126,7 +126,8 @@ namespace AppForSEII2526.UT.BookingsController_test
                 Comment="Facil de aplicar y tremendamente economico",
                 MaintenanceId=maintenanceDTO.Id,
                 MaintName=maintenanceDTO.Name,
-                Price=maintenanceDTO.Price}
+                Price=maintenanceDTO.Price,
+                NumberOfDays=maintenanceDTO.NumberOfDays}
             ;
             var bookingItemList = new List<BookingItemDTO>() { bookingItemDTO };
 
@@ -143,7 +144,8 @@ namespace AppForSEII2526.UT.BookingsController_test
                   bookingID: 2,
                   maintenanceDTO.Id,
                   maintenanceDTO.Name,
-                  maintenanceDTO.Price
+                  maintenanceDTO.Price,
+                  maintenanceDTO.NumberOfDays
             );
 
             var expectedBookingDetailDTO = new BookingDetailDTO(

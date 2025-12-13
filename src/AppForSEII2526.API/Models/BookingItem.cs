@@ -18,6 +18,7 @@ namespace AppForSEII2526.API.Models
             MaintenanceId = maintenance.Id;
             Price=maintenance.Price;
             MaintName=maintenance.Name;
+            NumberOfDays=maintenance.NumberOfDays;
         }
 
         public int BookingId { get; set; }
@@ -26,6 +27,7 @@ namespace AppForSEII2526.API.Models
         public Maintenance Maintenance { get; set; }
         public string MaintName { get; set; }
         public int Price { get; set; }
+        public int NumberOfDays { get; set; }
 
         [StringLength(200, ErrorMessage = "El comentario debe tener menos de 200 caracteres y mas de 20.", MinimumLength = 20)]
         public string Comment { get; set; }
@@ -38,13 +40,14 @@ namespace AppForSEII2526.API.Models
                    MaintenanceId == item.MaintenanceId &&
                    Price == item.Price &&
                    MaintName == item.MaintName &&
+                     NumberOfDays == item.NumberOfDays &&
                    EqualityComparer<Booking>.Default.Equals(Booking, item.Booking) &&
                    EqualityComparer<Maintenance>.Default.Equals(Maintenance, item.Maintenance);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(BookingId, Comment, MaintenanceId, Booking, Maintenance);
+            return HashCode.Combine(BookingId, Comment, MaintenanceId,Price,MaintName,NumberOfDays, Booking, Maintenance);
         }
     }
 }

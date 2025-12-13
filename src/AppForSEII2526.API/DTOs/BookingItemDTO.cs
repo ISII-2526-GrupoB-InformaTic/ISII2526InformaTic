@@ -10,13 +10,14 @@ namespace AppForSEII2526.API.DTOs
 
         }
 
-        public BookingItemDTO(string comment, int bookingID, int maintenanceID, string maintName, int price)
+        public BookingItemDTO(string comment, int bookingID, int maintenanceID, string maintName, int price, int Days)
         {
             MaintenanceId = maintenanceID;
             BookingId = bookingID;
             Comment = comment;
             MaintName = maintName;
             Price = price;
+            NumberOfDays = Days;
         }
 
         public int BookingId { get; set; }
@@ -25,6 +26,7 @@ namespace AppForSEII2526.API.DTOs
         public int MaintenanceId { get; set; }
         public string MaintName { get; set; }
         public int Price { get; set; }
+        public int NumberOfDays { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -33,12 +35,13 @@ namespace AppForSEII2526.API.DTOs
                    Comment == dTO.Comment &&
                    MaintenanceId == dTO.MaintenanceId &&
                      MaintName == dTO.MaintName &&
-                     Price == dTO.Price;
+                     Price == dTO.Price &&
+                     NumberOfDays == dTO.NumberOfDays;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(BookingId, Comment, MaintenanceId, MaintName, Price);
+            return HashCode.Combine(BookingId, Comment, MaintenanceId, MaintName, Price, NumberOfDays);
         }
     }
 }
