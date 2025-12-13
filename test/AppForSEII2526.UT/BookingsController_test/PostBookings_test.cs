@@ -70,7 +70,7 @@ namespace AppForSEII2526.UT.BookingsController_test
             var maintenanceNoUsername = new BookingForCreateDTO(nombre_cliente, apellido_cliente, "", deliveryAddress, PaymentMethod.Paypal, null, bookingItems);
             var maintenanceNoAddress = new BookingForCreateDTO(nombre_cliente, apellido_cliente, correo,"", PaymentMethod.Paypal, null, bookingItems);
             var maintenanceInvalidPaymentMethod = new BookingForCreateDTO(nombre_cliente, apellido_cliente, correo, deliveryAddress, (PaymentMethod)999, null, bookingItems);
-            var maintenanceNoUser = new BookingForCreateDTO("Maradona", "Huseopos", correo, "El inframundo greco romano", PaymentMethod.Paypal, null, bookingItems);
+            var maintenanceNoUser = new BookingForCreateDTO("Calaca", "Huseopos", "ElMasHuesudo@hades.es", "El inframundo greco romano", PaymentMethod.Paypal, null, bookingItems);
             var maintenanceNoComment = new BookingForCreateDTO(nombre_cliente, apellido_cliente, correo, deliveryAddress, PaymentMethod.Paypal, null, bookingItemsNoComment);
             var maintenanceNoCommentShort = new BookingForCreateDTO(nombre_cliente, apellido_cliente, correo, deliveryAddress, PaymentMethod.Paypal, null, bookingItemsCommentShort);
             var allTestCases = new List<object[]>
