@@ -1300,6 +1300,10 @@
           "car": {
             "type": "string",
             "nullable": true
+          },
+          "manufacturer": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
