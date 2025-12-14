@@ -18,6 +18,7 @@ public class ApplicationUser : IdentityUser
         Name = name;
         Surname = surname;
         Email = email;
+        UserName = email;
         DeliveryAddress = deliveryAddress;
     }
 }

@@ -762,7 +762,8 @@
           "deliveryAddress",
           "name",
           "paymentMethod",
-          "surname"
+          "surname",
+          "username"
         ],
         "type": "object",
         "properties": {
@@ -772,6 +773,11 @@
             "type": "string"
           },
           "surname": {
+            "maxLength": 50,
+            "minLength": 3,
+            "type": "string"
+          },
+          "username": {
             "maxLength": 50,
             "minLength": 3,
             "type": "string"

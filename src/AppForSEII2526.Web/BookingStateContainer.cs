@@ -33,7 +33,8 @@ namespace AppForSEII2526.Web
                 {
                     MaintenanceId = maintenance.Id,
                     MaintName = maintenance.Name,
-                    Price = maintenance.Price
+                    Price = maintenance.Price,
+                    NumberOfDays = maintenance.NumberOfDays
                 }
             );
             NotifyStateChanged();
