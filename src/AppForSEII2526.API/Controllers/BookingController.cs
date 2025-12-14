@@ -119,6 +119,7 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest(new ValidationProblemDetails(ModelState));
 
             Booking booking = new Booking(DateTime.Today.ToUniversalTime(), bookingForCreate.PaymentMethod, new List<BookingItem>(), user);
+            booking.clientPhoneNumber = bookingForCreate.clientPhoneNumber;
             foreach (var itemDto in bookingForCreate.BookingItems)
             {
                 var maintenance = await _context.Maintenances
