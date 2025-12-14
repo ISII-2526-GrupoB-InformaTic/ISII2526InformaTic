@@ -48,7 +48,7 @@ namespace AppForSEII2526.API.Controllers
 
             IList<CarForRentalDTO> cars = await _context.Cars
                 .Include(c => c.Model)
-                .Where(c => ((modelFilter == null) || (c.Model.Name.Equals(modelFilter))) &&
+                .Where(c => ((modelFilter == null) || (c.Model.Name.Contains(modelFilter))) &&
                     ((c.RentingPrice <= priceMax) || (priceMax==null)) &&
                     ((c.RentingPrice >= priceMin) || (priceMin==null)))
                 .OrderBy(c=> c.Model.Name)  
