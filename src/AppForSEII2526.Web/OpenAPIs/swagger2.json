@@ -1163,6 +1163,10 @@
             },
             "nullable": true
           },
+          "manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
           "price": {
             "type": "integer",
             "format": "int32"
@@ -1171,6 +1175,10 @@
             "type": "number",
             "format": "double",
             "readOnly": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
           },
           "id": {
             "type": "integer",
@@ -1261,6 +1269,10 @@
             "type": "string",
             "format": "date"
           },
+          "manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
           "price": {
             "type": "integer",
             "format": "int32"
@@ -1269,6 +1281,10 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

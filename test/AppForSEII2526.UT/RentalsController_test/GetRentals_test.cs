@@ -3,6 +3,7 @@ using AppForSEII2526.API.DTOs;
 using Humanizer.Localisation;
 using System;
 using System.Collections.Generic;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,7 +87,7 @@ namespace AppForSEII2526.UT.RentalsController_test
             var rentingdateUnspecified = DateTime.SpecifyKind(rentingDate, DateTimeKind.Unspecified);
 
             var expectedRental = new RentalDetailDTO("Pepe","Viyuela", "Calle MiCasa Nº7",PaymentMethod.TarjetaDeCredito,
-                startdateUnspecified,enddateUnspecified,rentingdateUnspecified, new List<RentalItemDTO>());
+                startdateUnspecified,enddateUnspecified,rentingdateUnspecified, new List<RentalItemDTO>(),"pepeV@uclm.es");
             expectedRental.RentalItems.Add(new RentalItemDTO(1,5,1));
 
             // Act 

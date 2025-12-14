@@ -11,12 +11,12 @@ namespace AppForSEII2526.Web
         };
 
         //we compute the TotalPrice of the movies we have selected for renting them
-        public decimal TotalPrice
+        public int TotalPrice
         {
             get
             {
                 int numberOfDays = (Rental.EndDate - Rental.StartDate).Days;
-                return Convert.ToDecimal(Rental.RentalItems.Sum(ri => ri.RentingPrice * numberOfDays));
+                return Rental.RentalItems.Sum(ri => ri.RentingPrice * numberOfDays);
             }
         }
 
@@ -37,7 +37,7 @@ namespace AppForSEII2526.Web
                     Car = car.Model,
                     Quantity = car.QuantityForRenting,
                     RentingPrice = car.RentingPrice,
-                    
+                    Manufacturer = car.Manufacturer,
                 }
             );
 

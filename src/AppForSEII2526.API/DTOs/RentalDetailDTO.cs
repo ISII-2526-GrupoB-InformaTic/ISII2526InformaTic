@@ -47,9 +47,10 @@ namespace AppForSEII2526.API.DTOs
                 return (Price * NumberOfDays)/2;
             }
         }
+        
 
         public RentalDetailDTO(string name, string surname, string deliveryAddress,PaymentMethod paymentMethod,
-            DateTime startDate, DateTime endDate,DateTime rentingDate, IList<RentalItemDTO> rentalItems) :base (name,surname,deliveryAddress,paymentMethod,startDate,endDate,rentalItems)
+            DateTime startDate, DateTime endDate,DateTime rentingDate, IList<RentalItemDTO> rentalItems, string username) :base (name,surname,deliveryAddress,paymentMethod,startDate,endDate,rentalItems,username)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Surname = surname ?? throw new ArgumentNullException(nameof(surname));
@@ -64,6 +65,22 @@ namespace AppForSEII2526.API.DTOs
             DateTime.SpecifyKind(RentingDate, DateTimeKind.Local);
         }
 
+        public RentalDetailDTO(int id, string name, string surname, string deliveryAddress, PaymentMethod paymentMethod,
+        DateTime startDate, DateTime endDate, DateTime rentingDate, IList<RentalItemDTO> rentalItems, string username) : base(name, surname, deliveryAddress, paymentMethod, startDate, endDate, rentalItems, username)
+        {
+            Id = id;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Surname = surname ?? throw new ArgumentNullException(nameof(surname));
+            DeliveryAddress = deliveryAddress ?? throw new ArgumentNullException(nameof(deliveryAddress));
+            PaymentMethod = paymentMethod;
+            StartDate = startDate;
+            EndDate = endDate;
+            RentingDate = rentingDate;
+
+            DateTime.SpecifyKind(StartDate, DateTimeKind.Local);
+            DateTime.SpecifyKind(EndDate, DateTimeKind.Local);
+            DateTime.SpecifyKind(RentingDate, DateTimeKind.Local);
+        }
         public override bool Equals(object? obj)
         {
             return obj is RentalDetailDTO dTO &&

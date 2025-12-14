@@ -2,10 +2,10 @@
 @using AppForSEII2526.Web.API
 @using Microsoft.AspNetCore.Authorization
 @inject AppForSEII2526APIClient apiclient
-
+@attribute [Authorize]
 <h3>DetailRental</h3>
 
-@attribute [Authorize]
+
 @if (rental == null)
 {
     <p>@error</p>
@@ -64,7 +64,7 @@ else
         <tfoot>
             @*colspan is used to state that TWO columns are collapsed*@
         <th scope="row" colspan="2" class="text-end">Total Price</th>
-        <td id="TotalPrice">@rental.TotalPrice €</td>
+        <td id="TotalPrice">@TotalPrice €</td>
         </tfoot>
 
     </table>
@@ -78,6 +78,21 @@ else
     private RentalDetailDTO rental;
     private string error = "";
 
+    private int NumberOfDays
+    {
+        get
+        {
+            return (rental.EndDate - rental.StartDate).Days;
+        }
+    }
+    private int TotalPrice
+    {
+        get
+        {
+            int price = rental.RentalItems.Sum(ri => ri.RentingPrice * NumberOfDays * ri.Quantity);
+            return price;
+        }
+    }
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
     protected override async Task OnInitializedAsync()

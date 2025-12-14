@@ -36,7 +36,7 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("RentalItems", "Error! You must include at least one car to be rented");
 
             // if (!_context.ApplicationUsers.Any(au=>au.UserName==rentalForCreate.CustomerUserName))
-            var user = _context.ApplicationUsers.FirstOrDefault(au => au.Name == rentalForCreate.Name);
+            var user = _context.ApplicationUsers.FirstOrDefault(au => au.UserName == rentalForCreate.Username);
             if (user == null)
                 ModelState.AddModelError("RentalApplicationUser", "Error! User is not registered");
 
@@ -47,11 +47,13 @@ namespace AppForSEII2526.API.Controllers
             var carModels = rentalForCreate.RentalItems
                 .Select(ri => ri.Car).ToList<string>();
 
-            var cars = _context.Cars.Include(c => c.RentalItems)
+            var cars = _context.Cars
+                .Include(c => c.Model)
+                .Include(c => c.RentalItems)
                 .ThenInclude(ri => ri.Rental)
                 .ThenInclude(ri => ri.RentalItems)
                 .ThenInclude(ri => ri.Car)
-                .ThenInclude(ri => ri.Model)
+
                 .Where(m => carModels.Contains(m.Model.Name))
 
                 //we use an anonymous type https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/anonymous-types
@@ -109,10 +111,10 @@ namespace AppForSEII2526.API.Controllers
             }
 
             //it returns rentalDetail
-            var rentalDetail = new RentalDetailDTO(rentalForCreate.Name, rentalForCreate.Surname,
+            var rentalDetail = new RentalDetailDTO(rental.Id,rentalForCreate.Name, rentalForCreate.Surname,
                 rentalForCreate.DeliveryAddress, rentalForCreate.PaymentMethod,
                 rental.StartDate, rental.EndDate, DateTime.Today,
-                rentalForCreate.RentalItems);
+                rentalForCreate.RentalItems,rentalForCreate.Username);
 
             return CreatedAtAction("GetRental", new { id = rental.Id }, rentalDetail);
         }
@@ -139,11 +141,12 @@ namespace AppForSEII2526.API.Controllers
                  .Include(r => r.RentalItems) //join table RentalItems
                     .ThenInclude(ri => ri.Car) //then join table Cars
                         .ThenInclude(car => car.Model) //then join table Model
-             .Select(r => new RentalDetailDTO(r.User.Name, r.User.Surname,
+             .Select(r => new RentalDetailDTO(r.Id,r.User.Name, r.User.Surname,
                     r.User.DeliveryAddress, r.PaymentMethod,
                     r.StartDate, r.EndDate,r.RentingDate,
                     r.RentalItems
-                        .Select(ri => new RentalItemDTO(ri.Car.Id,ri.Quantity,ri.RentalId)).ToList<RentalItemDTO>()))
+                        .Select(ri => new RentalItemDTO(ri.Car.Id,ri.Quantity,ri.RentalId,ri.Car.RentingPrice,ri.Car.Model.Name,
+                        ri.Car.Manufacturer)).ToList<RentalItemDTO>(),r.User.UserName))
              .FirstOrDefaultAsync();
 
             if (rental == null)

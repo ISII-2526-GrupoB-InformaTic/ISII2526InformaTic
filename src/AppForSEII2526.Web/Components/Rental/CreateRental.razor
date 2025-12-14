@@ -1,15 +1,15 @@
-﻿@page "/booking/createbooking"
+﻿@page "/rental/createrental"
 @using AppForSEII2526.Web.API
 @using AppForSEII2526.Web.Components.Shared
 @using Microsoft.AspNetCore.Authorization
 @inject AppForSEII2526APIClient apiclient
-@inject ILogger<CreateBooking> logger
-@inject BookingStateContainer bookingState
+@inject ILogger<CreateRental> logger
+@inject RentalStateContainer rentalContainer
 @inject NavigationManager navigation
 
 @attribute [Authorize]
-<h3>CreateBooking</h3>
-<EditForm Model="booking" OnValidSubmit="OpenDialog">
+<h3>CreateRental</h3>
+<EditForm Model="rental" OnValidSubmit="OpenDialog">
     <div class="row">
         <DataAnnotationsValidator />
         <ValidationSummary class="row alert alert-danger" />
@@ -20,28 +20,29 @@
     <div class="row g-3">
         <div class="col-md">
             <div class="form-floating mb-3">
-                <InputText @bind-Value="booking.Name" class="form-control" id="Name" />
+                <InputText @bind-Value="rental.Name" class="form-control" id="Name" />
                 <label for="Name">Name </label>
             </div>
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
-                <InputText @bind-Value="booking.Surname" class="form-control" id="Surname" />
+                <InputText @bind-Value="rental.Surname" class="form-control" id="Surname" />
                 <label for="Name">Surname </label>
             </div>
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
-                <InputText @bind-Value="booking.DeliveryAddress" class="form-control" id="DeliveryAddress" />
+                <InputText @bind-Value="rental.DeliveryAddress" class="form-control" id="DeliveryAddress" />
                 <label for="DeliveryAddress">Delivery Address</label>
             </div>
         </div>
     </div>
-        <div class="row g-2">
+    <div class="row g-2">
+        <p>number of cars @rental.RentalItems.Count</p>
         <div class="col-md">
             <div class="form-floating">
                 @*a dropdown for selecting the payment method*@
-                <InputSelect class="form-select" @bind-Value="@booking.PaymentMethod" id="PaymentMethod">
+                <InputSelect class="form-select" @bind-Value="@rental.PaymentMethod" id="PaymentMethod">
                     <option value="@PaymentMethod.TarjetaDeCredito" default> CreditCard</option>
                     <option value="@PaymentMethod.Paypal"> PayPal</option>
                     <option value="@PaymentMethod.Metálico"> Cash</option>
@@ -51,48 +52,43 @@
                 <label for="PaymentMethod">Payment Method</label>
             </div>
         </div>
-        <div class="col-md">
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="booking.ClientPhoneNumber" class="form-control" id="ClientPhoneNumber" />
-                <label for="ClientPhoneNumber">Client PhoneNumber</label>
-            </div>
-        </div>
+
 
         <div class="col-md">
             <div class="form-floating">
                 @*this button will be used to ask the user if he want to proceed to rent the movies*@
-                <button class="btn btn-primary" type="submit" id="Submit" disabled="@bookingButtonDisabled">
-                    Book your maintenances
+                <button class="btn btn-primary" type="submit" id="Submit" disabled="@rentalButtonDisabled">
+                    Rent cars
                 </button>
             </div>
         </div>
     </div>
-    <h4>Booking detail</h4>
-    <p><b>Total days:</b> @TotalDays</p>
+    <h4>Rental detail</h4>
+    <p><b>Total days:</b> @NumberOfDays</p>
     <p>
-        <b>Total price:</b> @TotalCost €
-        <button class="btn btn-outline-primary" type="submit" @onclick="ModifyBookingItems" id="ModifyMaintenances">
-            Modify maintenances
+        <b>Total price:</b> @TotalPrice €
+        <button class="btn btn-outline-primary" type="submit" @onclick="ModifyRentalItems" id="ModifyRentals">
+            Modify rental
         </button>
     </p>
     <div class="mh-100 table-responsive">
-        <table class="table table-condensed table-hover" id="TableOfBookingItems">
+        <table class="table table-condensed table-hover" id="TableOfRentalItems">
             <thead>
                 <tr>
-                    <th>MaintName</th>
+                    <th>Model</th>
+                    <th>Manufacturer</th>
                     <th>Price</th>
-                    <th>NumberOfDays</th>
-                    <th>Comment</th>
+                    <th>Quantity</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in booking.BookingItems)
+                @foreach (var item in rental.RentalItems)
                 {
-                    <tr id="MaintData_@item.MaintName">
-                        <td>@item.MaintName</td>
-                        <td>@item.Price</td>
-                        <td>@item.NumberOfDays</td>
-                        <td><InputText @bind-Value="item.Comment" class="form-control" id="@($"Comment_{item.MaintenanceId}")" /></td>
+                    <tr id="RentalId_@item.RentalId">
+                        <td>@item.Car</td>
+                        <td>@item.Manufacturer</td>
+                        <td>@item.RentingPrice</td>
+                        <td><InputNumber @bind-Value="item.Quantity" class="form-control" id="@($"Quantity_{item.CarId}")" /></td>
                     </tr>
                 }
             </tbody>
@@ -103,8 +99,8 @@
 @*a modal popup dialog for checking if user wants to proceed to rent*@
 @if (DialogIsOpen)
 {
-    <Dialog Caption="Booked Maintenances"
-            Message="Do you want to proceed to book the selected maintenances?"
+    <Dialog Caption="Rented Cars"
+            Message="Do you want to proceed to rent the selected cars?"
             OnClose="@OnDialogClose"
             Type=Dialog.Category.SaveNot>
     </Dialog>
@@ -112,30 +108,29 @@
 
 @code {
     private string messageError = "";
-    private bool bookingButtonDisabled { get { return (booking.BookingItems == null || booking.BookingItems.Count == 0); } }
+    private bool rentalButtonDisabled { get { return (rental.RentalItems == null || rental.RentalItems.Count == 0); } }
     private bool hideErrors { get { return messageError.Length == 0; } }
     private bool DialogIsOpen;
-    private int TotalDays
+    private int NumberOfDays
     {
         get
         {
-            int days = booking.BookingItems.Sum(ri => ri.NumberOfDays);
-            return days;
+            return (rental.EndDate - rental.StartDate).Days;
         }
     }
-    private int TotalCost
+    private int TotalPrice
     {
         get
         {
-            int price = booking.BookingItems.Sum(ri => ri.Price);
+            int price = rental.RentalItems.Sum(ri => ri.RentingPrice * NumberOfDays * ri.Quantity);
             return price;
         }
     }
-    private void ModifyBookingItems()
+    private void ModifyRentalItems()
     {
-        navigation.NavigateTo("/booking/selectmaintenancesforbooking");
+        navigation.NavigateTo("/rental/selectcarsforrental");
     }
-    private BookingForCreateDTO booking => bookingState.Booking;
+    private RentalForCreateDTO rental => rentalContainer.Rental;
     private void OpenDialog()
     {
         DialogIsOpen = true;
@@ -147,13 +142,13 @@
         DialogIsOpen = false;
         if (isOk)
         {
-            if (booking.BookingItems.Count > 0)
+            if (rental.RentalItems.Count > 0)
             {
                 try
                 {
-                    var booked = await apiclient.CreateBookingAsync(booking);
-                    bookingState.BookingProcessed();
-                    navigation.NavigateTo($"/booking/detailbooking/?BookingId={booked.Id}");
+                    var rented = await apiclient.CreateRentalAsync(rental);
+                    rentalContainer.RentalProcessed();
+                    navigation.NavigateTo($"/rental/detailrental/?rentalId={rented.Id}");
                 }
                 catch (ApiException<ValidationProblemDetails> apiexceptionvalidation)
                 {
@@ -178,6 +173,9 @@
     }
     protected override async Task OnInitializedAsync()
     {
+        rental.StartDate = DateTime.Today.AddDays(1);
+        rental.EndDate = DateTime.Today.AddDays(8);
+        rental.RentingDate = DateTime.Today;
 
         if (authenticationState is not null)
         {
@@ -188,12 +186,12 @@
             {
                 if (user.Identity is not null && user.Identity.IsAuthenticated)
                 {
-                    booking.Username = user.Identity.Name;
+                    rental.Username = user.Identity.Name;
                 }
             }
-            booking.Name = booking.Name == null ? "" : booking.Name;
-            booking.Surname = booking.Surname == null ? "" : booking.Surname;
-            booking.DeliveryAddress = booking.DeliveryAddress == null ? "" : booking.DeliveryAddress;
+            rental.Name = rental.Name == null ? "" : rental.Name;
+            rental.Surname = rental.Surname == null ? "" : rental.Surname;
+            rental.DeliveryAddress = rental.DeliveryAddress == null ? "" : rental.DeliveryAddress;
 
         }
     }
