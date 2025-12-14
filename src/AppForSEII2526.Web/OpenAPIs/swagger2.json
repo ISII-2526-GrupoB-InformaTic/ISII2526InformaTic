@@ -1163,6 +1163,10 @@
             },
             "nullable": true
           },
+          "manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
           "price": {
             "type": "integer",
             "format": "int32"
@@ -1264,6 +1268,10 @@
           "rentingDate": {
             "type": "string",
             "format": "date"
+          },
+          "manufacturer": {
+            "type": "string",
+            "nullable": true
           },
           "price": {
             "type": "integer",

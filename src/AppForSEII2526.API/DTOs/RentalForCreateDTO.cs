@@ -71,6 +71,7 @@ namespace AppForSEII2526.API.DTOs
             EndDate = endDate;
             Username = username;
         }
+
         public RentalForCreateDTO()
         {
             RentalItems = new List<RentalItemDTO>();
