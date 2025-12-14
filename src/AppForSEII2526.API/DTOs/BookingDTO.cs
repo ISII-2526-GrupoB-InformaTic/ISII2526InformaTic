@@ -18,7 +18,8 @@ namespace AppForSEII2526.API.DTOs
             this.PaymentMethod = PaymentMethod;
             this.User = usuario;
             clientAdress = usuario.DeliveryAddress;
-            clientName = usuario.UserName;
+            clientUsername= usuario.UserName;
+            clientName = usuario.Name;
             clientSurname = usuario.Surname;
             clientPhoneNumber = usuario.PhoneNumber;
         }
@@ -30,7 +31,8 @@ namespace AppForSEII2526.API.DTOs
             this.BookingItems = BookingItems;
             this.User = usuario;
             clientAdress = usuario.DeliveryAddress;
-            clientName = usuario.UserName;
+            clientUsername = usuario.UserName;
+            clientName = usuario.Name;
             clientSurname = usuario.Surname;
             clientPhoneNumber = usuario.PhoneNumber;
         }
@@ -45,6 +47,8 @@ namespace AppForSEII2526.API.DTOs
         public string? clientPhoneNumber { get; set; }
         [StringLength(10, ErrorMessage = "El apellido debe tener menos de 10 caracteres y mas de 3.", MinimumLength = 3)]
         public string clientSurname { get; set; }
+        [StringLength(20, ErrorMessage = "El email debe tener menos de 20 caracteres y mas de 3.", MinimumLength = 3)]
+        public string clientUsername { get; set; }
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
         public PaymentMethod PaymentMethod { get; set; }

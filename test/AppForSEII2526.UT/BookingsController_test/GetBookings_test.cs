@@ -37,9 +37,9 @@ namespace AppForSEII2526.UT.BookingsController_test
             };
             var bookingItems = new List<BookingItem>()
             {
-                new BookingItem() { Comment="Facil de contratar y tremendamente efectivo",Booking=bookings[0], Maintenance=maintenances[0]},
-                new BookingItem() { Comment = "Dificil y tremendamente efectivo",Booking=bookings[1], Maintenance=maintenances[1]},
-                new BookingItem() { Comment = "Intermedio de contratar y tremendamente efectivo",Booking=bookings[2], Maintenance=maintenances[2]}
+                new BookingItem() { Comment="Facil de contratar y tremendamente efectivo",Booking=bookings[0], Maintenance=maintenances[0],MaintName=maintenances[0].Name,Price=maintenances[0].Price,NumberOfDays=maintenances[0].NumberOfDays},
+                new BookingItem() { Comment = "Dificil y tremendamente efectivo",Booking=bookings[1], Maintenance=maintenances[1],MaintName=maintenances[1].Name,Price=maintenances[1].Price,NumberOfDays=maintenances[1].NumberOfDays},
+                new BookingItem() { Comment = "Intermedio de contratar y tremendamente efectivo",Booking=bookings[2], Maintenance=maintenances[2],MaintName=maintenances[0].Name,Price=maintenances[2].Price,NumberOfDays=maintenances[2].NumberOfDays}
             };
             _context.AddRange(maintenanceTypes);
             _context.AddRange(maintenances);
@@ -84,16 +84,11 @@ namespace AppForSEII2526.UT.BookingsController_test
             var mock = new Mock<ILogger<BookingController>>();
             ILogger<BookingController> logger = mock.Object;
             var controller = new BookingController(_context, logger);
-            var maintenanceTypesDTO = new List<MaintenanceTypeDTO>() {
-                new MaintenanceTypeDTO (1,"Cambio de aceite"),
-                new MaintenanceTypeDTO (2,"Ajustar frenos"),
-            };
+
             ApplicationUser usuario = new ApplicationUser("1","Alfonso", "Gutierrez", "alfonsogutierrez@gmail.es", "Avenida 1");
 
-            var expectedBookingDTO = new BookingDetailDTO(1,"Alfonso", "Gutierrez", "Avenida 1", PaymentMethod.GooglePay,null, DateTime.Today.ToUniversalTime(), new List<BookingItemDTO>());
-            expectedBookingDTO.BookingItems.Add(new BookingItemDTO("Facil de contratar y tremendamente efectivo", new BookingDTO(DateTime.Today.ToUniversalTime(), 1, PaymentMethod.GooglePay, usuario), new MaintenanceDTO(1, "R-512", 2, 100, new List<MaintenanceTypeDTO>())));
-            expectedBookingDTO.BookingItems[0].Maintenance.MaintenanceTypes.Add(maintenanceTypesDTO[0]);
-            expectedBookingDTO.BookingItems[0].Maintenance.MaintenanceTypes.Add(maintenanceTypesDTO[1]);
+            var expectedBookingDTO = new BookingDetailDTO(1,"Alfonso", "Gutierrez", "Avenida 1", PaymentMethod.GooglePay,null,DateTime.Today.ToUniversalTime(),100,2, new List<BookingItemDTO>());
+            expectedBookingDTO.BookingItems.Add(new BookingItemDTO("Facil de contratar y tremendamente efectivo", 1, 1,"R-512", 100,2));
             //Act
             var result = await controller.GetBookings(1);
             //Assert

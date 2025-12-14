@@ -85,6 +85,16 @@ namespace AppForSEII2526.API.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("MaintName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberOfDays")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
                     b.HasKey("BookingId", "MaintenanceId");
 
                     b.HasIndex("MaintenanceId");
@@ -188,7 +198,7 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<int?>("CarId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MaintenanceId")
+                    b.Property<int?>("MaintenanceId")
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
@@ -233,8 +243,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.Property<string>("DeliveryCarDealer")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
@@ -592,13 +601,9 @@ namespace AppForSEII2526.API.Migrations
                         .WithMany("MaintenanceTypes")
                         .HasForeignKey("CarId");
 
-                    b.HasOne("AppForSEII2526.API.Models.Maintenance", "Maintenance")
+                    b.HasOne("AppForSEII2526.API.Models.Maintenance", null)
                         .WithMany("MaintenanceTypes")
-                        .HasForeignKey("MaintenanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Maintenance");
+                        .HasForeignKey("MaintenanceId");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Purchase", b =>

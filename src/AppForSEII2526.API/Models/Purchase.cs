@@ -7,7 +7,6 @@ namespace AppForSEII2526.API.Models
         internal int purchasing;
 
         [Required]
-        [StringLength(10, ErrorMessage = "Nombre no valido")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
         public String DeliveryCarDealer { get; set; }
 

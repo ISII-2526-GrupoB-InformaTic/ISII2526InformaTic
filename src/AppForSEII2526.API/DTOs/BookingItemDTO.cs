@@ -10,23 +10,23 @@ namespace AppForSEII2526.API.DTOs
 
         }
 
-        public BookingItemDTO(string comment, BookingDTO booking, MaintenanceDTO maintenance)
+        public BookingItemDTO(string comment, int bookingID, int maintenanceID, string maintName, int price, int Days)
         {
-            Booking = booking;
-            Maintenance = maintenance;
-
-            BookingId = booking.Id;
-            MaintenanceId = maintenance.Id;
+            MaintenanceId = maintenanceID;
+            BookingId = bookingID;
             Comment = comment;
+            MaintName = maintName;
+            Price = price;
+            NumberOfDays = Days;
         }
 
         public int BookingId { get; set; }
         [StringLength(200, ErrorMessage = "El comentario debe tener menos de 200 caracteres y mas de 20.", MinimumLength = 20)]
         public string Comment { get; set; }
         public int MaintenanceId { get; set; }
-
-        public BookingDTO Booking { get; set; }
-        public MaintenanceDTO Maintenance { get; set; }
+        public string MaintName { get; set; }
+        public int Price { get; set; }
+        public int NumberOfDays { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -34,13 +34,14 @@ namespace AppForSEII2526.API.DTOs
                    BookingId == dTO.BookingId &&
                    Comment == dTO.Comment &&
                    MaintenanceId == dTO.MaintenanceId &&
-                   EqualityComparer<MaintenanceDTO>.Default.Equals(Maintenance, dTO.Maintenance);
-                   EqualityComparer<BookingDTO>.Default.Equals(Booking, dTO.Booking);
+                     MaintName == dTO.MaintName &&
+                     Price == dTO.Price &&
+                     NumberOfDays == dTO.NumberOfDays;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(BookingId, Comment, MaintenanceId, Booking, Maintenance);
+            return HashCode.Combine(BookingId, Comment, MaintenanceId, MaintName, Price, NumberOfDays);
         }
     }
 }

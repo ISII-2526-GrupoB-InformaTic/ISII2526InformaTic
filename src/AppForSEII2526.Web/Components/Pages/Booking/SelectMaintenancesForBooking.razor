@@ -1,0 +1,159 @@
+﻿@page "/booking/selectmaintenancesforbooking"
+
+@using Microsoft.AspNetCore.Authorization
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<SelectMaintenancesForBooking> logger
+@inject BookingStateContainer bookingState
+@inject NavigationManager navigation
+
+@attribute [Authorize]
+<h3>Select Maintenances For Booking</h3>
+
+<div class="container-fluid">
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        <p id="ErrorsShown">Errors: @errors</p>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <p>Filters</p>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Type</span>
+                        <input type="text" id="inputType" @bind=maintenaceType class="form-control" placeholder="Type" aria-label="Type" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Name</span>
+                        <input type="text" id="Name" @bind=maintenaceName class="form-control" placeholder="Name" aria-label="Name" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" @onclick=@SearchMaintenances id="searchMaintenances">Search maintenances</button>
+                </div>
+            </div>
+            <div class="row">
+                @if (maintenances == null)
+                {
+                    <p>Loading maintenances....</p>
+                }
+                else
+                {
+                    <p>number of maintenances @maintenances.Count</p>
+                    <div class="mh-100 table-responsive">
+                        <table class="table table-condensed table-hover" id="TableOfMaintenances">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Types:</th>
+                                    <th>NumberOfDays</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var maintenance in maintenances)
+                                {
+                                    string maintenanceTypestr = "";
+
+                                    <tr id="MaintenanceData_@maintenance.Name">
+                                        <td>@maintenance.Name</td>
+                                        @foreach (var MaintenanceType in maintenance.MaintenanceTypes)
+                                        {   if (maintenanceTypestr == "") { maintenanceTypestr = MaintenanceType.Type; }
+                                            else maintenanceTypestr = maintenanceTypestr + ", " + MaintenanceType.Type;
+                                        }
+                                        <td>@maintenanceTypestr</td>
+                                        <td>@maintenance.NumberOfDays</td>
+                                        <td>@maintenance.Price</td>
+                                        <td>
+                                            <button class="btn btn-outline-secondary" id="maintenanceToBook_@maintenance.Name" @onclick="@(() => AddMaintenance(maintenance))">Add</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                }
+            </div>
+        </div>
+        <div class="col-2">
+            <p>Booking cart</p>
+            <div class="col-2" hidden="@hideBookingCart">
+                <div class="row">
+                    <h3>Shopping Cart</h3>
+                </div>
+                @foreach (BookingItemDTO item in booking.BookingItems)
+                {
+                    <div class="row">
+                        <button type="button" class="btn btn-light" id="removeMaintenance_@item.MaintName" @onclick="@(() => RemoveBookingItem(item))">x @item.MaintName - @item.Price€</button>
+                    </div>
+                }
+                <div class="row">
+                    <button type="button" class="btn btn-primary" id="bookMaintenanceButton" @onclick=@BookMaintenances>Book Maintenances</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+@code {
+    private bool hideBookingCart { get { return booking.BookingItems.Count == 0; } }
+    private ICollection<MaintenanceDTO> maintenances;
+    private bool hideErrors { get { return errors.Length == 0; } }
+    private string errors = "";
+    private string maintenaceType { get; set; }
+    private string maintenaceName { get; set; }
+
+    private BookingForCreateDTO booking => bookingState.Booking;
+
+    private bool hiddenRentingCart = true;
+
+    private void AddMaintenance(MaintenanceDTO maintenance)
+    {
+        bookingState.AddMaintenance(maintenance);
+    }
+
+    private void RemoveBookingItem(BookingItemDTO item)
+    {
+        bookingState.RemoveBookingItem(item);
+        if (booking.BookingItems.Count == 0) hiddenRentingCart = true;
+    }
+
+
+    public async void SearchMaintenances()
+    {
+        if ((maintenaceType != null && maintenaceType.Trim().Length <= 2 && maintenaceType.Length > 0) || (maintenaceName != null && maintenaceName.Trim().Length <= 2 && maintenaceName.Length > 0))
+        {
+            errors = "busquedaPequeña, debes rellenar al menos un campo con mas de 2 caracteres";
+            StateHasChanged();
+            return;
+        }
+        try
+        {
+            maintenances = await apiclient.GetMaintenanceAsync(maintenaceType, maintenaceName);
+            errors = "";
+
+        }
+        catch (ApiException ex)
+        {
+            logger.LogError($"{DateTime.Now} Error: {ex}");
+            errors = "Error while connecting to the system";
+        }
+        StateHasChanged();
+    }
+    protected override Task OnInitializedAsync()
+    {
+
+        SearchMaintenances();
+
+        return base.OnInitializedAsync();
+    }
+    private void BookMaintenances()
+    {
+        navigation.NavigateTo("/booking/createbooking");
+    }
+
+}

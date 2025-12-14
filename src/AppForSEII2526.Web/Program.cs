@@ -6,6 +6,10 @@ using AppForSEII2526.Web.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using AppForSEII2526.Web.Components;
+using AppForSEII2526.Web.Components.Account;
+using AppForSEII2526.Web.Data;
+using AppForSEII2526.Web.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,10 +42,11 @@ builder.Services.AddIdentityCore<AppForSEII2526.Web.Data.ApplicationUser>(option
 builder.Services.AddSingleton<IEmailSender<AppForSEII2526.Web.Data.ApplicationUser>, IdentityNoOpEmailSender>();
 
 //this variable obtains the url where the API has been deployed
-string? URI2API = builder.Configuration.GetValue(typeof(string), "AppForSEII_API") as string;
+string? URI2API = builder.Configuration.GetValue(typeof(string), "AppForSEII2526_API") as string;
 
 //We create the service for accessing the API from where .WEB project
 builder.Services.AddScoped<AppForSEII2526APIClient>(sp => new AppForSEII2526APIClient(URI2API, new HttpClient()));
+builder.Services.AddScoped<BookingStateContainer>();
 
 builder.Services.AddScoped<RentalStateContainer>();
 

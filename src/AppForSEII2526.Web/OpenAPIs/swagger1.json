@@ -709,245 +709,24 @@
   },
   "components": {
     "schemas": {
-      "ApplicationUser": {
-        "required": [
-          "name",
-          "surname"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "userName": {
-            "type": "string",
-            "nullable": true
-          },
-          "normalizedUserName": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "normalizedEmail": {
-            "type": "string",
-            "nullable": true
-          },
-          "emailConfirmed": {
-            "type": "boolean"
-          },
-          "passwordHash": {
-            "type": "string",
-            "nullable": true
-          },
-          "securityStamp": {
-            "type": "string",
-            "nullable": true
-          },
-          "concurrencyStamp": {
-            "type": "string",
-            "nullable": true
-          },
-          "phoneNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "phoneNumberConfirmed": {
-            "type": "boolean"
-          },
-          "twoFactorEnabled": {
-            "type": "boolean"
-          },
-          "lockoutEnd": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "lockoutEnabled": {
-            "type": "boolean"
-          },
-          "accessFailedCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "surname": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "purchases": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Purchase"
-            },
-            "nullable": true
-          },
-          "rentals": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Rental"
-            },
-            "nullable": true
-          },
-          "bookings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Booking"
-            },
-            "nullable": true
-          },
-          "deliveryAddress": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Booking": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "clientAdress": {
-            "maxLength": 30,
-            "minLength": 4,
-            "type": "string",
-            "nullable": true
-          },
-          "clientName": {
-            "maxLength": 10,
-            "minLength": 3,
-            "type": "string",
-            "nullable": true
-          },
-          "clientPhoneNumber": {
-            "maxLength": 12,
-            "minLength": 9,
-            "type": "string",
-            "nullable": true
-          },
-          "clientSurname": {
-            "maxLength": 10,
-            "minLength": 3,
-            "type": "string",
-            "nullable": true
-          },
-          "date": {
-            "type": "string",
-            "format": "date"
-          },
-          "paymentMethod": {
-            "$ref": "#/components/schemas/PaymentMethod"
-          },
-          "bookingItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BookingItem"
-            },
-            "nullable": true
-          },
-          "userId": {
-            "type": "string",
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/ApplicationUser"
-          },
-          "numberOfDays": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "price": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "BookingDTO": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "clientAdress": {
-            "maxLength": 30,
-            "minLength": 4,
-            "type": "string",
-            "nullable": true
-          },
-          "clientName": {
-            "maxLength": 10,
-            "minLength": 3,
-            "type": "string",
-            "nullable": true
-          },
-          "clientPhoneNumber": {
-            "maxLength": 12,
-            "minLength": 9,
-            "type": "string",
-            "nullable": true
-          },
-          "clientSurname": {
-            "maxLength": 10,
-            "minLength": 3,
-            "type": "string",
-            "nullable": true
-          },
-          "date": {
-            "type": "string",
-            "format": "date"
-          },
-          "paymentMethod": {
-            "$ref": "#/components/schemas/PaymentMethod"
-          },
-          "bookingItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BookingItemDTO"
-            },
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/ApplicationUser"
-          }
-        },
-        "additionalProperties": false
-      },
       "BookingDetailDTO": {
-        "required": [
-          "bookingItems",
-          "deliveryAddress",
-          "name",
-          "paymentMethod",
-          "surname"
-        ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
           "name": {
-            "maxLength": 50,
-            "minLength": 10,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "surname": {
-            "maxLength": 50,
-            "minLength": 10,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "deliveryAddress": {
-            "maxLength": 50,
-            "minLength": 10,
             "type": "string",
-            "format": "multiline"
+            "nullable": true
           },
           "paymentMethod": {
             "$ref": "#/components/schemas/PaymentMethod"
@@ -955,59 +734,57 @@
           "clientPhoneNumber": {
             "type": "string",
             "nullable": true
-          },
-          "bookingItems": {
-            "maxLength": 50,
-            "minLength": 10,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BookingItemDTO"
-            }
-          },
-          "numberOfDays": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "price": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "id": {
-            "type": "integer",
-            "format": "int32"
           },
           "bookingDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "bookingItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookingItemDTO"
+            },
+            "nullable": true
+          },
+          "numberOfDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "price": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
       },
       "BookingForCreateDTO": {
         "required": [
-          "bookingItems",
           "deliveryAddress",
           "name",
           "paymentMethod",
-          "surname"
+          "surname",
+          "username"
         ],
         "type": "object",
         "properties": {
           "name": {
             "maxLength": 50,
-            "minLength": 10,
+            "minLength": 3,
             "type": "string"
           },
           "surname": {
             "maxLength": 50,
-            "minLength": 10,
+            "minLength": 3,
+            "type": "string"
+          },
+          "username": {
+            "maxLength": 50,
+            "minLength": 3,
             "type": "string"
           },
           "deliveryAddress": {
             "maxLength": 50,
-            "minLength": 10,
+            "minLength": 3,
             "type": "string",
             "format": "multiline"
           },
@@ -1019,47 +796,10 @@
             "nullable": true
           },
           "bookingItems": {
-            "maxLength": 50,
-            "minLength": 10,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/BookingItemDTO"
-            }
-          },
-          "numberOfDays": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "price": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "BookingItem": {
-        "type": "object",
-        "properties": {
-          "bookingId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "booking": {
-            "$ref": "#/components/schemas/Booking"
-          },
-          "maintenanceId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maintenance": {
-            "$ref": "#/components/schemas/Maintenance"
-          },
-          "comment": {
-            "maxLength": 200,
-            "minLength": 20,
-            "type": "string",
+            },
             "nullable": true
           }
         },
@@ -1082,115 +822,17 @@
             "type": "integer",
             "format": "int32"
           },
-          "booking": {
-            "$ref": "#/components/schemas/BookingDTO"
-          },
-          "maintenance": {
-            "$ref": "#/components/schemas/MaintenanceDTO"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Car": {
-        "required": [
-          "carClass",
-          "color",
-          "description",
-          "manufacturer",
-          "purchasingPrice",
-          "quantityForPurchasing",
-          "quantityForRenting",
-          "rentingPrice"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "carClass": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[A-Z]+[a-zA-Z''-'\\s]*$",
-            "type": "string"
-          },
-          "color": {
-            "maxLength": 50,
-            "minLength": 0,
-            "pattern": "^[A-Z]+[a-zA-Z''-'\\s]*$",
-            "type": "string"
-          },
-          "description": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "pattern": "^[A-Z]+[a-zA-Z''-'\\s]*$",
-            "type": "string"
-          },
-          "manufacturer": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[A-Z]+[a-zA-Z''-'\\s]*$",
-            "type": "string"
-          },
-          "quantityForPurchasing": {
-            "maximum": 100,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          },
-          "quantityForRenting": {
-            "maximum": 100,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          },
-          "purchasingPrice": {
-            "maximum": 1000000,
-            "minimum": 1,
-            "type": "integer",
-            "format": "currency"
-          },
-          "rentingPrice": {
-            "maximum": 1000000,
-            "minimum": 1,
-            "type": "integer",
-            "format": "currency"
-          },
-          "model": {
-            "$ref": "#/components/schemas/Model"
-          },
-          "rentalItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RentalItem"
-            },
-            "nullable": true
-          },
-          "purchaseItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PurchaseItem"
-            },
-            "nullable": true
-          },
-          "fuelType": {
+          "maintName": {
             "type": "string",
             "nullable": true
           },
-          "engDisplacement": {
-            "type": "string",
-            "nullable": true
+          "price": {
+            "type": "integer",
+            "format": "int32"
           },
-          "rimSize": {
-            "type": "string",
-            "nullable": true
-          },
-          "maintenanceTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MaintenanceType"
-            },
-            "nullable": true
+          "numberOfDays": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1282,46 +924,6 @@
         },
         "additionalProperties": false
       },
-      "Maintenance": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "maxLength": 30,
-            "minLength": 3,
-            "type": "string",
-            "nullable": true
-          },
-          "numberOfDays": {
-            "maximum": 10,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          },
-          "price": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "bookingItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BookingItem"
-            },
-            "nullable": true
-          },
-          "maintenanceTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MaintenanceType"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "MaintenanceDTO": {
         "type": "object",
         "properties": {
@@ -1355,25 +957,6 @@
         },
         "additionalProperties": false
       },
-      "MaintenanceType": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "type": {
-            "maxLength": 30,
-            "minLength": 3,
-            "type": "string",
-            "nullable": true
-          },
-          "maintenance": {
-            "$ref": "#/components/schemas/Maintenance"
-          }
-        },
-        "additionalProperties": false
-      },
       "MaintenanceTypeDTO": {
         "type": "object",
         "properties": {
@@ -1385,35 +968,6 @@
             "maxLength": 10,
             "minLength": 3,
             "type": "string",
-            "nullable": true
-          },
-          "maintenance": {
-            "$ref": "#/components/schemas/Maintenance"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Model": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "maxLength": 100,
-            "minLength": 0,
-            "pattern": "^[A-Z]+[a-zA-Z''-'\\s]*$",
-            "type": "string"
-          },
-          "cars": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Car"
-            },
             "nullable": true
           }
         },
@@ -1456,102 +1010,6 @@
         },
         "additionalProperties": { }
       },
-      "Purchase": {
-        "required": [
-          "deliveryCarDealer",
-          "paymentMethod",
-          "purchaseDate",
-          "purchasingPrice",
-          "totalPrice"
-        ],
-        "type": "object",
-        "properties": {
-          "deliveryCarDealer": {
-            "maxLength": 10,
-            "minLength": 0,
-            "pattern": "^[A-Z]+[a-zA-Z''-'\\s]*$",
-            "type": "string"
-          },
-          "paymentMethod": {
-            "$ref": "#/components/schemas/PaymentMethod"
-          },
-          "purchaseDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "purchasingPrice": {
-            "type": "integer",
-            "format": "currency"
-          },
-          "totalPrice": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "purchaseItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PurchaseItem"
-            },
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/ApplicationUser"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PurchaseDTO": {
-        "required": [
-          "deliveryCarDealer",
-          "paymentMethod",
-          "purchasingDate",
-          "purchasingPrice",
-          "totalPrice"
-        ],
-        "type": "object",
-        "properties": {
-          "deliveryCarDealer": {
-            "maxLength": 10,
-            "minLength": 0,
-            "pattern": "^[A-Z]+[a-zA-Z''-'\\s]*$",
-            "type": "string"
-          },
-          "paymentMethod": {
-            "$ref": "#/components/schemas/PaymentMethod"
-          },
-          "purchasingDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "purchasingPrice": {
-            "type": "integer",
-            "format": "currency"
-          },
-          "totalPrice": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "purchaseItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PurchaseItemDTO"
-            },
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/ApplicationUser"
-          }
-        },
-        "additionalProperties": false
-      },
       "PurchaseForCreateDTO": {
         "required": [
           "deliveryAddress",
@@ -1564,18 +1022,15 @@
         "type": "object",
         "properties": {
           "name": {
-            "maxLength": 50,
-            "minLength": 10,
+            "minLength": 1,
             "type": "string"
           },
           "surname": {
-            "maxLength": 50,
-            "minLength": 10,
+            "minLength": 1,
             "type": "string"
           },
           "deliveryAddress": {
-            "maxLength": 50,
-            "minLength": 10,
+            "minLength": 1,
             "type": "string",
             "format": "multiline"
           },
@@ -1663,33 +1118,6 @@
         },
         "additionalProperties": false
       },
-      "PurchaseItem": {
-        "required": [
-          "quantity"
-        ],
-        "type": "object",
-        "properties": {
-          "carId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "purchaseId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "quantity": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "purchase": {
-            "$ref": "#/components/schemas/Purchase"
-          },
-          "car": {
-            "$ref": "#/components/schemas/Car"
-          }
-        },
-        "additionalProperties": false
-      },
       "PurchaseItemDTO": {
         "required": [
           "quantity"
@@ -1708,66 +1136,9 @@
             "type": "integer",
             "format": "int32"
           },
-          "purchase": {
-            "$ref": "#/components/schemas/PurchaseDTO"
-          },
           "car": {
-            "$ref": "#/components/schemas/CarForPurchasingDTO"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Rental": {
-        "required": [
-          "deliveryCarDealer",
-          "endDate",
-          "paymentMethod",
-          "rentingDate",
-          "startDate",
-          "totalPrice"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "endDate": {
             "type": "string",
-            "format": "date"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "rentingDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "totalPrice": {
-            "maximum": 1000000,
-            "minimum": 1,
-            "type": "integer",
-            "format": "currency"
-          },
-          "deliveryCarDealer": {
-            "maxLength": 50,
-            "minLength": 10,
-            "pattern": "^[A-Z]+[a-zA-Z''-'\\s]*$",
-            "type": "string"
-          },
-          "paymentMethod": {
-            "$ref": "#/components/schemas/PaymentMethod"
-          },
-          "rentalItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RentalItem"
-            },
             "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/ApplicationUser"
           }
         },
         "additionalProperties": false
@@ -1898,35 +1269,6 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "RentalItem": {
-        "required": [
-          "quantity"
-        ],
-        "type": "object",
-        "properties": {
-          "carId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "quantity": {
-            "maximum": 100,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          },
-          "rentalId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "rental": {
-            "$ref": "#/components/schemas/Rental"
-          },
-          "car": {
-            "$ref": "#/components/schemas/Car"
           }
         },
         "additionalProperties": false
