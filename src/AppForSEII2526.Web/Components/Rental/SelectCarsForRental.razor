@@ -34,6 +34,9 @@
                         <input type="text" id="inputmaxPrice" @bind=maximumPrice class="form-control" placeholder="Maximum Price" aria-label="Maximum Price" aria-describedby="basic-addon1">
                     </div>
                 </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" @onclick=@SearchCars id="searchCars">Search Cars</button>
+                </div>
             </div>
             <div class="row">
                 @if (cars == null)
@@ -42,6 +45,7 @@
                 }
                 else
                 {
+                    <p>number of cars @cars.Count</p>
                     <div class="mh-100 table-responsive">
                         <table class="table table-condensed table-hover" id="TableOfCars">
                             <thead>
@@ -54,7 +58,8 @@
                             <tbody>
                                 @foreach (var car in cars)
                                 {
-                                    <tr id="MovieData_@car.Model">
+                                    <tr id="carToRent_@car.Model">
+                                        <td>@car.Model</td>
                                         <td>@car.Manufacturer</td>
                                         <td>@car.RentingPrice</td>
                                         <td>
@@ -117,7 +122,7 @@
             cars = await apiclient.GetCarsForRentingAsync(carModel,minimumPrice,maximumPrice);
 
         }
-        catch (ApiException ex)
+        catch (Exception ex)
         {
             logger.LogError($"{DateTime.Now} Error: {ex}");
             errors = "Error while connecting to the system";

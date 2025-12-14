@@ -48,9 +48,9 @@ namespace AppForSEII2526.API.Controllers
 
             IList<CarForRentalDTO> cars = await _context.Cars
                 .Include(c => c.Model)
-                .Where(c => ((modelFilter == null) || (c.Model.Name.Equals(modelFilter))) &&
-                    ((c.RentingPrice <= priceMax) || (priceMax==null)) &&
-                    ((c.RentingPrice >= priceMin) || (priceMin==null)))
+                .Where(c => ((modelFilter == null) || (c.Model.Name.Contains(modelFilter))) &&
+                    ((c.RentingPrice <= priceMax) || (priceMax==null) || (priceMax == 0)) &&
+                    ((c.RentingPrice >= priceMin) || (priceMin==null) || (priceMin == 0)))
                 .OrderBy(c=> c.Model.Name)  
                 .Select(c => new CarForRentalDTO(c.Id,c.Description,c.Color,c.Manufacturer,c.RentingPrice,c.QuantityForRenting,c.FuelType,c.Model.Name))
                 .ToListAsync();
