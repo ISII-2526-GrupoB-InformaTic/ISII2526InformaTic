@@ -86,9 +86,9 @@ namespace AppForSEII2526.UT.RentalsController_test
             var enddateUnspecified = DateTime.SpecifyKind(endDate, DateTimeKind.Unspecified);
             var rentingdateUnspecified = DateTime.SpecifyKind(rentingDate, DateTimeKind.Unspecified);
 
-            var expectedRental = new RentalDetailDTO("Pepe","Viyuela", "Calle MiCasa Nº7",PaymentMethod.TarjetaDeCredito,
+            var expectedRental = new RentalDetailDTO(1,"Pepe","Viyuela", "Calle MiCasa Nº7",PaymentMethod.TarjetaDeCredito,
                 startdateUnspecified,enddateUnspecified,rentingdateUnspecified, new List<RentalItemDTO>(),"pepeV@uclm.es");
-            expectedRental.RentalItems.Add(new RentalItemDTO(1,5,1));
+            expectedRental.RentalItems.Add(new RentalItemDTO(1,5,1,2000,"Toyota R", "Toyota"));
 
             // Act 
             var result = await controller.GetRental(1);

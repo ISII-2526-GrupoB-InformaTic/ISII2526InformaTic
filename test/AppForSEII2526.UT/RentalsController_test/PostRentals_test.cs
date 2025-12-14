@@ -140,7 +140,7 @@ namespace AppForSEII2526.UT.RentalsController_test
             var rentalDTO = new RentalForCreateDTO(_Name, _Surname,_deliveryAddress, PaymentMethod.TarjetaDeCredito,
                 startdateUnspecified, enddateUnspecified, new List<RentalItemDTO>() { new RentalItemDTO(2,10,0,3000,"Toyota A") }, _email);
 
-            var expectedrentalDetailDTO = new RentalDetailDTO(_Name,_Surname,_deliveryAddress,PaymentMethod.TarjetaDeCredito,
+            var expectedrentalDetailDTO = new RentalDetailDTO(2,_Name,_Surname,_deliveryAddress,PaymentMethod.TarjetaDeCredito,
                 startdateUnspecified,enddateUnspecified,rentingdateUnspecified,new List<RentalItemDTO>() { new RentalItemDTO(2,10,0,3000,"Toyota A") },_email);
 
             // Act
