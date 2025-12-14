@@ -36,7 +36,7 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("RentalItems", "Error! You must include at least one car to be rented");
 
             // if (!_context.ApplicationUsers.Any(au=>au.UserName==rentalForCreate.CustomerUserName))
-            var user = _context.ApplicationUsers.FirstOrDefault(au => au.Name == rentalForCreate.Name);
+            var user = _context.ApplicationUsers.FirstOrDefault(au => au.UserName == rentalForCreate.Username);
             if (user == null)
                 ModelState.AddModelError("RentalApplicationUser", "Error! User is not registered");
 
@@ -112,7 +112,7 @@ namespace AppForSEII2526.API.Controllers
             var rentalDetail = new RentalDetailDTO(rentalForCreate.Name, rentalForCreate.Surname,
                 rentalForCreate.DeliveryAddress, rentalForCreate.PaymentMethod,
                 rental.StartDate, rental.EndDate, DateTime.Today,
-                rentalForCreate.RentalItems);
+                rentalForCreate.RentalItems,rentalForCreate.Username);
 
             return CreatedAtAction("GetRental", new { id = rental.Id }, rentalDetail);
         }
@@ -143,7 +143,7 @@ namespace AppForSEII2526.API.Controllers
                     r.User.DeliveryAddress, r.PaymentMethod,
                     r.StartDate, r.EndDate,r.RentingDate,
                     r.RentalItems
-                        .Select(ri => new RentalItemDTO(ri.Car.Id,ri.Quantity,ri.RentalId)).ToList<RentalItemDTO>()))
+                        .Select(ri => new RentalItemDTO(ri.Car.Id,ri.Quantity,ri.RentalId)).ToList<RentalItemDTO>(),r.User.UserName))
              .FirstOrDefaultAsync();
 
             if (rental == null)

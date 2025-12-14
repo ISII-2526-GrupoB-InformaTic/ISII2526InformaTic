@@ -58,8 +58,9 @@ namespace AppForSEII2526.API.DTOs
                 return (Price * NumberOfDays) / 2;
             }
         }
+        public string Username { get; set; }
         public RentalForCreateDTO(string name, string surname, string deliveryAddress,
-            PaymentMethod paymentMethod, DateTime startDate, DateTime endDate, IList<RentalItemDTO> rentalItem)
+            PaymentMethod paymentMethod, DateTime startDate, DateTime endDate, IList<RentalItemDTO> rentalItem,string username)
         {
             Name = name;
             Surname = surname;
@@ -68,6 +69,7 @@ namespace AppForSEII2526.API.DTOs
             RentalItems = rentalItem;
             StartDate = startDate;
             EndDate = endDate;
+            Username = username;
         }
         public RentalForCreateDTO()
         {

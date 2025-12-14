@@ -1172,6 +1172,10 @@
             "format": "double",
             "readOnly": true
           },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
           "id": {
             "type": "integer",
             "format": "int32"
@@ -1269,6 +1273,10 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

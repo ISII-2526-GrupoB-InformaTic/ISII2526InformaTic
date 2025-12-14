@@ -7,7 +7,7 @@
 @inject RentalStateContainer rentalState
 @inject NavigationManager navigation
 
-
+@attribute [Authorize]
 <h3>Rentals</h3>
 <div class="container-fluid">
     <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
@@ -141,6 +141,6 @@
 
     private void RentCars()
     {
-        navigation.NavigateTo("/rentals/createrental");
+        navigation.NavigateTo("/rental/createrental");
     }
 }

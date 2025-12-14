@@ -49,7 +49,7 @@ namespace AppForSEII2526.API.DTOs
         }
 
         public RentalDetailDTO(string name, string surname, string deliveryAddress,PaymentMethod paymentMethod,
-            DateTime startDate, DateTime endDate,DateTime rentingDate, IList<RentalItemDTO> rentalItems) :base (name,surname,deliveryAddress,paymentMethod,startDate,endDate,rentalItems)
+            DateTime startDate, DateTime endDate,DateTime rentingDate, IList<RentalItemDTO> rentalItems, string username) :base (name,surname,deliveryAddress,paymentMethod,startDate,endDate,rentalItems,username)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Surname = surname ?? throw new ArgumentNullException(nameof(surname));
