@@ -28,6 +28,7 @@ namespace AppForSEII2526.UIT.Rental
             _driver.FindElement(inputMinPrice).SendKeys(minPrice);
             _driver.FindElement(inputMaxPrice).SendKeys(maxPrice);
             _driver.FindElement(buttonSearchCars).Click();
+            System.Threading.Thread.Sleep(2000);
         }
 
         public void SelectCars(List<string> carModels)
