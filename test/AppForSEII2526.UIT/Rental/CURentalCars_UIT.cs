@@ -28,6 +28,7 @@ namespace AppForSEII2526.UIT.Rental
         private void Precondition_perform_login()
         {
             Perform_login("pepeV@uclm.es", "Password1234%");
+            System.Threading.Thread.Sleep(2000);
         }
 
         private void InitialStepsForRentalCars()
