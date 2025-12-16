@@ -108,9 +108,9 @@ namespace AppForSEII2526.UIT.Rental
         }
 
         [Theory]
-        [InlineData("","Viyuela" ,"Calle MiCasa Nº7", "Errors: (*) Please, set your Name")]
-        [InlineData("Pepe", "", "Calle MiCasa Nº7", "Errors: (*) Please, set your Surname")]
-        [InlineData("Pepe", "Viyuela", "", "Errors: (*) Please, set your address for delivery")]
+        [InlineData("","Viyuela" ,"Calle MiCasa Nº7", "(*) Please, set your Name")]
+        [InlineData("Pepe", "", "Calle MiCasa Nº7", "(*) Please, set your Surname")]
+        [InlineData("Pepe", "Viyuela", "", "(*) Please, set your address for delivery")]
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC2_AF4_testingErrorsMandatorydata(string name,string surname, string deliveryAddress,
         string expectedMessageError)
@@ -125,9 +125,9 @@ namespace AppForSEII2526.UIT.Rental
             selectCarsForRentalPO.SearchCars("", "", "");
             selectCarsForRentalPO.SelectCars(new List<string> { carModel1 });
             selectCarsForRentalPO.RentCars();
-            createrental.FillInRentalInfo(name,surname, deliveryAddress, "CreditCard");
+            createrental.FillInRentalInfo(name,surname, deliveryAddress, "GooglePay");
             createrental.PressRentCars();
-
+            createrental.PressOkModalDialog();
             //Assert
             //the expected error is shown in the view
             Assert.True(createrental.CheckValidationError(expectedMessageError), $"Errors: {expectedMessageError}");
@@ -151,6 +151,7 @@ namespace AppForSEII2526.UIT.Rental
             //we remove movietitle2 from the rentingcart
             selectCarsForRentalPO.ModifyRentalCart(carModel2);
             selectCarsForRentalPO.RentCars();
+
 
             //Assert
             //the list of movies must change

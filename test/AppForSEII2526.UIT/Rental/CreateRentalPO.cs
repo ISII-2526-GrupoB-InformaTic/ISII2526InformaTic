@@ -12,7 +12,8 @@ namespace AppForSEII2526.UIT.Rental
         private By _surname = By.Id("Surname");
         private By _address= By.Id("DeliveryAddress");
         private By _paymentMethod = By.Id("PaymentMethod");
-        private By _errors = By.Id("ErrorsShown");
+        private By _submit = By.Id("Submit");
+
         public CreateRentalPO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
         }
@@ -39,8 +40,8 @@ namespace AppForSEII2526.UIT.Rental
 
 
         public void PressRentCars()
-        {
-            _driver.FindElement(By.Id("Submit")).Click();
+        {     
+            _driver.FindElement(_submit).Click();
         }
 
 
