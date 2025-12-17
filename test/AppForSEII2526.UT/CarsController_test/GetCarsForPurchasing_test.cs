@@ -86,9 +86,9 @@ namespace AppForSEII2526.UT.CarsController_test
             var carDTO = new List<CarForPurchasingDTO>()
                 {
 
-                    new CarForPurchasingDTO(1, "Model X" , "Red", "Diesel", "Ford Company", 50000),
+                    new CarForPurchasingDTO(1, "Model X" , "Red", "Un coche rojo", "Diesel", "Ford Company", 50000),
 
-                    new CarForPurchasingDTO(2, "Mustang"  ,"Blue", "Gasoleo", "Citroen Company", 60000),
+                    new CarForPurchasingDTO(2, "Mustang"  ,"Blue","Un coche azul", "Gasoleo", "Citroen Company", 60000),
 
                 };
 

@@ -63,21 +63,21 @@ namespace AppForSEII2526.UT.PurchasesController_test
 
             var purchaseItems = new List<PurchaseItemDTO>() {new PurchaseItemDTO(1, 1, 3, _carModel1)};
 
-            var purchaseBeforeToday = new PurchaseForCreateDTO(_customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today.AddDays(-1), purchaseItems);
+            var purchaseBeforeToday = new PurchaseForCreateDTO(1,_customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today.AddDays(-1), purchaseItems, _userName);
 
-            var purchaseNotName = new PurchaseForCreateDTO(null, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, purchaseItems);
+            var purchaseNotName = new PurchaseForCreateDTO(1,null, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, purchaseItems, _userName);
 
-            var purchaseNotSurName = new PurchaseForCreateDTO(_customerName, null, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, purchaseItems);
+            var purchaseNotSurName = new PurchaseForCreateDTO(1,_customerName, null, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, purchaseItems, _userName);
 
-            var purchaseNotDelivery= new PurchaseForCreateDTO(_customerName, _customerSurName, null, PaymentMethod.TarjetaDeCredito, DateTime.Today, purchaseItems);
+            var purchaseNotDelivery= new PurchaseForCreateDTO(1, _customerName, _customerSurName, null, PaymentMethod.TarjetaDeCredito, DateTime.Today, purchaseItems, _userName);
 
-            var purchaseCarNotExist = new PurchaseForCreateDTO(_customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, new List<PurchaseItemDTO>(){ 
+            var purchaseCarNotExist = new PurchaseForCreateDTO(1, _customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, new List<PurchaseItemDTO>(){ 
                 new PurchaseItemDTO(3, 1, 25000, "Toyota") 
-            });
+            }, _userName);
 
-            var purchaseQuantityNotEnough = new PurchaseForCreateDTO(_customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, new List<PurchaseItemDTO>(){
+            var purchaseQuantityNotEnough = new PurchaseForCreateDTO(1, _customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, new List<PurchaseItemDTO>(){
                 new PurchaseItemDTO(1, 1, 7, _carModel1)
-            });
+            }, _userName);
 
             var allTest = new List<object[]>
             {
@@ -133,9 +133,9 @@ namespace AppForSEII2526.UT.PurchasesController_test
             //Act
             var controller = new PurchasesController(_context, logger);
 
-            var purchaseDTO = new PurchaseForCreateDTO(_customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, new List<PurchaseItemDTO>() { new PurchaseItemDTO(1, 1, 2, _carModel1) });
+            var purchaseDTO = new PurchaseForCreateDTO(2, _customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, new List<PurchaseItemDTO>() { new PurchaseItemDTO(1, 1, 2, _carModel1,"Gasoline", "Ford", 50000, _carColor1, "Un coche rojo") }, _userName);
 
-            var expectedPurchaseDetailDTO = new PurchaseForDetailsDTO(_customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, new List<PurchaseItemDTO>() { new PurchaseItemDTO(1, 1, 2, _carModel1) });
+            var expectedPurchaseDetailDTO = new PurchaseForDetailsDTO(2, _customerName, _customerSurName, _deliveryAddress, PaymentMethod.TarjetaDeCredito, DateTime.Today, _userName, new List<PurchaseItemDTO>() { new PurchaseItemDTO(1, 1, 2, _carModel1, "Gasoline", "Ford", 50000, _carColor1, "Un coche rojo") });
 
             // Act
             var result = await controller.CreatePurchase(purchaseDTO);
