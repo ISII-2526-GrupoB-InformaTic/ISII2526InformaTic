@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
+using System.Linq;
 
 namespace AppForSEII2526.API.Controllers
 {
@@ -42,7 +43,7 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-            var user = _context.ApplicationUsers.FirstOrDefault(u => u.Name == purchaseForCreate.Name);
+            var user = _context.ApplicationUsers.FirstOrDefault(u => u.UserName == purchaseForCreate.username);
 
             if (user == null)
             {
@@ -62,11 +63,11 @@ namespace AppForSEII2526.API.Controllers
                 .ToList<String>();
 
             var cars = _context.Cars
+                .Include(c => c.Model)
                 .Include(c => c.PurchaseItems)
                 .ThenInclude(pi => pi.purchase)
                 .ThenInclude(c => c.purchaseItems)
                 .ThenInclude(pi => pi.car)
-                .ThenInclude(c => c.Model)
                 .Where(c => c.Model != null && carModels.Contains(c.Model.Name))
                 .ToList();
 
@@ -134,8 +135,8 @@ namespace AppForSEII2526.API.Controllers
 
             }
 
-            var purchaseDetails = new PurchaseForDetailsDTO(purchaseForCreate.Name, purchaseForCreate.Surname,
-                purchaseForCreate.DeliveryAddress, purchase.PaymentMethod, purchase.PurchaseDate, purchaseForCreate.PurchaseItemDTO);
+            var purchaseDetails = new PurchaseForDetailsDTO(purchase.Id, purchaseForCreate.Name, purchaseForCreate.Surname,
+                purchaseForCreate.DeliveryAddress, purchase.PaymentMethod, purchase.PurchaseDate, purchaseForCreate.username, purchaseForCreate.PurchaseItemDTO);
 
             _logger.LogInformation("Creada las compras a realizar");
 
@@ -174,15 +175,21 @@ namespace AppForSEII2526.API.Controllers
                 .ThenInclude(pi => pi.car)
                 .ThenInclude(c => c.Model)
                 .Select(p => new PurchaseForDetailsDTO(
+                    p.Id,
                     p.User.Name,
                     p.User.Surname,
                     p.User.DeliveryAddress,
                     p.PaymentMethod,
                     p.PurchaseDate,
+                    p.User.UserName,
                     p.purchaseItems
                         .Select(pi => new PurchaseItemDTO
                         {
                             CarId = pi.car.Id,
+                            Color = pi.car.Color,
+                            Price = pi.car.PurchasingPrice,
+                            Car = pi.car.Model.Name,
+                            Descripcion = pi.car.Description,
                             PurchaseId = pi.PurchaseId,
                             Quantity = pi.Quantity
                         })

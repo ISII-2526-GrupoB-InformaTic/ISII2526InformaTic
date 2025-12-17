@@ -22,7 +22,7 @@ namespace AppForSEII2526.API.DTOs
 
         }*/
 
-        public CarForPurchasingDTO(int id, String Model,String Color, String FuelType, String Manufacture, int PurchasingPrice)
+        public CarForPurchasingDTO(int id, String Model,String Color, String Description, String FuelType, String Manufacture, int PurchasingPrice)
         {
 
             Id = id;
@@ -30,6 +30,8 @@ namespace AppForSEII2526.API.DTOs
             model = Model;
 
             color = Color;
+
+            descripcion = Description;
 
             fuelType = FuelType;
 
@@ -48,6 +50,8 @@ namespace AppForSEII2526.API.DTOs
        // public String modelo { get; set; }
 
         public String color { get; set; }
+
+        public String descripcion { get; set; }
 
         public String fuelType { get; set; }
 

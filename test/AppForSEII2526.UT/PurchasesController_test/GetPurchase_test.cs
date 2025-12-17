@@ -23,11 +23,11 @@ namespace AppForSEII2526.UT.PurchasesController_test
             var cars = new List<Car>()
             {
                 new Car {carClass = "coche",Color="rojo",Description="un coche rojo",Manufacturer="Toyota",
-                    QuantityForRenting= 1, RentingPrice=2000,Model= models[0],FuelType="Gasoline"},
+                    QuantityForPurchasing= 1, PurchasingPrice=2000,Model= models[0],FuelType="Gasoline"},
                 new Car {carClass = "coche",Color="amarillo",Description="un coche amarillo",Manufacturer="Toyota",
-                    QuantityForRenting= 1, RentingPrice=3000,Model= models[1],FuelType="Gasoline"},
+                    QuantityForPurchasing= 1, PurchasingPrice=3000,Model= models[1],FuelType="Gasoline"},
                 new Car {carClass = "coche",Color="verde",Description="un coche verde",Manufacturer="Toyota",
-                    QuantityForRenting= 1, RentingPrice=1500,Model= models[2],FuelType="Gasoline"}
+                    QuantityForPurchasing= 1, PurchasingPrice=1500,Model= models[2],FuelType="Gasoline"}
             };
 
             ApplicationUser user = new ApplicationUser("1", "Pepe", "Viyuela", "pepeV@uclm.es", "Calle MiCasa Nº7");
@@ -84,8 +84,8 @@ namespace AppForSEII2526.UT.PurchasesController_test
 
             var startdateUnspecified = DateTime.SpecifyKind(startDate, DateTimeKind.Unspecified);
 
-            var expectedPurchase = new PurchaseForDetailsDTO("Pepe", "Viyuela", "Calle MiCasa Nº7", PaymentMethod.TarjetaDeCredito, startdateUnspecified, new List<PurchaseItemDTO>());
-            expectedPurchase.PurchaseItemDTO.Add(new PurchaseItemDTO(1, 1, 10));
+            var expectedPurchase = new PurchaseForDetailsDTO(1, "Pepe", "Viyuela", "Calle MiCasa Nº7",PaymentMethod.TarjetaDeCredito, startdateUnspecified, "pepeV@uclm.es" ,new List<PurchaseItemDTO>());
+            expectedPurchase.PurchaseItemDTO.Add(new PurchaseItemDTO(1, 1, 10, "Toyota R", "Gasoline", "Toyota", 2000, "Rojo", "un coche rojo"));
 
             // Act 
             var result = await controller.GetPurchase(1);

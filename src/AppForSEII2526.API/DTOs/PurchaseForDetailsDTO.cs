@@ -20,9 +20,10 @@ namespace AppForSEII2526.API.DTOs
         public DateTime PurchaseDate { get; set; }
 
 
-        public PurchaseForDetailsDTO(string name, string surname, string deliveryAddress,PaymentMethod paymentMethod,
-            DateTime purchaseDate, IList<PurchaseItemDTO> purchaseItemDTOs) :base (name,surname,deliveryAddress,paymentMethod,purchaseDate,purchaseItemDTOs)
+        public PurchaseForDetailsDTO(int id, string name, string surname, string deliveryAddress,PaymentMethod paymentMethod,
+            DateTime purchaseDate, String username, IList<PurchaseItemDTO> purchaseItemDTOs) :base (id,name,surname,deliveryAddress,paymentMethod,purchaseDate,purchaseItemDTOs, username)
         {
+            Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Surname = surname ?? throw new ArgumentNullException(nameof(surname));
             DeliveryAddress = deliveryAddress ?? throw new ArgumentNullException(nameof(deliveryAddress));
