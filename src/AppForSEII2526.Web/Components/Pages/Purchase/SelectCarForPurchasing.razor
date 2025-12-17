@@ -1,0 +1,146 @@
+﻿@page "/purchase/selectCarForPurchasing"
+
+@using Microsoft.AspNetCore.Authorization
+@using AppForSEII2526.Web.API;
+@inject AppForSEII2526APIClient apiclient;
+@inject ILogger<SelectCarForPurchasing> logger;
+@inject PurchaseStateContainer purchaseState;
+@inject NavigationManager navigation;
+
+@attribute [Authorize]
+<h3>Car For Purchasing</h3>
+
+<div class="container-fluid">
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        <p id="ErrorsShown">Errors: @errors</p>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Model</span>
+                        <input type="text" id="inputModel" @bind=selectedModel class="form-control" placeholder="Model" aria-label="Model" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Color</span>
+                        <input type="text" id="inputColor" @bind=selectedColor class="form-control" placeholder="Color" aria-label="Color" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+
+                <div class="col">
+                    <button type="button" class="btn btn-primary" @onclick=@SearchCars id="searchCars">Search Cars</button>
+                </div>
+            </div>
+            <div class="row">
+                @if (cars == null)
+                {
+                    <p>Loading cars....</p>
+                }
+                else
+                {
+                    <p>number of cars @cars.Count</p>
+                    <div class="mh-100 table-responsive">
+                        <table class="table table-condensed table-hover" id="TableOfCars">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>Color</th>
+                                    <th>Fueltype</th>
+                                    <th>Manufacturer</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var car in cars)
+                                {
+                                    <tr id="carForPurchase_@car.Model">
+                                        <td>@car.Model</td>
+                                        <td>@car.Color</td>
+                                        <td>@car.FuelType</td>
+                                        <td>@car.Manufacture</td>
+                                        <td>@car.PurchasingPrice</td>
+                                        <td>
+                                            <button class="btn btn-outline-secondary" id="carToPurchaseButton_@car.Model" @onclick="@(() => AddCar(car))">Add</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-2" hidden="@hidePurchasingCart" id="PurchaseCart">
+            <div class="row">
+                <h3>Shopping Cart</h3>
+            </div>
+            @foreach (PurchaseItemDTO item in purchase.PurchaseItemDTO)
+            {
+                <div class="row">
+                    <button type="button" class="btn btn-light" id="removeCar_@item.Car" @onclick="@(() => RemovePurchaseItem(item))">x @item.Car - @item.Price€</button>
+                </div>
+            }
+            <div class="row">
+                <button type="button" class="btn btn-primary" id="PurchaseCarButton" @onclick=@PurchaseCars>Purchase cars</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+
+    private ICollection<CarForPurchasingDTO> cars;
+    private bool hidePurchasingCart { get { return purchase.PurchaseItemDTO.Count == 0; } }
+    private bool hideErrors { get { return errors.Length == 0; } }
+    private string errors = "";
+    private string selectedModel { get; set; }
+    private string selectedColor { get; set; }
+
+    private PurchaseForCreateDTO purchase => purchaseState.Purchase;
+    private bool hiddenPurchasingCart = true;
+
+    private void AddCar(CarForPurchasingDTO car)
+    {
+        purchaseState.AddCarToPurchase(car);
+    }
+
+    private void RemovePurchaseItem(PurchaseItemDTO item)
+    {
+        purchaseState.RemovePurchaseItemToPurchase(item);
+        if (purchase.PurchaseItemDTO.Count == 0) hiddenPurchasingCart = true;
+    }
+
+    public async void SearchCars()
+    {
+        try
+        {
+            cars = await apiclient.GetCarForPurchaseAsync(selectedModel, selectedColor);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error retrieving cars for purchasing: {Message}", ex.Message);
+            errors = "An error occurred while retrieving the cars. Please try again later.";
+        }
+
+        StateHasChanged();
+
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+
+        SearchCars();
+
+        return base.OnInitializedAsync();
+    }
+
+    private void PurchaseCars()
+    {
+        navigation.NavigateTo("/purchase/createpurchase");
+    }
+}

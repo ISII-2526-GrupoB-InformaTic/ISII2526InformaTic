@@ -77,7 +77,7 @@ namespace AppForSEII2526.API.Controllers
                 .Where(m => (m.Model.Name.Contains(name) || (name == null)) &&
                 (m.Color.Equals(color) || (color == null)))
                 .OrderBy(c => c.Model.Name)
-                .Select(m => new CarForPurchasingDTO(m.Id, m.Model.Name, m.Color, m.FuelType, m.Manufacturer, m.PurchasingPrice))
+                .Select(m => new CarForPurchasingDTO(m.Id, m.Model.Name, m.Color, m.Description, m.FuelType, m.Manufacturer, m.PurchasingPrice))
                 .ToListAsync();
 
             return Ok(cars);

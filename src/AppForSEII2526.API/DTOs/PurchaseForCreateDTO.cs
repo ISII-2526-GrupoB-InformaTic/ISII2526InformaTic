@@ -3,6 +3,9 @@ namespace AppForSEII2526.API.DTOs
 {
     public class PurchaseForCreateDTO   //DTO para enseñar los datos de los coches seleccionados por el cliente (DTO del create)
     {
+
+        public int Id { get; set; }
+
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set your Name")]
         public string Name { get; set; }
 
@@ -29,6 +32,8 @@ namespace AppForSEII2526.API.DTOs
 
         public int Price { get; set; }
 
+        public string username { get; set; }
+
         [Display(Name = "Total Price")]
         [JsonPropertyName("TotalPrice")]
         public int TotalPrice
@@ -40,16 +45,17 @@ namespace AppForSEII2526.API.DTOs
         }
 
 
-        public PurchaseForCreateDTO(string name, string surname, string deliveryAddress,
-            PaymentMethod paymentMethod, DateTime startDate, IList<PurchaseItemDTO> purchaseItemDTOs)
+        public PurchaseForCreateDTO(int id, string name, string surname, string deliveryAddress,
+            PaymentMethod paymentMethod, DateTime startDate, IList<PurchaseItemDTO> purchaseItemDTOs, string username)
         {
+            Id = id;
             Name = name;
             Surname = surname;
             DeliveryAddress = deliveryAddress;
             PaymentMethod = paymentMethod;
             PurchaseDate = startDate;
             PurchaseItemDTO = purchaseItemDTOs;
-            
+            this.username = username;
         }
         public PurchaseForCreateDTO()
         {
