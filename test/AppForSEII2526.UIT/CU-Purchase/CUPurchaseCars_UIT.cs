@@ -1,4 +1,7 @@
-﻿using System;
+﻿using OpenQA.Selenium.DevTools.V142.BackgroundService;
+using OpenQA.Selenium.Internal;
+using OpenQA.Selenium.Support.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +27,8 @@ namespace AppForSEII2526.UIT.CU_Purchase
         private const string Description2 = "4 puertas";
         private const string Fueltype2 = "Electrico";
         private const string carPrice2 = "30750";
+        private const int carId2 = 1009;
+        private const int quantity2 = 1;
 
 
         public CUPurchaseCars_UIT(ITestOutputHelper output) : base(output)
@@ -79,6 +84,7 @@ namespace AppForSEII2526.UIT.CU_Purchase
             Assert.True(selectCarsForPurchasePO.CheckListOfCars(expectedCars));
 
         }
+
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC1_AF2_NoSelectedCars()
@@ -166,6 +172,48 @@ namespace AppForSEII2526.UIT.CU_Purchase
         }
 
 
+        [Theory]
+        [InlineData("Pepe", "Viyuela", "Calle MiCasa Nº7", "Visa")]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC1_AF1_AF1(string name, string surname, string deliveryAddress, string paymentMethod)
+        {
+
+
+            var createpurchase = new CreatePurchasePO(_driver, _output);
+            var detailPurchase = new DetailPurchasePO(_driver, _output);
+            var nameSurname = $"{name} " + $"{surname}";
+            var price = 30750;
+            var totalPrice = price * quantity2;
+            //Act
+            InitialStepsForPurchaseCars();
+
+            selectCarsForPurchasePO.SearchCars("", carColor1);
+            selectCarsForPurchasePO.SelectCars(new List<string> { carModel1 });
+            _driver.FindElement(By.Id("inputColor")).Clear();
+            selectCarsForPurchasePO.SearchCars(carModel2, "");
+            selectCarsForPurchasePO.SelectCars(new List<string> { carModel2 });
+            selectCarsForPurchasePO.ModifyPurchaseCart(carModel1);
+            selectCarsForPurchasePO.PurchaseCars();
+
+            createpurchase.FillInPurchaseInfo(name, surname, deliveryAddress, paymentMethod);
+            createpurchase.FillInQuantity(quantity2, carId2);
+            createpurchase.PressPurchaseCars();
+            createpurchase.PressOkModalDialog();
+
+            //Assert
+            //the expected error is shown in the view
+            Assert.True(detailPurchase.CheckPurchaseDetail(nameSurname,
+                deliveryAddress, totalPrice + " €"),
+                "Error: detail purchase is not as expected");
+
+            var expectedPurchaseItems = new List<string[]>
+                    { new string[] { carModel2, carPrice2, carColor2 , quantity2.ToString()}, };
+
+            Assert.True(detailPurchase.CheckListOfCars(expectedPurchaseItems),
+                "Error: rental items are not as expected");
+
+
+        }
 
         [Theory]
         [InlineData("Pepe", "Viyuela", "Calle MiCasa Nº7", "Visa")]
