@@ -22,6 +22,11 @@ namespace AppForSEII2526.UIT.CU_Booking
         private const string type2 = "Cambio de neumaticos";
         private const string days2 = "8";
         private const string price2 = "150";
+        private const int maintId3 = 4;
+        private const string maintName3 = "D-312";
+        private const string type3 = "Revision de llantas";
+        private const string days3 = "7";
+        private const string price3 = "350";
         public CUBookingMaintenances_UIT(ITestOutputHelper output) : base(output)
         {
             selectMaintenancesForBookingPO = new SelectMaintenancesForBookingPO(_driver, _output);
@@ -175,6 +180,50 @@ namespace AppForSEII2526.UIT.CU_Booking
 
             var expectedBookingItems = new List<string[]>
                     { new string[] { maintName1, price1+"€", days1, comment1.ToString()} };
+
+            Assert.True(detailbooking.CheckListOfMaintenances(expectedBookingItems));
+
+        }
+
+    
+    [Theory]
+        [InlineData("Pepe", "Viyuela", "Calle MiCasa Nº7", "Visa", "967967967")]
+        [InlineData("Pepe", "Viyuela", "Calle MiCasa Nº7", "GooglePay", "")]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC3_Examen(string name, string surname, string deliveryAddress, string paymentMethod, string phonenumber)
+        {
+            //Arrange
+            var days = (DateTime.Today.AddDays(8) - DateTime.Today.AddDays(1)).Days;
+
+            var createbooking = new CreateBookingPO(_driver, _output);
+            var detailbooking = new DetailBookingPO(_driver, _output);
+            var nameSurname = $"{name} " + $"{surname}";
+            var totaldays = "7";
+            var totalprice = 350;
+            //Act
+            InitialStepsForBookingMaintenances();
+
+            selectMaintenancesForBookingPO.SearchMaintenances("", maintName1);
+            selectMaintenancesForBookingPO.SelectMaintenances(new List<string> { maintName1 });
+            selectMaintenancesForBookingPO.BookMaintenances();
+            createbooking.PressModifyMaintenances();
+            selectMaintenancesForBookingPO.SearchMaintenances(type3, "");
+            selectMaintenancesForBookingPO.SelectMaintenances(new List<string> { maintName3 });
+            selectMaintenancesForBookingPO.ModifyBookingCart(maintName1);
+            selectMaintenancesForBookingPO.BookMaintenances();
+
+            createbooking.FillInBookingInfo(name, surname, deliveryAddress, paymentMethod, phonenumber);
+            createbooking.FillInElement(comment1.ToString(), maintId3);
+            createbooking.PressBookMaintenances();
+            createbooking.PressOkModalDialog();
+
+
+            //Assert
+            Assert.True(detailbooking.CheckBookingDetail(nameSurname,
+                deliveryAddress, paymentMethod, totaldays, totalprice + " €"));
+
+            var expectedBookingItems = new List<string[]>
+                    { new string[] { maintName3, price3+"€", days3, comment1.ToString()} };
 
             Assert.True(detailbooking.CheckListOfMaintenances(expectedBookingItems));
 
