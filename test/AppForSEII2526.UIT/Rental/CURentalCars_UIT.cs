@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace AppForSEII2526.UIT.Rental
 {
@@ -18,8 +18,8 @@ namespace AppForSEII2526.UIT.Rental
         private const string carModel2 = "Toyota";
         private const string carManufacturer2 = "Toyota";
         private const string carPrice2 = "2000";
+        private const int quantity2 = 2;
 
-        
         public CURentalCars_UIT(ITestOutputHelper output) : base(output)
         {
             selectCarsForRentalPO = new SelectCarsForRentalPO(_driver, _output);
@@ -159,8 +159,48 @@ namespace AppForSEII2526.UIT.Rental
             var expectedRentalItems = new List<string[]> { new string[] { carModel1, carManufacturer1, carPrice1 }, };
             Assert.True(createrental.CheckListOfRentalItems(expectedRentalItems));
         }
+        [Theory]
+        [InlineData("Pepe", "Viyuela", "Calle MiCasa Nº7", "GooglePay")]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC2_BF_AF1_AF1(string name, string surname, string deliveryAddress, string paymentMethod) 
+        {
+            //Arrange
+
+            var createrental = new CreateRentalPO(_driver, _output);
+            var detailRental = new DetailRentalPO(_driver, _output);
+            var days = (DateTime.Today.AddDays(8) - DateTime.Today.AddDays(1)).Days;
+            var nameSurname = $"{name} " + $"{surname}";
+            var price = 2000;
+            var totalPrice = price * quantity2 * days;
+            //Act
+            InitialStepsForRentalCars();
+
+            selectCarsForRentalPO.SearchCars(carModel1, "", "");
+            selectCarsForRentalPO.SelectCars(new List<string> { carModel1 });
+            _driver.FindElement(By.Id("inputModel")).Clear();
+            selectCarsForRentalPO.SearchCars("", carPrice2, "" );
+            selectCarsForRentalPO.SelectCars(new List<string> { carModel2 });
+            selectCarsForRentalPO.ModifyRentalCart(carModel1);
+            selectCarsForRentalPO.RentCars();
+
+            createrental.FillInRentalInfo(name, surname, deliveryAddress, paymentMethod);
+            createrental.PressRentCars();
+            createrental.PressOkModalDialog();
 
 
+            //Assert
+            //the expected error is shown in the view
+            Assert.True(detailRental.CheckRentalDetail(nameSurname,
+                deliveryAddress, paymentMethod, totalPrice + " €"),
+                "Error: detail rental is not as expected");
+
+            var expectedRentalItems = new List<string[]>
+                    { new string[] { carModel2, carManufacturer2, carPrice2, quantity2.ToString()}, };
+
+            Assert.True(detailRental.CheckListOfCars(expectedRentalItems),
+                "Error: rental items are not as expected");
+
+        }
 
         [Theory]
         [InlineData("Pepe","Viyuela", "Calle MiCasa Nº7", "Visa")]
@@ -171,7 +211,7 @@ namespace AppForSEII2526.UIT.Rental
             //Arrange
             var days = (DateTime.Today.AddDays(8)-DateTime.Today.AddDays(1)).Days; 
                    
-        var createrental = new CreateRentalPO(_driver, _output);
+            var createrental = new CreateRentalPO(_driver, _output);
             var detailRental = new DetailRentalPO(_driver, _output);
             var nameSurname = $"{name} " + $"{surname}";
             var price = 800;
