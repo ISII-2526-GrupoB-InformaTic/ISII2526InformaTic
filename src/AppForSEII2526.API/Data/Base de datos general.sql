@@ -31,6 +31,7 @@ SET IDENTITY_INSERT [dbo].[Maintenances] ON
 INSERT INTO [dbo].[Maintenances] ([Id],[Name],[NumberOfDays],[Price]) VALUES (1,N'A-312',4,100)
 INSERT INTO [dbo].[Maintenances] ([Id],[Name],[NumberOfDays],[Price]) VALUES (2,N'B-312',8,150)
 INSERT INTO [dbo].[Maintenances] ([Id],[Name],[NumberOfDays],[Price]) VALUES (3,N'C-312',6,300)
+INSERT INTO [dbo].[Maintenances] ([Id],[Name],[NumberOfDays],[Price]) VALUES (4,N'D-312',7,350)
 SET IDENTITY_INSERT [dbo].[Maintenances] OFF
 
 SET IDENTITY_INSERT [dbo].[MaintenanceTypes] ON
@@ -38,6 +39,7 @@ INSERT INTO [dbo].[MaintenanceTypes] ([Id],[MaintenanceId],[Type]) VALUES (1,1,N
 INSERT INTO [dbo].[MaintenanceTypes] ([Id],[MaintenanceId],[Type]) VALUES (2,1,N'Cambio de aceite')
 INSERT INTO [dbo].[MaintenanceTypes] ([Id],[MaintenanceId],[Type]) VALUES (3,2,N'Cambio de neumaticos')
 INSERT INTO [dbo].[MaintenanceTypes] ([Id],[MaintenanceId],[Type]) VALUES (4,3,N'Cambio de aceite')
+INSERT INTO [dbo].[MaintenanceTypes] ([Id],[MaintenanceId],[Type]) VALUES (5,4,N'Revision de llantas')
 SET IDENTITY_INSERT [dbo].[MaintenanceTypes] OFF
 
 SET IDENTITY_INSERT [dbo].[Bookings] ON

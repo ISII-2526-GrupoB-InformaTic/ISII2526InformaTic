@@ -21,7 +21,7 @@
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
         <Nullable>enable</Nullable>
 
-        <!-- Display name -->
+      <!--- Display name -->
         <ApplicationTitle>AppForSEII2526.Maui</ApplicationTitle>
 
         <!-- App Identifier -->
